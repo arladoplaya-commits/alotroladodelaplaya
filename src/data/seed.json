@@ -1,0 +1,675 @@
+{
+  "version": 3,
+  "updatedAt": "2026-09-26T07:30:00.000Z",
+  "categories": [
+    {
+      "id": "hamburguesas",
+      "name": "Hamburguesas",
+      "emoji": "🍔",
+      "visible": true
+    },
+    {
+      "id": "perros",
+      "name": "Perros Calientes",
+      "emoji": "🌭",
+      "visible": true
+    },
+    {
+      "id": "baguette",
+      "name": "El Rincón del Baguette",
+      "emoji": "🥖",
+      "visible": true
+    },
+    {
+      "id": "raciones",
+      "name": "Raciones",
+      "emoji": "🍟",
+      "visible": true
+    },
+    {
+      "id": "bebidas-refrescos",
+      "name": "Refrescos y Malta",
+      "emoji": "🥤",
+      "visible": true
+    },
+    {
+      "id": "bebidas-jugos",
+      "name": "Jugos y Batidos",
+      "emoji": "🧃",
+      "visible": true
+    },
+    {
+      "id": "bebidas-cafe",
+      "name": "Café",
+      "emoji": "☕",
+      "visible": true
+    }
+  ],
+  "products": [
+    {
+      "id": "p-clasica",
+      "name": "Clásica",
+      "description": "Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
+      "price": 1200,
+      "category": "hamburguesas",
+      "image": "/images/products/p-clasica.jpg",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Pan de papa",
+        "Carne de pollo",
+        "Vegetales",
+        "Ketchup",
+        "Mostaza",
+        "Chips de boniato"
+      ]
+    },
+    {
+      "id": "p-cerdo",
+      "name": "De Cerdo",
+      "description": "Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
+      "price": 1400,
+      "category": "hamburguesas",
+      "image": "/images/products/p-cerdo.jpg",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Pan de papa",
+        "Carne de cerdo",
+        "Vegetales",
+        "Ketchup",
+        "Mostaza",
+        "Chips de boniato"
+      ]
+    },
+    {
+      "id": "p-res",
+      "name": "De Res",
+      "description": "Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
+      "price": 1600,
+      "category": "hamburguesas",
+      "image": "/images/products/p-res.jpg",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Pan de papa",
+        "Carne de res",
+        "Vegetales",
+        "Ketchup",
+        "Mostaza",
+        "Chips de boniato"
+      ]
+    },
+    {
+      "id": "p-doble",
+      "name": "Doble",
+      "description": "Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
+      "price": 1550,
+      "category": "hamburguesas",
+      "image": "/images/products/p-doble.jpg",
+      "emoji": "🍔",
+      "tags": [
+        "Doble carne"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Pan de papa",
+        "Carne de pollo",
+        "Carne de pollo",
+        "Vegetales",
+        "Ketchup",
+        "Mostaza",
+        "Chips de boniato"
+      ]
+    },
+    {
+      "id": "p-doble-mixta",
+      "name": "Doble Mixta",
+      "description": "Cerdo y pollo, vegetales, ketchup, mostaza y chips de boniato.",
+      "price": 1750,
+      "category": "hamburguesas",
+      "image": "/images/products/p-doble-mixta.jpg",
+      "emoji": "🍔",
+      "tags": [
+        "Doble carne"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Pan de papa",
+        "Carne de cerdo",
+        "Carne de pollo",
+        "Vegetales",
+        "Ketchup",
+        "Mostaza",
+        "Chips de boniato"
+      ]
+    },
+    {
+      "id": "p-perro-clasico",
+      "name": "Clásico",
+      "description": "Pan con perro, ketchup, mayonesa y mostaza.",
+      "price": 700,
+      "category": "perros",
+      "image": "/images/products/p-perro-clasico.jpg",
+      "emoji": "🌭",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Mostaza",
+        "Mayonesa",
+        "Ketchup",
+        "Salchicha",
+        "Pan de perro"
+      ]
+    },
+    {
+      "id": "p-perro-crispy",
+      "name": "El Crispy",
+      "description": "Pan con perro, ketchup, mostaza y chips de boniato.",
+      "price": 750,
+      "category": "perros",
+      "image": "/images/products/p-perro-crispy.jpg",
+      "emoji": "🌭",
+      "tags": [
+        "Crujiente"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Chips de boniato",
+        "Mostaza",
+        "Ketchup",
+        "Salchicha",
+        "Pan de perro"
+      ]
+    },
+    {
+      "id": "p-perro-isleno",
+      "name": "El Isleño",
+      "description": "Pan con perro, ketchup, mostaza y piña glaseada.",
+      "price": 850,
+      "category": "perros",
+      "image": "/images/products/p-perro-isleno.jpg",
+      "emoji": "🌭",
+      "tags": [
+        "Dulce-salado"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Piña glaseada",
+        "Mostaza",
+        "Ketchup",
+        "Salchicha",
+        "Pan de perro"
+      ]
+    },
+    {
+      "id": "p-perro-saludable",
+      "name": "El Saludable",
+      "description": "Pan con perro, ketchup, mostaza y vegetales.",
+      "price": 850,
+      "category": "perros",
+      "image": "/images/products/p-perro-saludable.jpg",
+      "emoji": "🌭",
+      "tags": [
+        "Con vegetales"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Vegetales",
+        "Mostaza",
+        "Ketchup",
+        "Salchicha",
+        "Pan de perro"
+      ]
+    },
+    {
+      "id": "p-perro-cheesy",
+      "name": "El Cheesy",
+      "description": "Pan con perro, ketchup, mostaza y queso gouda.",
+      "price": 900,
+      "category": "perros",
+      "image": "/images/products/p-perro-cheesy.jpg",
+      "emoji": "🌭",
+      "tags": [
+        "Queso gouda"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Queso gouda",
+        "Mostaza",
+        "Ketchup",
+        "Salchicha",
+        "Pan de perro"
+      ]
+    },
+    {
+      "id": "p-baguette-rustico",
+      "name": "Rústico",
+      "description": "Pan baguette, jamón, queso gouda, vegetales y mayonesa.",
+      "price": 1320,
+      "category": "baguette",
+      "image": "/images/products/p-baguette-rustico.jpg",
+      "emoji": "🥖",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Mayonesa",
+        "Vegetales",
+        "Queso gouda",
+        "Jamón",
+        "Pan baguette"
+      ]
+    },
+    {
+      "id": "p-albondiga-cerdo",
+      "name": "Albóndiga de Cerdo",
+      "description": "Ración de 5 albóndigas con ketchup.",
+      "price": 800,
+      "category": "raciones",
+      "image": "/images/products/p-albondiga-cerdo.jpg",
+      "emoji": "🍖",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Albóndigas",
+        "Ketchup"
+      ]
+    },
+    {
+      "id": "p-albondiga-pollo",
+      "name": "Albóndiga de Pollo",
+      "description": "Ración de 5 albóndigas con ketchup.",
+      "price": 800,
+      "category": "raciones",
+      "image": "/images/products/p-albondiga-pollo.jpg",
+      "emoji": "🍖",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Albóndigas",
+        "Ketchup"
+      ]
+    },
+    {
+      "id": "p-croquetas",
+      "name": "Croquetas",
+      "description": "Ración de 10 croquetas.",
+      "price": 850,
+      "category": "raciones",
+      "image": "/images/products/p-croquetas.jpg",
+      "emoji": "🧆",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Croquetas"
+      ]
+    },
+    {
+      "id": "p-fajitas-pollo",
+      "name": "Fajitas de Pollo",
+      "description": "Fajitas de pollo con porción de mayonesa.",
+      "price": 1200,
+      "category": "raciones",
+      "image": "/images/products/p-fajitas-pollo.jpg",
+      "emoji": "🌯",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Fajitas de pollo",
+        "Mayonesa"
+      ]
+    },
+    {
+      "id": "p-papas-fritas",
+      "name": "Papas Fritas",
+      "description": "Ración de papas fritas.",
+      "price": 850,
+      "category": "raciones",
+      "image": "/images/products/p-papas-fritas.jpg",
+      "emoji": "🍟",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Papas fritas"
+      ]
+    },
+    {
+      "id": "p-papischis",
+      "name": "Papischis",
+      "description": "Papas fritas y salchichas con salsa.",
+      "price": 1000,
+      "category": "raciones",
+      "image": "/images/products/p-papischis.jpg",
+      "emoji": "🍟",
+      "tags": [
+        "Para compartir"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Papas fritas",
+        "Salchichas",
+        "Salsa de la casa"
+      ]
+    },
+    {
+      "id": "p-alitas-pollo",
+      "name": "Alitas de Pollo",
+      "description": "Ración de alitas de pollo.",
+      "price": 1400,
+      "category": "raciones",
+      "image": "/images/products/p-alitas-pollo.jpg",
+      "emoji": "🍗",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Alitas de pollo"
+      ]
+    },
+    {
+      "id": "p-refrescos",
+      "name": "Refrescos",
+      "description": "Gaseosas bien frías: cola, naranja o limón. El clásico de la arena.",
+      "price": 600,
+      "category": "bebidas-refrescos",
+      "image": "/images/products/p-refrescos.jpg",
+      "emoji": "🥤",
+      "tags": [
+        "Bien frío"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Rodaja de limón",
+        "Gaseosa bien fría",
+        "Hielo",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-malta",
+      "name": "Malta",
+      "description": "Malta bien helada con su espuma dorada. Energía playera.",
+      "price": 650,
+      "category": "bebidas-refrescos",
+      "image": "/images/products/p-malta.jpg",
+      "emoji": "🥃",
+      "tags": [
+        "Bien frío"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Espuma de malta",
+        "Malta bien fría",
+        "Hielo",
+        "Vaso"
+      ]
+    },
+    {
+      "id": "p-cerveza",
+      "name": "Cerveza Importada",
+      "description": "Lager importada, helada hasta el último sorbo. Brindis al atardecer.",
+      "price": 650,
+      "category": "bebidas-refrescos",
+      "image": "/images/products/p-cerveza.jpg",
+      "emoji": "🍺",
+      "tags": [
+        "Importada"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Espuma bien fría",
+        "Cerveza importada",
+        "Vaso helado"
+      ]
+    },
+    {
+      "id": "p-jugos",
+      "name": "Jugos Naturales",
+      "description": "Jugos de frutas naturales del día: naranja, papaya o piña.",
+      "price": 700,
+      "category": "bebidas-jugos",
+      "image": "/images/products/p-jugos.jpg",
+      "emoji": "🧃",
+      "tags": [
+        "Natural"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Rodaja de naranja",
+        "Jugo natural",
+        "Hielo",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-malteada",
+      "name": "Malteada",
+      "description": "Malteada cremosa con crema batida. Dulce como la brisa.",
+      "price": 850,
+      "category": "bebidas-jugos",
+      "image": "/images/products/p-malteada.jpg",
+      "emoji": "🥛",
+      "tags": [
+        "Crema batida"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Crema batida",
+        "Malteada de leche bien cremosa",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-batidos",
+      "name": "Batidos de Frutas Naturales",
+      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce.",
+      "price": 900,
+      "category": "bebidas-jugos",
+      "image": "/images/products/p-batidos.jpg",
+      "emoji": "🍓",
+      "tags": [
+        "Natural"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Frutas naturales frescas",
+        "Batido cremoso",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-maracuya",
+      "name": "Jugo de Maracuyá",
+      "description": "Maracuyá bien fría, entre dulce y ácida. El favorito del cangrejo.",
+      "price": 900,
+      "category": "bebidas-jugos",
+      "image": "/images/products/p-maracuya.jpg",
+      "emoji": "🍹",
+      "tags": [
+        "Natural"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Semillas de maracuyá",
+        "Jugo de maracuyá",
+        "Hielo",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-limonada",
+      "name": "Limonada Natural",
+      "description": "Limonada natural con hielo y menta fresca. Sombra y frescura.",
+      "price": 700,
+      "category": "bebidas-jugos",
+      "image": "/images/products/p-limonada.jpg",
+      "emoji": "🍋",
+      "tags": [
+        "Bien frío"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Menta fresca",
+        "Limonada natural",
+        "Hielo",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-limonada-brasilena",
+      "name": "Limonada Brasileña",
+      "description": "La clásica brasileña: limón batido con crema, suave y helada.",
+      "price": 850,
+      "category": "bebidas-jugos",
+      "image": "/images/products/p-limonada-brasilena.jpg",
+      "emoji": "🍋",
+      "tags": [
+        "Crema de limón"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Crema de limón",
+        "Limonada brasileña",
+        "Hielo",
+        "Vaso alto"
+      ]
+    },
+    {
+      "id": "p-espresso",
+      "name": "Café Espresso",
+      "description": "Espresso corto e intenso con su crema dorada. Chispa instantánea.",
+      "price": 250,
+      "category": "bebidas-cafe",
+      "image": "/images/products/p-espresso.jpg",
+      "emoji": "☕",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Espuma dorada",
+        "Café espresso",
+        "Taza caliente"
+      ]
+    },
+    {
+      "id": "p-cortado",
+      "name": "Café Cortado",
+      "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto.",
+      "price": 350,
+      "category": "bebidas-cafe",
+      "image": "/images/products/p-cortado.jpg",
+      "emoji": "☕",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Chorro de leche",
+        "Café cortado",
+        "Vasito de cristal"
+      ]
+    },
+    {
+      "id": "p-bombon",
+      "name": "Café Bombón",
+      "description": "Espresso sobre leche condensada, en capas como un atardecer.",
+      "price": 450,
+      "category": "bebidas-cafe",
+      "image": "/images/products/p-bombon.jpg",
+      "emoji": "☕",
+      "tags": [
+        "Dulce"
+      ],
+      "available": true,
+      "featured": false,
+      "ingredients": [
+        "Café recién hecho",
+        "Leche condensada",
+        "Vasito de cristal"
+      ]
+    }
+  ],
+  "agregos": [
+    {
+      "id": "a-cebolla",
+      "name": "Cebolla",
+      "price": 200,
+      "available": true
+    },
+    {
+      "id": "a-chips-boniato",
+      "name": "Chips de boniato",
+      "price": 100,
+      "available": true
+    },
+    {
+      "id": "a-jamon",
+      "name": "Jamón",
+      "price": 250,
+      "available": true
+    },
+    {
+      "id": "a-lomo-ahumado",
+      "name": "Lomo Ahumado",
+      "price": 350,
+      "available": true
+    },
+    {
+      "id": "a-queso-gouda",
+      "name": "Queso Gouda",
+      "price": 400,
+      "available": true
+    },
+    {
+      "id": "a-huevo",
+      "name": "Huevo",
+      "price": 300,
+      "available": true
+    }
+  ],
+  "settings": {
+    "businessName": "Al Otro Lado de la Playa",
+    "tagline": "Hamburguesas, perros calientes, baguettes y raciones · By Sol & Habana",
+    "whatsapp": "",
+    "currency": "$",
+    "deliveryPoint": "Calle 21 e/ 14 · Vedado",
+    "deliveryTime": "Pedidos por WhatsApp",
+    "hideSoldOut": true,
+    "adminPassword": "playa2026",
+    "ordersOpen": true
+  },
+  "github": {
+    "owner": "",
+    "repo": "",
+    "branch": "main",
+    "path": "public/data/menu.json"
+  }
+}

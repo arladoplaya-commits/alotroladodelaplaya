@@ -81,3 +81,53 @@ Work Log:
 Stage Summary:
 - La playa ya no desaparece en el teléfono: sol, palmera, tabla, conchas y cangrejo presentes en todo el scroll móvil sin estorbar la lectura.
 - Ideas de mejoras propuestas al usuario (búsqueda, modo noche, compartir por WhatsApp, toasts, fotos reales, contador de favoritos) pendientes de su elección.
+
+---
+Task ID: 5
+Agent: Super Z (main agent)
+Task: "Vamos con todas las mejoras" + sistema de cliente registrado con notificaciones (apertura/cierre, productos nuevos), gustos guardados y opción de activar notificaciones.
+
+Work Log:
+- Nuevos archivos:
+  - src/lib/customer.ts: store zustand persist aol-customer-v1 (perfil con nº de socio, favoritos, bandeja de hasta 40 avisos, orderCounts como gustos, visitas, prefs con tema día/atardecer y toggles de avisos) + helpers showSystemNotification (Notification API), buzz (vibración), waitEstimate (heurística por hora pico), normalizeText.
+  - src/components/menu/notification-watcher.tsx: vigía que lee localStorage aol-menu-v1 cada 15 s + evento storage; detecta apertura/cierre y productos nuevos (comparando con seenProducts), deja aviso en la campanita y dispara Notification API si hay permiso. BUG corregido durante pruebas: zustand persist guarda settings/products directo en state (no en state.data).
+  - src/components/menu/customer-sheet.tsx: CustomerSheet (registro con nombre + WhatsApp opcional, tarjeta de socio, stats favoritos/pedidos/visitas, "Tus gustos" top 3, preferencias con switches, activar notificaciones del navegador, borrar mis datos) e InboxSheet (bandeja con no leídos, marcar leído, vaciar).
+- beach-scene.tsx: WaveBand (olas SVG en bucle sin costuras con wave-drift) para el fondo del encabezado.
+- globals.css: keyframes wave-drift + .animate-wave(-slow); tema atardecer completo vía [data-theme="sunset"] con clases semánticas (aol-page/title/sub/h/chip/navbar/pill/card/price/tag/featured/empty/closing/waves/reviews). Sheets quedan claras a propósito.
+- menu-view.tsx: buscador (acentos-insensible, oculta pills mientras busca), filtro ❤️ Favoritos + corazón en cada foto, fila de acciones (Hazte cliente/Hola {nombre}, campanita con badge, modo atardecer, compartir con navigator.share/clipboard), chip de espera estimada, galería "Así se vive el shack" (4 fotos IA en public/images/shack), olas animadas, CustomerSheet/InboxSheet/NotificationWatcher montados, data-theme en <html>.
+- customizer-sheet.tsx: al agregar → toast sonner + vibración + bumpOrderCount (gustos). cart-sheet.tsx: nombre precargado del perfil. reviews-section.tsx: clases de tema.
+- Infra: el dev server servía CSS viejo de Turbopack (touch no bastó); reiniciado con rm -rf .next/dev + bun run dev.
+- Verificado con agent-browser (móvil 390 + desktop 1440, audit/50-60): registro "Marta" #927, badge campanita al simular cierre, bandeja con aviso "Cerramos por hoy 🌙", búsqueda "limo" 3 resultados, favoritos persistentes, atardecer persistente, toast "Clásica al carrito", gustos {p-clasica:1}, consola sin errores, eslint 0, tsc limpio en archivos nuevos (queda 1 error preexistente en admin/tab-resenas).
+
+Stage Summary:
+- 8 mejoras implementadas + sistema de cliente de la marea completo, todo local (localStorage), sin backend.
+- Notificaciones: funcionan en la app/página abierta (y como PWA instalada); aviso del navegador requiere permiso del usuario. Push real con servidor queda como futuro.
+- ZIP entregado: download/al-otro-lado-playa-2026-09-27-v2.zip (4.4 MB, 163 archivos, .env portable).
+
+---
+Task ID: 6
+Agent: Super Z (main agent)
+Task: Preparar el proyecto para GitHub (fotos/datos) + Supabase (datos guardados y push); añadir sección Carrito y sección Favoritos; acceso al admin tocando 3 veces el logo.
+
+Work Log:
+- Arquitectura nube (opcional, la carta sigue funcionando 100% local):
+  - supabase.ts: SQL_SETUP ampliado con tablas customers (registro de clientes), push_subscriptions (Web Push VAPID) y announcements (avisos de apertura/cierre/producto nuevo) + RPC admin_announce y admin_customers; helpers REST sbUpsertCustomer, sbInsertPushSubscription, sbDeletePushSubscription, sbFetchAnnouncements, sbAdminAnnounce, sbAdminCustomers.
+  - cloud.ts (nuevo): subscribeToPush/unsubscribeFromPush (service worker + VAPID desde env NEXT_PUBLIC_VAPID_PUBLIC_KEY o localStorage aol-vapid-key), syncCustomerToCloud (upsert del perfil + gustos). Todo no-op silencioso sin Supabase.
+  - customer.ts: seenAnnouncements + syncSeenAnnouncements.
+  - notification-watcher.tsx: además del vigía local, consulta announcements de Supabase cada 60 s y los entrega en campanita/notificación respetando preferencias; sincroniza el cliente a la nube al visitar.
+  - customer-sheet.tsx: al registrarse → syncCustomerToCloud (toast si quedó en nube); al activar notificaciones → subscribeToPush (mensaje distinto si push real activo).
+- Secciones nuevas en la carta (barra de navegación inferior fija con 3 tabs: Menú / Favoritos / Carrito, badges con contadores y total en Carrito; reemplaza a la antigua barra flotante):
+  - favorites-section.tsx (nuevo): favoritos con ProductRow + tarjeta «Tus gustos de la marea» (top 3 por orderCounts + total armado) + estados vacíos.
+  - cart-section.tsx (nuevo, sustituye a cart-sheet.tsx que se eliminó): pedido completo como sección (items con +/-/quitar, nombre precargado del perfil, dirección, totales, WhatsApp, vaciar).
+  - product-row.tsx (nuevo): ProductRow + WaterBackdrop extraídos para reutilizar sin dependencia circular.
+  - menu-view.tsx: view state menu|favoritos|carrito con scroll-to-top; contenido del menú extraído a MenuHome; buscador intacto; píldora ❤️ ahora lleva a la sección; logo ahora es botón con TRIPLE TOQUE → toast 🔑 y hash #/admin (el enlace visible del pie se retiró, pie con guiño «El secreto del shack vive en el logo»).
+- Admin: tab Hoy incluye tarjeta «📣 Avisos a los clientes»: avisar apertura/cierre (textos playeros fijos) o anunciar producto nuevo (select de productos con precio) → sbAdminAnnounce con contraseña de nube; errores explicados con explain().
+- globals.css: tema atardecer para .aol-nav (barra inferior) y .aol-tastes (tarjeta de gustos) con textos legibles.
+- README.md (nuevo): guía completa — acceso admin (3 toques, playa2026), fotos en GitHub (public/images + Publicar con Contents API), Supabase paso a paso (SQL, tablas, avisos), push real con VAPID y Edge Functions; .env.example con placeholder VAPID.
+- BUG corregidos durante pruebas: syntax error en cloud.ts (as en línea partida → BufferSource variable); SupaCreds importado desde types; caché CSS de Turbopack sirviendo estilos viejos tras editar globals.css (requirió reiniciar servidor con rm -rf .next/dev y luego rm -rf .next).
+- Verificado: tsc solo con 2 errores preexistentes (tab-resenas, reviews.ts) y 0 en archivos nuevos/tocados; eslint 0; agent-browser móvil 390 (menú, favoritos con gustos, carrito con nombre precargado, triple toque → admin, toast 2 toques, aviso de cierre simulado con badge y bandeja, búsqueda "limo" 3 resultados) y desktop 1440 (menú, carrito, atardecer); consola limpia tras recarga fresca; capturas en audit/60-75.
+
+Stage Summary:
+- Secciones Carrito y Favoritos como vistas de primera clase con navegación inferior; admin oculto tras triple toque en el logo.
+- Camino a producción listo: GitHub para fotos/carta (repo + tab Publicar), Supabase para clientes/pedidos/reseñas/avisos y Web Push (solo falta pegar credenciales y ejecutar el SQL; documentado en README).
+- ZIP entregado: download/al-otro-lado-playa-2026-09-27-v3.zip con README y .env.example incluidos.
