@@ -10,6 +10,7 @@ import { useCartStore } from "@/lib/cart";
 import { useCustomerStore } from "@/lib/customer";
 import { buildOrder, saveOrder } from "@/lib/orders";
 import { useReviewsStore } from "@/lib/reviews";
+import { CatTitle } from "./section-title";
 
 /* ------------------------------------------------------------------ */
 /*  Sección Carrito: revisa el pedido, pon nombre y dirección, y       */
@@ -145,9 +146,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
 
   return (
     <section aria-label="Mi pedido">
-      <h2 className="aol-h mb-1 flex items-center gap-2 font-display text-2xl text-[#c2542f] sm:text-3xl">
-        <span aria-hidden="true">🛒</span> Mi pedido playero
-      </h2>
+      <CatTitle emoji="🛒">Mi pedido playero</CatTitle>
       <p className="aol-sub mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-semibold text-[#8a7350]">
         <span className="inline-flex items-center gap-1">
           <MapPin className="size-3.5" aria-hidden="true" />

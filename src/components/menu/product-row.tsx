@@ -54,7 +54,7 @@ export function ProductRow({
   onFav: () => void;
 }) {
   return (
-    <article className="aol-card group relative flex gap-3.5 rounded-3xl border border-[#f0dfc0] bg-gradient-to-b from-white via-white to-[#eef9fc] p-3.5 shadow-[0_3px_14px_rgba(180,140,80,0.09)] transition hover:shadow-[0_8px_22px_rgba(94,183,212,0.22)]">
+    <article className="aol-card aol-float group relative flex gap-3.5 rounded-3xl border border-[#f0dfc0] bg-gradient-to-b from-white via-white to-[#eef9fc] p-3.5">
       <WaterBackdrop />
       {product.featured && (
         <span className="absolute -top-2.5 left-4 z-10 inline-flex rotate-[-4deg] items-center gap-1 rounded-full bg-[#f2c230] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#7a5410] shadow-sm">

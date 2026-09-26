@@ -1,9 +1,9 @@
 "use client";
 
-import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/types";
 import { ProductRow } from "./product-row";
+import { CatTitle } from "./section-title";
 
 /* ------------------------------------------------------------------ */
 /*  Sección Favoritos: lo que el cliente guardó con ❤️, más sus        */
@@ -36,10 +36,7 @@ export function FavoritesSection({
 }: FavoritesSectionProps) {
   return (
     <section aria-label="Tus favoritos">
-      <h2 className="aol-h mb-1 flex items-center gap-2 font-display text-2xl text-[#c2542f] sm:text-3xl">
-        <Heart className="size-6 fill-[#e2574c] text-[#e2574c]" aria-hidden="true" />
-        Tus favoritos
-      </h2>
+      <CatTitle emoji="❤️">Tus favoritos</CatTitle>
       <p className="aol-sub mb-4 text-sm font-semibold text-[#8a7350]">
         Guardaditos en este teléfono, listos para pedirlos otra vez.
       </p>

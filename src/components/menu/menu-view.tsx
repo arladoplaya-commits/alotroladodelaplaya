@@ -26,6 +26,7 @@ import {
   waitEstimate,
 } from "@/lib/customer";
 import { Bunting, BeachCart, CrabSilhouette, PalmSilhouette, ShellSilhouette, Shoreline, StampBadge, SunSilhouette, Surfboard, WaveBand } from "./beach-scene";
+import { CatTitle } from "./section-title";
 import { CustomizerSheet } from "./customizer-sheet";
 import { CartSection } from "./cart-section";
 import { FavoritesSection, type TasteEntry } from "./favorites-section";
@@ -33,31 +34,9 @@ import { ProductRow } from "./product-row";
 import { ReviewsSection } from "./reviews-section";
 import { CustomerSheet, InboxSheet } from "./customer-sheet";
 import { NotificationWatcher } from "./notification-watcher";
+import { InstallButton } from "./install-prompt";
+import { DEFAULT_GALLERY } from "./gallery-data";
 import type { MenuData, Product } from "@/lib/types";
-
-/* Galería «Así se vive el shack» */
-const SHACK_GALLERY = [
-  {
-    src: "/images/shack/s-carrito.jpg",
-    caption: "El carrito al atardecer",
-    alt: "Carrito del shack en la arena al atardecer",
-  },
-  {
-    src: "/images/shack/s-barra.jpg",
-    caption: "La barra y sus jugos",
-    alt: "Barra de madera del shack con frutas y luces",
-  },
-  {
-    src: "/images/shack/s-punto.jpg",
-    caption: "Calle 21 e/ 14 · Vedado",
-    alt: "Esquina del Vedado al anochecer con el puesto iluminado",
-  },
-  {
-    src: "/images/shack/s-atardecer.jpg",
-    caption: "Nuestra playa, la del otro lado",
-    alt: "Atardecer en la playa con palmeras y tabla de surf",
-  },
-];
 
 /* Vistas de la carta: menú, favoritos guardados y carrito */
 type View = "menu" | "favoritos" | "carrito";
@@ -216,16 +195,14 @@ function MenuHome({
       {/* Destacados */}
       {featured.length > 0 && (
         <section className="mt-6" aria-label="Recomendados del chef">
-          <h2 className="aol-h mb-2.5 font-display text-xl text-[#c2542f]">
-            ⭐ Los preferidos de la marea
-          </h2>
+          <CatTitle emoji="⭐">Los preferidos de la marea</CatTitle>
           <div className="nice-scroll -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
             {featured.map((p) => (
               <button
                 key={p.id}
                 type="button"
                 onClick={() => onArm(p)}
-                className="aol-featured relative w-40 shrink-0 snap-start overflow-hidden rounded-2xl bg-white text-left shadow-[0_3px_14px_rgba(180,140,80,0.12)] ring-1 ring-[#f0dfc0] transition hover:shadow-lg active:scale-[0.98] sm:w-48"
+                className="aol-featured aol-float relative w-40 shrink-0 snap-start overflow-hidden rounded-2xl bg-white text-left ring-1 ring-[#f0dfc0] transition active:scale-[0.98] sm:w-48"
               >
                 <div className="relative h-28 w-full sm:h-32">
                   {p.image ? (
@@ -266,7 +243,7 @@ function MenuHome({
       >
         <div className="relative mb-2">
           <Search
-            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#c4b08c]"
+            className="aol-search-icon pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#c4b08c]"
             aria-hidden="true"
           />
           <input
@@ -275,14 +252,14 @@ function MenuHome({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar antojos… limonada, perro, alitas"
             aria-label="Buscar en el menú"
-            className="h-10 w-full rounded-full border border-[#f0dfc0] bg-white pl-9 pr-10 text-sm text-[#4a3b28] placeholder:text-[#c4b08c] focus:outline-none focus:ring-2 focus:ring-[#e2574c]/50"
+            className="aol-search h-10 w-full rounded-full border border-[#f0dfc0] bg-white pl-9 pr-10 text-sm text-[#4a3b28] placeholder:text-[#c4b08c] focus:outline-none focus:ring-2 focus:ring-[#e2574c]/50"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
               aria-label="Limpiar búsqueda"
-              className="absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-full bg-[#fdf3e0] text-[#8a7350] transition hover:bg-[#f6dfb2]"
+              className="aol-search-clear absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-full bg-[#fdf3e0] text-[#8a7350] transition hover:bg-[#f6dfb2]"
             >
               <X className="size-3.5" aria-hidden="true" />
             </button>
@@ -318,11 +295,11 @@ function MenuHome({
       {/* Búsqueda / productos por categoría */}
       {query.trim().length >= 2 ? (
         <section className="mt-3" aria-label="Resultados de búsqueda">
-          <h2 className="aol-h mb-2.5 flex items-center gap-2 font-display text-xl text-[#c2542f] sm:text-2xl">
-            <span aria-hidden="true">🔍</span> {searchResults.length}{" "}
-            {searchResults.length === 1 ? "resultado" : "resultados"} para
+          <CatTitle emoji="🔍">
+            {searchResults.length}{" "}
+            {searchResults.length === 1 ? "resultado" : "resultados"} para{" "}
             “{query.trim()}”
-          </h2>
+          </CatTitle>
           {searchResults.length === 0 ? (
             <div className="aol-empty rounded-2xl border-2 border-dashed border-[#e8d5b5] bg-white/60 px-4 py-6 text-center text-sm text-[#8a7350]">
               Nada con esa marea… prueba con “limonada”, “perro” o “alitas” 🌊
@@ -349,9 +326,7 @@ function MenuHome({
               const list = productsByCat.get(c.id) ?? [];
               return (
                 <section key={c.id} aria-label={c.name}>
-                  <h2 className="aol-h mb-2.5 flex items-center gap-2 font-display text-xl text-[#c2542f] sm:text-2xl">
-                    <span aria-hidden="true">{c.emoji}</span> {c.name}
-                  </h2>
+                  <CatTitle emoji={c.emoji}>{c.name}</CatTitle>
                   {list.length === 0 ? (
                     <div className="aol-empty rounded-2xl border-2 border-dashed border-[#e8d5b5] bg-white/60 px-4 py-6 text-center text-sm text-[#8a7350]">
                       {data.settings.hideSoldOut
@@ -380,16 +355,15 @@ function MenuHome({
       {/* Reseñas */}
       <ReviewsSection />
 
-      {/* Galería del shack */}
+      {/* Galería del shack (fotos reales del panel o las de serie) */}
       <section className="mt-10" aria-label="Así se vive el shack">
-        <h2 className="aol-h mb-2.5 font-display text-xl text-[#c2542f] sm:text-2xl">
-          📸 Así se vive el shack
-        </h2>
+        <CatTitle emoji="📸">Así se vive el shack</CatTitle>
         <div className="nice-scroll -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
-          {SHACK_GALLERY.map((g) => (
+          {(data.settings.gallery?.length ? data.settings.gallery : DEFAULT_GALLERY).map(
+            (g) => (
             <figure
               key={g.src}
-              className="relative w-56 shrink-0 snap-start overflow-hidden rounded-2xl shadow-[0_3px_14px_rgba(180,140,80,0.12)] ring-1 ring-[#f0dfc0] sm:w-64"
+              className="aol-float relative w-56 shrink-0 snap-start overflow-hidden rounded-2xl ring-1 ring-[#f0dfc0] sm:w-64"
             >
               <div className="relative h-40 w-full">
                 <Image
@@ -409,7 +383,7 @@ function MenuHome({
       </section>
 
       {/* Escena de cierre */}
-      <div className="aol-closing relative mt-12 overflow-hidden rounded-3xl bg-[#f6dfb2] px-6 pb-0 pt-6 text-center ring-1 ring-[#e8d5b5]">
+      <div className="aol-closing aol-float relative mt-12 overflow-hidden rounded-3xl bg-[#f6dfb2] px-6 pb-0 pt-6 text-center ring-1 ring-[#e8d5b5]">
         <BeachCart className="mx-auto h-24 w-20" />
         <p className="font-display text-lg leading-snug text-[#b3562e]">
           El shack te espera
@@ -658,6 +632,9 @@ export function MenuView() {
 
       {/* Decoración ambiental solo para pantallas grandes */}
       <div className="pointer-events-none fixed inset-0 z-0 hidden lg:block" aria-hidden="true">
+        <div className="absolute right-[10%] top-12 opacity-30">
+          <SunSilhouette className="h-24 w-24" />
+        </div>
         <div className="absolute -left-12 top-24 opacity-[0.14]">
           <PalmSilhouette className="h-64 w-64" />
         </div>
@@ -683,8 +660,9 @@ export function MenuView() {
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden lg:hidden"
         aria-hidden="true"
       >
-        <div className="absolute -left-5 top-16 opacity-30">
-          <SunSilhouette className="h-16 w-16" />
+        {/* Sol de atardecer bien alto, detrás de la copa de la palmera */}
+        <div className="absolute left-1 top-1 opacity-60">
+          <SunSilhouette className="h-14 w-14" />
         </div>
         <div className="absolute -right-8 top-28 opacity-[0.13]">
           <PalmSilhouette className="h-36 w-36" />
@@ -809,6 +787,8 @@ export function MenuView() {
             >
               <Share2 className="size-4" aria-hidden="true" />
             </button>
+
+            <InstallButton />
           </div>
         </header>
 

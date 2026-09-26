@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Pencil, Plus } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { Camera, ImagePlus, Pencil, Plus } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -34,6 +34,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { money, uid, useMenuStore } from "@/lib/store";
+import { getGhToken, uploadPhotoToGitHub } from "@/lib/gh";
 import type { Product } from "@/lib/types";
 
 /* ------------------------------------------------------------------ */
@@ -63,6 +64,62 @@ export function TabProductos() {
   const [tagsText, setTagsText] = useState("");
   const [ingredientsText, setIngredientsText] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
+
+  /* ---- Subida de fotos reales a GitHub ---- */
+  const fileRef = useRef<HTMLInputElement>(null);
+  const pickFor = useRef<{ id: string; name: string; inDialog: boolean } | null>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+
+  const requestPhoto = (id: string, name: string, inDialog: boolean) => {
+    pickFor.current = { id, name, inDialog };
+    fileRef.current?.click();
+  };
+
+  const onPickPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    const t = pickFor.current;
+    pickFor.current = null;
+    if (!file || !t) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Ese archivo no es una foto");
+      return;
+    }
+    const token = getGhToken();
+    if (!token) {
+      toast.error("Falta el token de GitHub", {
+        description: "Pégalo en la pestaña «Publicar» para poder subir fotos.",
+      });
+      return;
+    }
+    setPhotoBusy(true);
+    const res = await uploadPhotoToGitHub({
+      cfg: {
+        owner: data.github.owner,
+        repo: data.github.repo,
+        branch: data.github.branch || "main",
+      },
+      token,
+      file,
+      folder: "products",
+      slug: t.name,
+    });
+    setPhotoBusy(false);
+    if (res.ok && res.path) {
+      if (t.inDialog && editing) {
+        setEditing({ ...editing, image: res.path });
+      } else {
+        const p = data.products.find((x) => x.id === t.id);
+        if (p) saveProduct({ ...p, image: res.path });
+      }
+      toast.success("¡Foto subida a GitHub! 📸", {
+        description:
+          "Publica la carta (pestaña Publicar) para que todos la vean.",
+      });
+    } else {
+      toast.error(res.error ?? "No se pudo subir la foto");
+    }
+  };
 
   const catName = useMemo(() => {
     const m = new Map(data.categories.map((c) => [c.id, c]));
@@ -118,9 +175,18 @@ export function TabProductos() {
 
   return (
     <div className="grid gap-3">
+      {/* Input oculto compartido para subir fotos de productos */}
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => void onPickPhoto(e)}
+      />
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-[#8a7350]">
-          Los cambios se aplican al menú en cuanto guardas.
+          Los cambios se aplican al menú en cuanto guardas. Usa el botón de
+          foto 📷 para subir fotos reales a GitHub.
         </p>
         <Button
           type="button"
@@ -170,6 +236,15 @@ export function TabProductos() {
                       onCheckedChange={(v) => saveProduct({ ...p, available: v })}
                       aria-label={`¿Hay ${p.name}?`}
                     />
+                    <button
+                      type="button"
+                      onClick={() => requestPhoto(p.id, p.name, false)}
+                      disabled={photoBusy}
+                      className="grid size-9 place-items-center rounded-full text-[#8a7350] transition hover:bg-[#fdf3e0] hover:text-[#c2542f] disabled:opacity-50"
+                      aria-label={`Subir foto real de ${p.name}`}
+                    >
+                      <ImagePlus className="size-4" />
+                    </button>
                     <button
                       type="button"
                       onClick={() => openEdit(p)}
@@ -294,17 +369,36 @@ export function TabProductos() {
                 <Label htmlFor="p-img" className="font-bold text-[#4a3b28]">
                   Foto del producto (opcional)
                 </Label>
-                <Input
-                  id="p-img"
-                  value={editing.image ?? ""}
-                  onChange={(e) => setEditing({ ...editing, image: e.target.value })}
-                  placeholder="/images/products/....jpg · vacío = emoji"
-                  className="border-[#f0dfc0] focus-visible:ring-[#e2574c]"
-                />
+                <div className="flex items-center gap-2">
+                  {editing.image ? (
+                    <img
+                      src={editing.image}
+                      alt="Foto actual"
+                      className="size-12 shrink-0 rounded-xl object-cover ring-1 ring-[#f0dfc0]"
+                    />
+                  ) : null}
+                  <Input
+                    id="p-img"
+                    value={editing.image ?? ""}
+                    onChange={(e) => setEditing({ ...editing, image: e.target.value })}
+                    placeholder="/images/products/....jpg · vacío = emoji"
+                    className="border-[#f0dfc0] focus-visible:ring-[#e2574c]"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => requestPhoto(editing.id, editing.name, true)}
+                  disabled={photoBusy}
+                  className="mt-1 rounded-full border-[#f0dfc0] font-bold text-[#c2542f] hover:bg-[#fdf3e0]"
+                >
+                  <Camera className="size-4" aria-hidden="true" />
+                  {photoBusy ? "Subiendo foto..." : "Subir foto real (cámara o galería)"}
+                </Button>
                 <p className="text-xs text-[#a58a5f]">
-                  {editing.image
-                    ? undefined
-                    : "Sin foto · se usa el emoji"}
+                  La foto se guarda en tu repositorio de GitHub y queda en la
+                  carta para todos. Después pulsa «Publicar menú ahora» en la
+                  pestaña Publicar.
                 </p>
               </div>
               <div className="flex items-center justify-between rounded-2xl bg-[#fdf8ec] px-4 py-3">

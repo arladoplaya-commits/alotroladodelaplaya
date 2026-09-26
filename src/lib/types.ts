@@ -38,6 +38,14 @@ export interface Settings {
   hideSoldOut: boolean;
   adminPassword: string;
   ordersOpen: boolean;
+  /** Fotos reales del local subidas desde el panel (opcional) */
+  gallery?: GalleryItem[];
+}
+
+export interface GalleryItem {
+  src: string;
+  caption: string;
+  alt: string;
 }
 
 export interface GitHubSync {

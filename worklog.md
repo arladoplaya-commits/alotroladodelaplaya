@@ -131,3 +131,46 @@ Stage Summary:
 - Secciones Carrito y Favoritos como vistas de primera clase con navegación inferior; admin oculto tras triple toque en el logo.
 - Camino a producción listo: GitHub para fotos/carta (repo + tab Publicar), Supabase para clientes/pedidos/reseñas/avisos y Web Push (solo falta pegar credenciales y ejecutar el SQL; documentado en README).
 - ZIP entregado: download/al-otro-lado-playa-2026-09-27-v3.zip con README y .env.example incluidos.
+
+---
+Task ID: 7
+Agent: Super Z (main agent)
+Task: Arreglos de diseño reportados por el usuario con capturas (las capturas no llegaron al servidor otra vez; se trabajó con la descripción): 1) nombres de categoría centrados, más pronunciados y legibles; 2) buscador dentro de un cuadrado negro (modo atardecer); 3) agua del hero se ve mal; 4) sol debajo de la palma y con tono marrón, debe ser atardecer.
+
+Work Log:
+- beach-scene.tsx:
+  - SunSilhouette rediseñado como sol de atardecer: disco con radialGradient (#ffefad→#ffc766→#ff9550→#f0654a), doble halo suave y rayos coral #ff8a4e (antes dorado plano #f2c230 que con opacidad se veía marrón apagado).
+  - WaveBand rehecho: 4 capas (back #a9ddec / mid #7ccadb / front #54b7cf / espuma blanco por stroke) que cuelgan del borde superior y terminan en orilla ondulada (antes cortaban recto al acabar el bloque h-24 y se veían como manchas translúcidas); WaveLayer admite stroke para la línea de espuma; orden apilado: la más honda (orilla clara) detrás, la más superficial delante.
+  - WaveRule (nuevo): ondulación decorativa para acompañar títulos.
+- globals.css:
+  - Mar de atardecer por capas: wave-front #7b55a8 (violeta) → wave-mid #b25a80 (rosa malva) → wave-back #e0885c (coral) + espuma #ffd9ae (antes TODO marrón #c46a3a por el override genérico .aol-waves svg path).
+  - Navbar atardecer: de losa opaca rgba(43,29,17,.95) a cristal cálido translúcido (gradiente rgba(70,45,28,.82)→rgba(52,34,21,.78)) con borde inferior suave, esquinas inferiores redondeadas y sombra → adiós «cuadrado negro».
+  - Buscador en atardecer: .aol-search translúcido cálido con texto #f8ecd4, placeholder #b08d5f, focus con halo coral; .aol-search-icon y .aol-search-clear adaptados.
+  - Títulos de categoría: .aol-cat (#a8431f + text-shadow blanco en día; #ffcda6 con glow oscuro en atardecer) y .aol-cat-rule para las ondulaciones.
+- section-title.tsx (nuevo): componente CatTitle — centrado, font-display 2xl/3xl, font-black, UPPERCASE, tracking-wide, emoji grande y WaveRule a cada lado. Aplicado a: destacados, resultados de búsqueda, TODAS las categorías, galería del shack (menu-view), favoritos (favorites-section) y carrito (cart-section). Reseñas mantiene su layout con botón de refresco.
+- menu-view.tsx: sol de atardecer subido a la esquina superior izquierda detrás de la copa de la palmera en móvil (antes top-16 = justo DEBAJO de la palma del header); sol añadido a la capa ambiental desktop (right-10% top-12, h-24, opacidad 30%); input de búsqueda con clases aol-search/aol-search-icon/aol-search-clear.
+- FIX de sintaxis: comilla curva dentro de literal JS en CatTitle de resultados ("resultados”} para") detectada por errores de consola de Next; corregida a {" "} para “{query.trim()}”.
+- Verificado: tsc 0 errores en archivos tocados (persisten los 2 preexistentes de reviews.ts/admin), eslint 0, agent-browser 390x844 día+atardecer (sticky navbar incluido) y 1440x900 día+atardecer, consola limpia tras recarga fresca; capturas en audit/fix-*.png.
+
+Stage Summary:
+- Categorías centradas y pronunciadas en todas las secciones; buscador sin cuadrado negro (cristal cálido en atardecer); mar del hero con orilla ondulada día (aguas claras) y atardecer (violeta→rosa→coral); sol de atardecer con gradiente cálido arriba de la palmera en móvil y presente en desktop.
+- ZIP entregado: download/al-otro-lado-playa-2026-09-27-v4.zip (mismas exclusiones, .env portable file:../db/custom.db).
+
+---
+Task ID: 8
+Agent: Super Z (main agent)
+Task: Tarjetas con sombra flotante; admin con subida de fotos reales de productos y del local (guardadas para todos); botón instalar como PWA; ideas de nombres temáticos (sugerencias al chat).
+
+Work Log:
+- Sombras flotantes: clase .aol-float en globals.css (3 capas: contacto + difusa azulada + profunda cálida; hover levanta 2px; variante atardecer más oscura). Aplicada a ProductRow, destacados, galería del shack y tarjeta de cierre.
+- lib/gh.ts (nuevo): putFileToGitHub (extraído de tab-publicar), uploadPhotoToGitHub (comprime en navegador con canvas a ~900px JPEG 0.82 y sube por Contents API a public/images/products|local/), compressImage, getGhToken/setGhToken.
+- Fotos de productos: tab-productos.tsx — botón ImagePlus en cada fila + botón "Subir foto real (cámara o galería)" en el diálogo de edición con miniatura de la foto actual; al subir se asigna al campo image del producto y recuerda publicar; sin token/repo explica cómo configurarlo.
+- Fotos del local: types.ts añade GalleryItem y settings.gallery (opcional); store con setGallery; tab-publicar.tsx con sección "Fotos del local 📸" (subida múltiple secuencial a public/images/local/, miniaturas, leyendas editables, quitar, guardar); menu-view.tsx usa settings.gallery si existe y si no DEFAULT_GALLERY (extraída a gallery-data.ts).
+- PWA: install-prompt.tsx (nuevo) — captura beforeinstallprompt, botón ⤓ en la fila de acciones del encabezado, guía para iPhone (Compartir → Añadir a pantalla de inicio), se oculta si ya está instalada (display-mode standalone / appinstalled). El manifest y sw.js ya existían.
+- Verificado: tsc 0 en tocados (persisten 2 preexistentes), eslint 0, capturas audit/float-*.png (móvil día/atardecer, desktop atardecer), botón ⤓ visible, admin Productos con botón de foto por fila, diálogo con miniatura + subir, galería del local con 4 fotos de serie y leyendas; consola limpia.
+
+Stage Summary:
+- Tarjetas flotan con sombra de tres capas en ambos temas.
+- Fotos reales: productos (por fila y en edición) y local (galería configurable) subidas desde el admin a GitHub, visibles para todos al publicar la carta.
+- Instalable como app (PWA) con botón en el encabezado; manifest + SW + iconos ya completaban los requisitos.
+- ZIP entregado: download/al-otro-lado-playa-2026-09-27-v5.zip.

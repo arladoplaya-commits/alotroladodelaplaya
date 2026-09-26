@@ -100,14 +100,50 @@ export function ShellSilhouette({ className }: { className?: string }) {
   );
 }
 
-/** Sol playero con rayos redondeados */
+/** Sol de atardecer: disco con degradado cálido, halo suave y rayos coral */
 export function SunSilhouette({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
-      <circle cx="32" cy="32" r="13" fill="#f2c230" />
-      <g stroke="#f2c230" strokeWidth="3.4" strokeLinecap="round">
-        <path d="M32 5.5v8.5M32 50v8.5M5.5 32H14M50 32h8.5M12.6 12.6l6 6M45.4 45.4l6 6M51.4 12.6l-6 6M18.6 45.4l-6 6" />
+      <defs>
+        <radialGradient id="aol-sun-core" cx="50%" cy="42%" r="62%">
+          <stop offset="0%" stopColor="#ffefad" />
+          <stop offset="42%" stopColor="#ffc766" />
+          <stop offset="76%" stopColor="#ff9550" />
+          <stop offset="100%" stopColor="#f0654a" />
+        </radialGradient>
+      </defs>
+      <circle cx="32" cy="32" r="26" fill="#ff9d5c" opacity="0.16" />
+      <circle cx="32" cy="32" r="20.5" fill="#ffb26b" opacity="0.22" />
+      <circle cx="32" cy="32" r="13.5" fill="url(#aol-sun-core)" />
+      <g stroke="#ff8a4e" strokeWidth="3" strokeLinecap="round" opacity="0.9">
+        <path d="M32 6v6.5M32 51.5V58M6 32h6.5M51.5 32H58M13.6 13.6l4.6 4.6M45.8 45.8l4.6 4.6M50.4 13.6l-4.6 4.6M18.2 45.8l-4.6 4.6" />
       </g>
+    </svg>
+  );
+}
+
+/** Ondulación decorativa para acompañar títulos de sección */
+export function WaveRule({
+  className,
+  flip,
+}: {
+  className?: string;
+  flip?: boolean;
+}) {
+  return (
+    <svg
+      viewBox="0 0 64 16"
+      className={className}
+      aria-hidden="true"
+      style={flip ? { transform: "scaleX(-1)" } : undefined}
+    >
+      <path
+        d="M2 9 Q10 3 18 9 T34 9 T50 9 T62 9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -144,47 +180,73 @@ function WaveLayer({
   fill,
   heightClass,
   className,
+  stroke,
 }: {
   path: string;
   fill: string;
   heightClass: string;
   className?: string;
+  stroke?: string;
 }) {
   return (
-    <div className={`absolute bottom-0 left-0 flex w-[200%] ${heightClass} ${className ?? ""}`}>
+    <div className={`absolute left-0 top-0 flex w-[200%] ${heightClass} ${className ?? ""}`}>
       {[0, 1].map((i) => (
         <svg
           key={i}
-          viewBox="0 0 1440 80"
+          viewBox="0 0 1440 72"
           preserveAspectRatio="none"
           className="h-full w-1/2 shrink-0"
           aria-hidden="true"
         >
-          <path d={path} fill={fill} />
+          <path
+            d={path}
+            fill={fill}
+            stroke={stroke}
+            strokeWidth={stroke ? 4 : undefined}
+            strokeLinecap="round"
+            opacity={stroke ? 0.85 : undefined}
+          />
         </svg>
       ))}
     </div>
   );
 }
 
-/** Mar suave que se mueve detrás del encabezado */
+/** Mar del hero: capas de agua que cuelgan del borde superior y terminan
+ *  en orilla ondulada, fundiéndose con la arena de la página. */
 export function WaveBand({ className }: { className?: string }) {
+  const full = "h-28 sm:h-36";
   return (
     <div
-      className={`pointer-events-none absolute inset-x-0 top-0 h-24 overflow-hidden sm:h-28 ${className ?? ""}`}
+      className={`pointer-events-none absolute inset-x-0 top-0 h-28 overflow-hidden sm:h-36 ${className ?? ""}`}
       aria-hidden="true"
     >
+      {/* Fondo marino: la capa más honda llega más abajo (orilla clara) */}
       <WaveLayer
-        className="animate-wave-slow opacity-20"
-        fill="#59b7d4"
-        heightClass="h-14"
-        path="M0 44 Q 120 18 240 40 T 480 40 T 720 40 T 960 40 T 1200 40 T 1440 40 V80 H0 Z"
+        className="wave-back animate-wave-slow"
+        fill="#a9ddec"
+        heightClass={full}
+        path="M0 0 H1440 V44 Q1330 62 1220 52 T1000 52 T780 52 T560 52 T340 52 T120 52 T0 52 Z"
       />
       <WaveLayer
-        className="animate-wave opacity-25"
-        fill="#7ec4cb"
-        heightClass="h-20"
-        path="M0 52 Q 140 30 280 48 T 560 48 T 840 48 T 1120 48 T 1400 48 T 1680 48 V80 H0 Z"
+        className="wave-mid animate-wave"
+        fill="#7ccadb"
+        heightClass={full}
+        path="M0 0 H1440 V32 Q1350 50 1260 40 T1080 40 T900 40 T720 40 T540 40 T360 40 T180 40 T0 40 Z"
+      />
+      <WaveLayer
+        className="wave-front animate-wave-slow"
+        fill="#54b7cf"
+        heightClass={full}
+        path="M0 0 H1440 V20 Q1360 36 1280 27 T1120 27 T960 27 T800 27 T640 27 T480 27 T320 27 T160 27 T0 27 Z"
+      />
+      {/* Espuma sobre la línea de orilla */}
+      <WaveLayer
+        className="wave-foam animate-wave"
+        fill="none"
+        stroke="#ffffff"
+        heightClass={full}
+        path="M0 54 Q1330 70 1220 61 T1000 61 T780 61 T560 61 T340 61 T120 61 T0 61"
       />
     </div>
   );

@@ -1,94 +1,31 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { CloudUpload, Copy, Download, ExternalLink } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { CloudUpload, Copy, Download, ExternalLink, ImagePlus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMenuStore } from "@/lib/store";
+import {
+  getGhToken,
+  putFileToGitHub,
+  setGhToken,
+  uploadPhotoToGitHub,
+} from "@/lib/gh";
+import type { GalleryItem } from "@/lib/types";
+import { DEFAULT_GALLERY } from "@/components/menu/gallery-data";
 
 /* ------------------------------------------------------------------ */
-/*  Publicar: sincroniza el menú con GitHub (menu.json)                */
+/*  Publicar: sincroniza el menú con GitHub (menu.json) + fotos del    */
+/*  local reales subidas al repositorio (visibles para todos).         */
 /* ------------------------------------------------------------------ */
-
-const GH_TOKEN_KEY = "aol-gh-token";
-
-async function putFileToGitHub(
-  cfg: { owner: string; repo: string; branch: string; path: string },
-  token: string,
-  contentJson: string,
-  message: string
-): Promise<{ ok: boolean; commitUrl?: string; error?: string }> {
-  const API = "https://api.github.com";
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/vnd.github+json",
-    "Content-Type": "application/json",
-  };
-  const filePath = (cfg.path || "public/data/menu.json").replace(/^\/+/, "");
-  const base = `${API}/repos/${cfg.owner}/${cfg.repo}/contents/${filePath}`;
-  try {
-    // 1) Obtener el SHA actual del archivo (si existe)
-    let sha: string | undefined;
-    const res = await fetch(`${base}?ref=${encodeURIComponent(cfg.branch)}`, {
-      headers,
-      cache: "no-store",
-    });
-    if (res.ok) {
-      const json = await res.json();
-      sha = json.sha;
-    } else if (res.status !== 404) {
-      return {
-        ok: false,
-        error: `No se pudo leer el archivo (${res.status}). Revisa owner/repo/rama y el permiso del token.`,
-      };
-    }
-    // 2) Crear el commit con el nuevo contenido
-    const content = btoa(
-      new TextEncoder()
-        .encode(contentJson)
-        .reduce((acc, b) => acc + String.fromCharCode(b), "")
-    );
-    const put = await fetch(base, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify({
-        message,
-        content,
-        branch: cfg.branch,
-        ...(sha ? { sha } : {}),
-      }),
-    });
-    if (!put.ok) {
-      const body = await put.json().catch(() => ({}));
-      if (put.status === 401) return { ok: false, error: "Token inválido o expirado (401)." };
-      if (put.status === 403)
-        return { ok: false, error: "El token no tiene permiso de escritura (403)." };
-      if (put.status === 404)
-        return { ok: false, error: "Repositorio o rama no encontrada (404)." };
-      return {
-        ok: false,
-        error: (body as { message?: string }).message ?? `Error de GitHub (${put.status})`,
-      };
-    }
-    const json = await put.json();
-    return {
-      ok: true,
-      commitUrl:
-        json.commit?.html_url ?? json.content?.html_url ?? "https://github.com",
-    };
-  } catch (err) {
-    if (err instanceof TypeError)
-      return { ok: false, error: "Sin conexión con GitHub. Verifica tu internet." };
-    return { ok: false, error: "Error inesperado al publicar" };
-  }
-}
 
 export function TabPublicar() {
   const data = useMenuStore((s) => s.data);
   const github = useMenuStore((s) => s.data.github);
   const saveGitHub = useMenuStore((s) => s.saveGitHub);
+  const setGallery = useMenuStore((s) => s.setGallery);
 
   const [owner, setOwner] = useState(github.owner);
   const [repo, setRepo] = useState(github.repo);
@@ -96,6 +33,95 @@ export function TabPublicar() {
   const [path, setPath] = useState(github.path || "public/data/menu.json");
   const [token, setToken] = useState("");
   const [publishing, setPublishing] = useState(false);
+
+  /* ---- Galería del local ---- */
+  const [items, setItems] = useState<GalleryItem[]>(
+    data.settings.gallery?.length ? data.settings.gallery : DEFAULT_GALLERY
+  );
+  const [galleryDirty, setGalleryDirty] = useState(false);
+  const [localBusy, setLocalBusy] = useState(0);
+  const localInputRef = useRef<HTMLInputElement>(null);
+
+  const persistGallery = (list: GalleryItem[]) => {
+    setGallery(list);
+    setGalleryDirty(false);
+    toast.success("Galería guardada en la carta", {
+      description:
+        "Pulsa «Publicar menú ahora» para que todos la vean desde GitHub.",
+    });
+  };
+
+  const onPickLocalPhotos = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (!files.length) return;
+    const t = token.trim() || getGhToken();
+    if (!t) {
+      toast.error("Pega tu token de GitHub arriba para subir fotos");
+      return;
+    }
+    if (!owner.trim() || !repo.trim()) {
+      toast.error(
+        "Completa el dueño y el repositorio para guardar las fotos"
+      );
+      return;
+    }
+    let list = [...items];
+    let okCount = 0;
+    for (let i = 0; i < files.length; i += 1) {
+      const file = files[i];
+      if (!file.type.startsWith("image/")) continue;
+      setLocalBusy(i + 1);
+      const res = await uploadPhotoToGitHub({
+        cfg: {
+          owner: owner.trim(),
+          repo: repo.trim(),
+          branch: branch.trim() || "main",
+        },
+        token: t,
+        file,
+        folder: "local",
+        slug: file.name.replace(/\.[^.]+$/, ""),
+      });
+      if (res.ok && res.path) {
+        okCount += 1;
+        list = [
+          ...list,
+          {
+            src: res.path,
+            caption:
+              file.name
+                .replace(/\.[^.]+$/, "")
+                .slice(0, 40) || "Nuestro shack",
+            alt: "Foto real del local",
+          },
+        ];
+      } else {
+        toast.error(res.error ?? `No se pudo subir ${file.name}`);
+      }
+    }
+    setLocalBusy(0);
+    if (okCount > 0) {
+      setItems(list);
+      setGallery(list);
+      setGalleryDirty(false);
+      toast.success(
+        okCount === 1
+          ? "¡Foto del local subida a GitHub! 📸"
+          : `¡${okCount} fotos del local subidas a GitHub! 📸`,
+        {
+          description:
+            "Pulsa «Publicar menú ahora» para que todos la vean en la carta.",
+        }
+      );
+    }
+  };
+
+  const removeGalleryItem = (i: number) => {
+    const list = items.filter((_, idx) => idx !== i);
+    setItems(list);
+    setGalleryDirty(true);
+  };
 
   const json = useMemo(() => JSON.stringify(data, null, 2), [data]);
   const lastUpdated = useMemo(
@@ -105,11 +131,7 @@ export function TabPublicar() {
 
   const saveCreds = () => {
     saveGitHub({ owner: owner.trim(), repo: repo.trim(), branch: branch.trim(), path: path.trim() });
-    try {
-      if (token.trim()) localStorage.setItem(GH_TOKEN_KEY, token.trim());
-    } catch {
-      /* noop */
-    }
+    setGhToken(token);
     toast.success("Cambios locales guardados");
   };
 
@@ -118,13 +140,7 @@ export function TabPublicar() {
       toast.error("Completa el dueño (usuario) y el repositorio");
       return;
     }
-    const t = token.trim() || (() => {
-      try {
-        return localStorage.getItem(GH_TOKEN_KEY) ?? "";
-      } catch {
-        return "";
-      }
-    })();
+    const t = token.trim() || getGhToken();
     if (!t) {
       toast.error("Pega tu token de acceso personal de GitHub");
       return;
@@ -306,6 +322,86 @@ export function TabPublicar() {
             Crear repo <ExternalLink className="size-3" aria-hidden="true" />
           </a>
         </div>
+      </section>
+
+      {/* Fotos del local: subida real al repositorio */}
+      <section className="rounded-3xl border border-[#e8dcc0] bg-white p-5 shadow-sm">
+        <h3 className="font-display text-lg text-[#c2542f]">
+          Fotos del local 📸 (las que ven los clientes)
+        </h3>
+        <p className="mt-1 text-sm text-[#8a7350]">
+          Sube fotos reales del shack: aparecen en la sección «Así se vive el
+          shack» para todo el que entre a la carta. Se guardan en tu repositorio
+          (carpeta <code className="rounded bg-[#fdf3e0] px-1">public/images/local/</code>)
+          y viajan dentro del menú al publicar.
+        </p>
+        <input
+          ref={localInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => void onPickLocalPhotos(e)}
+        />
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => localInputRef.current?.click()}
+            disabled={localBusy > 0}
+            className="rounded-2xl border-[#f0dfc0] font-bold text-[#c2542f] hover:bg-[#fdf3e0]"
+          >
+            <ImagePlus className="size-4" aria-hidden="true" />
+            {localBusy > 0
+              ? `Subiendo foto ${localBusy}...`
+              : "Subir fotos del local"}
+          </Button>
+          {galleryDirty && (
+            <Button
+              type="button"
+              onClick={() => persistGallery(items)}
+              className="rounded-2xl bg-[#e2574c] font-extrabold text-white hover:bg-[#d34a40]"
+            >
+              Guardar cambios de la galería
+            </Button>
+          )}
+        </div>
+
+        <ul className="mt-4 grid gap-2.5">
+          {items.map((g, i) => (
+            <li key={`${g.src}-${i}`} className="flex items-center gap-2.5">
+              <img
+                src={g.src}
+                alt={g.alt}
+                className="size-14 shrink-0 rounded-xl object-cover ring-1 ring-[#f0dfc0]"
+              />
+              <Input
+                value={g.caption}
+                onChange={(e) => {
+                  const list = [...items];
+                  list[i] = { ...g, caption: e.target.value };
+                  setItems(list);
+                  setGalleryDirty(true);
+                }}
+                placeholder="Leyenda de la foto"
+                aria-label={`Leyenda de la foto ${i + 1}`}
+                className="border-[#f0dfc0] focus-visible:ring-[#e2574c]"
+              />
+              <button
+                type="button"
+                onClick={() => removeGalleryItem(i)}
+                aria-label={`Quitar foto ${i + 1}`}
+                className="grid size-9 shrink-0 place-items-center rounded-full text-[#b3562e] transition hover:bg-[#fdeae7]"
+              >
+                <Trash2 className="size-4" aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-2 text-xs text-[#a58a5f]">
+          Consejo: fotos horizontales lucen mejor. Se comprimen solas antes de
+          viajar a GitHub.
+        </p>
       </section>
     </div>
   );

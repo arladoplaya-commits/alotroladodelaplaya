@@ -7,6 +7,7 @@ import type {
   Agrego,
   CartItem,
   Category,
+  GalleryItem,
   GitHubSync,
   MenuData,
   Product,
@@ -53,6 +54,7 @@ interface MenuState {
   deleteAgrego: (id: string) => void;
   saveCategories: (cats: Category[]) => void;
   saveSettings: (s: Settings) => void;
+  setGallery: (items: GalleryItem[]) => void;
   saveGitHub: (g: GitHubSync) => void;
   setAllAvailable: (available: boolean) => void;
   setAllAgregosAvailable: (available: boolean) => void;
@@ -154,6 +156,15 @@ export const useMenuStore = create<MenuState>()(
       saveSettings: (s) =>
         set((st) => ({
           data: { ...st.data, settings: s, updatedAt: new Date().toISOString() },
+        })),
+
+      setGallery: (items) =>
+        set((st) => ({
+          data: {
+            ...st.data,
+            settings: { ...st.data.settings, gallery: items },
+            updatedAt: new Date().toISOString(),
+          },
         })),
 
       saveGitHub: (g) =>
