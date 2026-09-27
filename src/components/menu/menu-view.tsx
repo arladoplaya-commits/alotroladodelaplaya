@@ -578,6 +578,19 @@ export function MenuView() {
   const [customerOpen, setCustomerOpen] = useState(false);
   const [inboxOpen, setInboxOpen] = useState(false);
 
+  /* Enlace directo desde una página de producto (/producto/slug → «Pedir
+     en la carta» → /?abrir=<id>): abrimos su personalizador solo. */
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("abrir");
+    if (!id) return;
+    const product = data.products.find((p) => p.id === id);
+    // Abrir el personalizador es la reacción a un parámetro de la URL leído
+    // solo una vez al montar (no a un cambio de estado/props): a propósito.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (product?.available) setCustomizing(product);
+    window.history.replaceState(null, "", window.location.pathname + window.location.hash);
+  }, []);
+
   useEffect(() => {
     void hydrate();
   }, [hydrate]);

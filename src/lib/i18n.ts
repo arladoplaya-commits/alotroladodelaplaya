@@ -12,7 +12,7 @@ import type { Category, Product } from "@/lib/types";
 /*  · El pedido que llega por WhatsApp siempre va en español.           */
 /* ------------------------------------------------------------------ */
 
-function detectLang(): Lang {
+export function detectLang(): Lang {
   if (typeof navigator === "undefined") return "es";
   const langs = navigator.languages?.length ? navigator.languages : [navigator.language];
   const first = (langs[0] ?? "es").toLowerCase();

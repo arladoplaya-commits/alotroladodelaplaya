@@ -164,6 +164,14 @@ de verdad:
 - **Cupones** (panel → *Promos*) — código, % o importe fijo, pedido mínimo, encender/apagar. El descuento sale en el carrito y en el WhatsApp. Los códigos viajan con la carta publicada: son para promos, no secretos.
 - **Carta en inglés** — botón ES/EN en la postal (se elige solo si el teléfono está en inglés). Nombres y descripciones en inglés se editan en cada producto («🇬🇧 En inglés»). El pedido a la cocina siempre llega en español.
 
+## 🔗 Páginas propias por producto y SEO
+
+- Cada antojo tiene su propia dirección: **`/producto/<nombre-del-antojo>`** (ej. `/producto/la-orilla`). Se puede compartir, tiene su título, descripción y foto para redes/buscadores, y datos estructurados (`schema.org/Product`) para que Google pueda mostrar precio y disponibilidad en el buscador.
+- El botón «🛒 Pedir en la carta» de esa página abre el personalizador de ese producto en la app de siempre (no es una tienda aparte: es la misma carta).
+- Botón «Compartir este antojo» (y el icono 🔗 en cada tarjeta de la carta) copian o comparten ese enlace directo.
+- `/sitemap.xml` y `/robots.txt` se generan solos con todos los productos. Para que las URLs salgan completas (no relativas), pon la dirección del sitio en **panel → Publicar → QR** (el mismo campo que ya usa el QR) o en la variable de entorno `NEXT_PUBLIC_SITE_URL` del hosting.
+- La página de producto se sirve directo del archivo `public/data/menu.json` que publicas desde el panel (sin llamadas a la nube): siempre está al día con la carta real, incluso si el producto se agotó o cambió de precio hoy.
+
 ## ☁️ Guardado automático en GitHub
 
 Una vez puestos en **Publicar** el usuario, el repo y el token de GitHub, cada

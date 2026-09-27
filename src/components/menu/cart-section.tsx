@@ -216,6 +216,13 @@ export function CartSection({ onBrowse }: CartSectionProps) {
     }
   };
 
+  /* Se recalcula en cada visita a esta pestaña; si está cerrado lo decimos
+     ya en el carrito, no solo cuando el cliente intenta confirmar. */
+  const closedState = useMemo(() => {
+    const s = openStateFor(settings, new Date(), lang);
+    return s.open ? null : s;
+  }, [settings, lang]);
+
   const handleConfirm = () => {
     if (!items.length) return;
     const state = openStateFor(settings, new Date(), lang);
@@ -311,6 +318,25 @@ export function CartSection({ onBrowse }: CartSectionProps) {
           {settings.deliveryTime}
         </span>
       </p>
+
+      {closedState && (
+        <div className="mb-4 flex items-start gap-2.5 rounded-2xl bg-[#eef0fb] px-4 py-3 text-sm font-semibold text-[#4a4a8a] ring-1 ring-[#d8daf2]">
+          <span className="text-lg" aria-hidden="true">
+            🌙
+          </span>
+          <p>
+            {tr(
+              "Ahora mismo no se puede confirmar: el shack está cerrado.",
+              "Orders can't be confirmed right now: the shack is closed."
+            )}{" "}
+            {closedState.label}{" "}
+            {tr(
+              "Tu carrito queda guardado en este teléfono; vuelve cuando abramos y lo confirmas.",
+              "Your cart stays saved on this phone; come back when we open and confirm it."
+            )}
+          </p>
+        </div>
+      )}
 
       {items.length === 0 ? (
         <div className="aol-empty flex flex-col items-center gap-2 rounded-3xl border-2 border-dashed border-[#e8d5b5] bg-white/60 px-4 py-10 text-center">
@@ -623,11 +649,13 @@ export function CartSection({ onBrowse }: CartSectionProps) {
           <div className="grid gap-2">
             <Button
               type="button"
-              disabled={sending || !items.length}
+              disabled={sending || !items.length || !!closedState}
               onClick={handleConfirm}
-              className="h-13 w-full rounded-2xl bg-[#25d366] py-3.5 text-base font-extrabold text-white shadow-[0_8px_24px_-4px_rgba(37,211,102,0.5)] transition hover:bg-[#1fb857] active:scale-[0.98]"
+              className="h-13 w-full rounded-2xl bg-[#25d366] py-3.5 text-base font-extrabold text-white shadow-[0_8px_24px_-4px_rgba(37,211,102,0.5)] transition hover:bg-[#1fb857] active:scale-[0.98] disabled:opacity-60"
             >
-              {tr("Confirmar por WhatsApp", "Confirm on WhatsApp")} · {money(settings.currency, total)}
+              {closedState
+                ? tr("🌙 Cerrado ahora", "🌙 Closed now")
+                : `${tr("Confirmar por WhatsApp", "Confirm on WhatsApp")} · ${money(settings.currency, total)}`}
             </Button>
             <div className="flex items-center justify-between">
               <p className="text-xs text-[#8a7350]">

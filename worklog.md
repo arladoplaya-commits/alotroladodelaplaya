@@ -296,3 +296,17 @@ Work Log:
 - Panel: pestaña Promos (fidelidad + cupones), campos en inglés en el editor de productos.
 - i18n: toda la carta del cliente en ES/EN; useLang respeta la hidratación (sin error #418).
 - Verificado en navegador: upsell, cupón -10 % con mínimo, sello 1/5 en WhatsApp, repetir pedido, inglés día/noche, sin errores.
+
+---
+Task ID: 19
+Agent: Claude
+Task: Revisión externa — traducciones sueltas, páginas por producto, SEO, horario cerrado
+
+Work Log:
+- i18n: night-glow.tsx (motivo del modo ligero) y notification-watcher.tsx (avisos de apertura/cierre/producto nuevo) ahora respetan el idioma elegido por el cliente; antes salían siempre en español.
+- Nuevo: src/lib/slug.ts, src/lib/menu-data.server.ts (lee public/data/menu.json publicado, con la carta de fábrica de respaldo).
+- Nuevo: /producto/[slug] (metadata + OpenGraph + JSON-LD Product), /sitemap.xml, /robots.ts (con Sitemap: si hay publicUrl o NEXT_PUBLIC_SITE_URL).
+- Enlace directo /?abrir=<id> reabre el personalizador de un producto desde su página propia; botón y icono «Compartir» en cada tarjeta y en la página de producto.
+- Carrito: aviso claro (no solo un toast) cuando está cerrado — el pedido no se envía, queda guardado en el teléfono, y el botón cambia a «Cerrado ahora».
+- Revisado: los precios ya estaban en el árbol de accesibilidad desde el primer render (sin lazy-load ni content-visibility); no se encontró el problema descrito.
+- Verificado en navegador: página de producto, enlace directo abre el personalizador, sitemap.xml con todos los productos, robots.txt, carrito cerrado con el aviso y sin poder confirmar, flujo completo v15 (upsell, cupón, fidelidad, repetir pedido, inglés) sigue funcionando.

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Zap } from "lucide-react";
 import { toast } from "sonner";
+import { useTr } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /*  Luciérnagas de la noche de playa + modo ligero para conexiones      */
@@ -22,7 +23,17 @@ type Nav = Navigator & {
   getBattery?: () => Promise<BatteryInfo>;
 };
 
-type Why = "" | "ahorro de datos" | "conexión lenta" | "teléfono modesto" | "batería baja" | "animaciones lentas" | "elegido por ti";
+type Why = "" | "savedata" | "slow-conn" | "modest-phone" | "low-battery" | "low-fps" | "manual";
+
+/** Motivo del modo ligero, en el idioma de la carta */
+const WHY_LABEL: Record<Exclude<Why, "">, [string, string]> = {
+  savedata: ["ahorro de datos", "data saver"],
+  "slow-conn": ["conexión lenta", "slow connection"],
+  "modest-phone": ["teléfono modesto", "modest phone"],
+  "low-battery": ["batería baja", "low battery"],
+  "low-fps": ["animaciones lentas", "slow animations"],
+  manual: ["elegido por ti", "your choice"],
+};
 
 const SAVED_KEY = "aol-lite"; // "1" / "0" solo si el cliente lo eligió a mano
 
@@ -39,9 +50,9 @@ function saved(): "1" | "0" | null {
 function quickCheck(): Why {
   const n = navigator as Nav;
   const c = n.connection;
-  if (c?.saveData) return "ahorro de datos";
-  if (c && /(^|-)(2g|3g)$/.test(c.effectiveType ?? "")) return "conexión lenta";
-  if ((n.deviceMemory ?? 8) <= 2 || (navigator.hardwareConcurrency ?? 8) <= 2) return "teléfono modesto";
+  if (c?.saveData) return "savedata";
+  if (c && /(^|-)(2g|3g)$/.test(c.effectiveType ?? "")) return "slow-conn";
+  if ((n.deviceMemory ?? 8) <= 2 || (navigator.hardwareConcurrency ?? 8) <= 2) return "modest-phone";
   return "";
 }
 
@@ -68,7 +79,7 @@ function measureFps(): Promise<number> {
 export function LiteModeButton() {
   const [why, setWhy] = useState<Why>(() => {
     const s = saved();
-    if (s === "1") return "elegido por ti";
+    if (s === "1") return "manual";
     if (s === "0") return "";
     return quickCheck();
   });
@@ -82,13 +93,13 @@ export function LiteModeButton() {
   useEffect(() => {
     if (saved() !== null) return;
     const n = navigator as Nav;
-    const recheck = () => setWhy((w) => (w === "batería baja" || w === "animaciones lentas" ? w : quickCheck()));
+    const recheck = () => setWhy((w) => (w === "low-battery" || w === "low-fps" ? w : quickCheck()));
     n.connection?.addEventListener?.("change", recheck);
 
     let cancelled = false;
     n.getBattery?.()
       .then((b) => {
-        if (!cancelled && b.level < 0.2 && !b.charging) setWhy((w) => w || "batería baja");
+        if (!cancelled && b.level < 0.2 && !b.charging) setWhy((w) => w || "low-battery");
       })
       .catch(() => undefined);
 
@@ -98,7 +109,7 @@ export function LiteModeButton() {
       const fps = await measureFps();
       if (cancelled) return;
       // solo para esta visita: un tirón puntual no marca el teléfono para siempre
-      if (fps < 40) setWhy((w) => w || "animaciones lentas");
+      if (fps < 40) setWhy((w) => w || "low-fps");
     }, 2500);
 
     return () => {
@@ -116,6 +127,8 @@ export function LiteModeButton() {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
+  const tr = useTr();
+
   if (!lite) return null;
 
   const turnOnAnimations = () => {
@@ -125,18 +138,22 @@ export function LiteModeButton() {
       /* noop */
     }
     setWhy("");
-    toast("✨ Animaciones activadas", { description: "Toda la playa en movimiento" });
+    toast(tr("✨ Animaciones activadas", "✨ Animations on"), {
+      description: tr("Toda la playa en movimiento", "The whole beach in motion"),
+    });
   };
+
+  const label = why ? tr(...WHY_LABEL[why]) : "";
 
   return (
     <button
       type="button"
       onClick={turnOnAnimations}
-      title="Toca para ver todas las animaciones"
+      title={tr("Toca para ver todas las animaciones", "Tap to see all animations")}
       className="inline-flex items-center gap-1 rounded-full bg-[#f2c230] px-3 py-1 text-xs font-bold text-[#7a5410] transition active:scale-95"
     >
       <Zap className="size-3.5" aria-hidden="true" />
-      Modo ligero · {why} · <span className="underline">ver animaciones</span>
+      {tr("Modo ligero", "Light mode")} · {label} · <span className="underline">{tr("ver animaciones", "see animations")}</span>
     </button>
   );
 }

@@ -11,6 +11,7 @@ import {
   useCustomerStore,
   type NotifKind,
 } from "@/lib/customer";
+import { detectLang, productName, trNow } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /*  Vigía del shack: detecta apertura/cierre y productos nuevos,       */
@@ -91,9 +92,23 @@ export function NotificationWatcher() {
       // 1) Apertura / cierre
       if (openRef.current !== null && openRef.current !== snap.open) {
         if (snap.open) {
-          deliver("open", "¡Abrimos la marea! 🌊", "El shack está en fuego. La carta está caliente y esperando tu pedido.");
+          deliver(
+            "open",
+            trNow("¡Abrimos la marea! 🌊", "The tide is open! 🌊"),
+            trNow(
+              "El shack está en fuego. La carta está caliente y esperando tu pedido.",
+              "The shack is fired up. The menu is hot and waiting for your order."
+            )
+          );
         } else {
-          deliver("close", "Cerramos por hoy 🌙", "El shack descansa. Vuelve en la próxima noche playera.");
+          deliver(
+            "close",
+            trNow("Cerramos por hoy 🌙", "Closed for today 🌙"),
+            trNow(
+              "El shack descansa. Vuelve en la próxima noche playera.",
+              "The shack is resting. Come back on the next beach night."
+            )
+          );
         }
         useCustomerStore.getState().setLastKnownOpen(snap.open);
       }
@@ -109,13 +124,13 @@ export function NotificationWatcher() {
           .filter((p): p is NonNullable<typeof p> => !!p && p.available)
           .slice(0, 3);
         if (names.length) {
+          const lang = useCustomerStore.getState().prefs.lang ?? detectLang();
+          const nameOf = (p: (typeof names)[number]) => productName(p, lang);
           const title =
             names.length === 1
-              ? `🆕 ${names[0].name} — nuevo en la carta`
-              : `🆕 ${names.length} novedades en la carta`;
-          const body = names
-            .map((p) => `${p.emoji} ${p.name}`)
-            .join(" · ");
+              ? trNow(`🆕 ${nameOf(names[0])} — nuevo en la carta`, `🆕 ${nameOf(names[0])} — new on the menu`)
+              : trNow(`🆕 ${names.length} novedades en la carta`, `🆕 ${names.length} new items on the menu`);
+          const body = names.map((p) => `${p.emoji} ${nameOf(p)}`).join(" · ");
           deliver("new-product", title, body);
         }
       }
