@@ -174,6 +174,29 @@ de verdad:
 - `/sitemap.xml` y `/robots.txt` se generan solos con todos los productos. Para que las URLs salgan completas (no relativas), pon la dirección del sitio en **panel → Publicar → QR** (el mismo campo que ya usa el QR) o en la variable de entorno `NEXT_PUBLIC_SITE_URL` del hosting.
 - La página de producto se sirve directo del archivo `public/data/menu.json` que publicas desde el panel (sin llamadas a la nube): siempre está al día con la carta real, incluso si el producto se agotó o cambió de precio hoy.
 
+## 💳 Minutos/créditos de build gastándose rápido (Netlify)
+
+Cada vez que tocas **«Publicar»** en el panel, la app sube solo
+`public/data/menu.json` a GitHub (precios, agotados, horario…). La carta
+ya lee ese archivo directo de `raw.githubusercontent.com` al minuto, **sin
+esperar ningún despliegue**. Pero por defecto Netlify (y Vercel) reconstruyen
+*todo el sitio* con cada push al repositorio, aunque lo único que cambió sea
+ese JSON — eso gasta minutos de build de tu plan gratis por algo que no
+hacía falta reconstruir.
+
+Ya incluí `netlify.toml` con la regla que le dice a Netlify que se salte el
+build cuando el único archivo que cambió es `public/data/menu.json` (si
+además subes código de verdad, el build se dispara como siempre). Para que
+funcione: sube ese archivo a tu repositorio (va en la raíz del proyecto,
+junto a `package.json`) y vuelve a desplegar una vez a mano; de ahí en
+adelante, publicar cambios de carta no gasta build.
+
+Si el aviso de Netlify dice que el equipo se quedó sin créditos, esa parte
+la controla Netlify, no el código: esperas al próximo ciclo de facturación,
+actualizas el plan del equipo, o mientras tanto despliegas esta misma carpeta
+en Vercel (ver «Hosting» más abajo) — el sitio funciona igual en cualquiera
+de los dos.
+
 ## ☁️ Guardado automático en GitHub
 
 Una vez puestos en **Publicar** el usuario, el repo y el token de GitHub, cada
@@ -192,24 +215,53 @@ combos, agregos, QR, mensajería y pagos). La letra se ajusta sola para que todo
 quepa en **una sola hoja**. «Descargar PDF» abre la ventana de imprimir: elige
 **Guardar como PDF** (en el móvil: Compartir/Imprimir → Guardar como PDF).
 
-## 🚀 Publicar en Vercel (y el QR)
+## 🚀 Publicar gratis, para siempre y sin sustos: GitHub Pages
 
-1. Sube este proyecto a un repo de GitHub (sin `node_modules` ni `.next`).
-2. En [vercel.com](https://vercel.com) → **Add New → Project** → importa el
-   repo → **Deploy** (Vercel detecta Next.js solo; no hace falta configurar).
-3. Abre `https://tu-proyecto.vercel.app/admin` (o 3 toques al logo).
-4. **Publicar**: pon tu usuario/repo de GitHub y un token para que el panel
-   guarde `public/data/menu.json`. Cada publicación actualiza la carta de
-   todos en ~1 minuto (se lee de GitHub y, tras el redeploy, del propio sitio).
-5. **Código QR**: en **Publicar → Código QR** el QR ya apunta a tu dirección
-   de Vercel. Descarga el **cartel para imprimir**. Si luego compras un
-   dominio propio, escríbelo en el campo y vuelve a descargar el QR.
+Desde esta versión la carta se genera como **export estático** (`output:
+"export"` en `next.config.ts`): todo el sitio son archivos, sin servidor Node
+detrás. Por eso funciona perfecto en **GitHub Pages**, que es gratis para
+cualquier uso —incluido comercial—, sin límite de minutos de build ni
+sistema de «créditos» que se pueda atascar (a diferencia de lo que pasó con
+Netlify).
+
+1. Sube este proyecto a tu repositorio de GitHub (rama `main`).
+2. En el repo: **Settings → Pages → Source → GitHub Actions** (una sola vez).
+3. El workflow ya incluido (`.github/workflows/deploy-pages.yml`) construye
+   y publica la carta solo cuando cambia código de verdad — los «Publicar»
+   del panel (que solo tocan `public/data/menu.json`) no disparan un build
+   nuevo, porque la carta ya lee ese archivo al instante desde
+   `raw.githubusercontent.com`.
+4. Con eso, cada `git push` a `main` deja la carta lista en unos 2 minutos en
+   `https://<tu-usuario>.github.io/<tu-repo>/`.
+5. La subcarpeta (`/<tu-repo>/`) se detecta y aplica sola —el workflow
+   pregunta a GitHub Pages si tienes dominio propio o no (`configure-pages`)
+   y ajusta todos los enlaces (logo, panel, fotos, compartir, QR) para que
+   funcionen igual en cualquiera de los dos casos. Si más adelante añades un
+   dominio propio en Settings → Pages, el siguiente `git push` ya sirve la
+   carta en la raíz, sin subcarpeta, sin tocar nada más.
+6. **Publicar** en el panel: pon tu usuario/repo de GitHub y un token —
+   igual que antes, esto no cambió.
+7. **Código QR**: pon tu dirección final (con o sin dominio propio) en
+   **Publicar → Código QR** y descarga el cartel.
+
+### Otras opciones
+
+- **Netlify**: sigue funcionando (ver más abajo el aviso de créditos) y
+  también admite export estático sin cambios.
+- **Vercel**: el plan **Hobby es solo para uso no comercial** — no vale para
+  una carta de restaurante real. Si prefieres Vercel, hace falta su plan de
+  pago (Pro).
+- **Cloudflare Pages/Workers**: uso comercial permitido y sin sistema de
+  créditos, pero requiere un adaptador distinto (OpenNext/vinext) y no
+  admite Turbopack ni leer archivos del disco en cada visita — más trabajo
+  de por medio que GitHub Pages. Si lo prefieres, se puede adaptar.
 
 ## 🧪 Desarrollo
 
 ```bash
 bun install
 bun run dev      # http://localhost:3000
+bun run build    # genera el sitio estático en out/
 bun run lint
 bunx tsc --noEmit
 ```

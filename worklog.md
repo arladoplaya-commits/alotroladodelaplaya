@@ -322,3 +322,50 @@ Work Log:
 - Triple toque en el logo y los enlaces «Ver menú» del panel ahora navegan de verdad (href real), no solo cambian el hash — así cada ruta carga su propio JS.
 - Enlace viejo tipo #/admin sigue funcionando: la home lo detecta y redirige a /admin.
 - Verificado: build genera /admin como ruta aparte; los <script> de la home no incluyen nada del admin; 3 toques al logo navegan a /admin; el panel entra igual que antes; flujo completo del carrito (v15) sigue funcionando; tsc y eslint en 0.
+
+---
+Task ID: 21
+Agent: Claude
+Task: Netlify sin créditos tras pocos commits — reducir builds innecesarios
+
+Work Log:
+- Causa real: cada «Publicar» del panel sube menu.json al repo, y por defecto
+  eso dispara una reconstrucción completa del sitio en Netlify/Vercel, aunque
+  la carta ya lee ese JSON directo de raw.githubusercontent.com sin esperar
+  el despliegue. Con varios publish de prueba + los commits de código, se
+  puede agotar rápido un plan con pocos créditos.
+- Nuevo: netlify.toml con `build.ignore` (patrón oficial de Netlify:
+  git diff --quiet excluyendo public/data/menu.json) para saltar el build
+  cuando el único cambio es la carta publicada.
+- README: sección explicando el porqué y cómo aplicarlo (subir el archivo al
+  repo real y desplegar una vez a mano).
+- Aclarado al usuario que el aviso de créditos agotados es de Netlify (plan/
+  ciclo de facturación), no algo que el código pueda arreglar retroactivo.
+
+---
+Task ID: 22
+Agent: Claude
+Task: Migrar el despliegue a GitHub Pages (export estático) — alternativa gratis sin límites de build ni bugs de créditos
+
+Work Log:
+- next.config.ts: output "export" (antes "standalone"), images.unoptimized (sin servidor que optimice al vuelo).
+- Quitado src/app/api/route.ts (placeholder "Hello, world!" sin uso real; las rutas de servidor no existen en export estático).
+- /producto/[slug]/page.tsx: quitado `revalidate`/`dynamicParams` (incompatibles con output: export; generateStaticParams ya cubre los 30 productos al build).
+- sitemap.ts y robots.ts: añadido `export const dynamic = "force-static"` (obligatorio con export estático).
+- package.json: `build` ya no copia a .next/standalone (ya no existe); `start` sirve out/ con `serve`.
+- Nuevo: .github/workflows/deploy-pages.yml — build + deploy a GitHub Pages, con `paths-ignore: public/data/menu.json` para que los «Publicar» del panel no disparen un build nuevo (la carta ya lee ese archivo al instante desde raw.githubusercontent.com).
+- README: nueva sección de GitHub Pages como opción principal (gratis, uso comercial permitido, sin sistema de créditos), con nota sobre subcarpeta vs dominio propio/usuario.github.io, y comparación breve con Netlify/Vercel/Cloudflare.
+- Verificado: `next build` genera out/ con las 30 páginas de producto, /admin, sitemap.xml, robots.txt; servido out/ con `serve` (sin modo SPA) y comprobado que un slug inexistente da 404 real; flujo completo del carrito (v15), separación de bundle admin/carta (v17) y navegación del panel — todo igual sirviendo desde archivos estáticos. tsc y eslint en 0.
+
+---
+Task ID: 23
+Agent: Claude
+Task: Soporte de basePath para GitHub Pages (usuario.github.io/repo/) — el usuario reportó que su sitio abría el README en vez de la carta
+
+Work Log:
+- Causa de lo que vio el usuario: Settings → Pages seguía en «Deploy from a branch» (Jekyll renderiza el README), no en «GitHub Actions». Se le indicó el cambio de una vez en Settings.
+- next.config.ts: basePath desde NEXT_PUBLIC_BASE_PATH (vacío si hay dominio propio).
+- .github/workflows/deploy-pages.yml: actions/configure-pages ahora corre ANTES del build y pasa sus outputs base_path/origin como NEXT_PUBLIC_BASE_PATH/NEXT_PUBLIC_SITE_ORIGIN — se detecta solo si hay subcarpeta o dominio propio, sin tocar nada a mano.
+- src/lib/base-path.ts: BASE_PATH + withImg() (prefija fotos de fábrica; deja intactas las URLs completas que sube el panel a GitHub).
+- Arregladas TODAS las navegaciones/recursos que no pasan por <Link>/<Image> y por eso no llevaban la subcarpeta sola: triple toque al logo, «Ver menú» del panel (ahora con next/link), redirect de #/admin viejo, compartir producto, QR/PDF (origen de respaldo), manifest/iconos/OG en layout.tsx, service worker (2 sitios de registro), notificaciones del sistema (3 sitios), galería por defecto, y las 8 fotos de producto/combo (tarjeta, personalizador, carrito, acompañantes, menú del día, destacados, combos, página de producto, editor admin).
+- Verificado sirviendo el export real en una subcarpeta (`/alotroladodelaplaya/`, igual que el caso real del usuario): sin imágenes rotas, «Pedir en la carta» abre el personalizador, triple toque va a `/alotroladodelaplaya/admin`, «Ver menú» vuelve a la subcarpeta, el enlace viejo `#/admin` redirige bien, y el flujo completo del carrito (v15) pasa igual. tsc y eslint en 0.
