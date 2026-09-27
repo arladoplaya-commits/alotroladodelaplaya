@@ -34,7 +34,8 @@ Los avisos funcionan en 3 niveles, según lo que actives:
 - Contraseña de fábrica: `playa2026`. **Cámbiala en Ajustes nada más ejecutar el
   SQL de Supabase**: se guarda cifrada en la nube y es la misma en todos los
   teléfonos. Sin conexión solo se puede entrar en un teléfono que ya entró antes.
-- También puedes abrir `#/admin` en la URL.
+- También puedes abrir `/admin` directo en la URL. Es una ruta propia:
+  su código nunca se descarga en la carta pública que abren los clientes.
 - El panel gestiona: abierto/cerrado, «¿hay hoy?», productos, agregos,
   pedidos, reseñas, avisos a clientes, publicación en GitHub y ajustes.
 
@@ -42,7 +43,8 @@ Los avisos funcionan en 3 niveles, según lo que actives:
 
 ```
 src/
-  app/            layout, página con enrutado por hash (#/ y #/admin)
+  app/            layout, página de la carta (/) y ruta propia del panel (/admin)
+  app/producto/[slug]  página de cada producto (enlace directo + SEO)
   components/
     menu/         carta, secciones favoritos/carrito, cliente, avisos…
     admin/        panel (Hoy, Productos, Agregos, Pedidos, Reseñas,
@@ -195,7 +197,7 @@ quepa en **una sola hoja**. «Descargar PDF» abre la ventana de imprimir: elige
 1. Sube este proyecto a un repo de GitHub (sin `node_modules` ni `.next`).
 2. En [vercel.com](https://vercel.com) → **Add New → Project** → importa el
    repo → **Deploy** (Vercel detecta Next.js solo; no hace falta configurar).
-3. Abre `https://tu-proyecto.vercel.app/#/admin` (o 3 toques al logo).
+3. Abre `https://tu-proyecto.vercel.app/admin` (o 3 toques al logo).
 4. **Publicar**: pon tu usuario/repo de GitHub y un token para que el panel
    guarde `public/data/menu.json`. Cada publicación actualiza la carta de
    todos en ~1 minuto (se lee de GitHub y, tras el redeploy, del propio sitio).

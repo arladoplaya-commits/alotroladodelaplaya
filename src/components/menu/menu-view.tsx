@@ -681,7 +681,9 @@ export function MenuView() {
       toast.success("🔑 Modo administrador", {
         description: "Abriendo el panel del shack…",
       });
-      window.location.hash = "#/admin";
+      // Navegación real a /admin (ruta propia): así su código nunca viaja
+      // dentro de la carta que descarga cada cliente.
+      window.location.href = "/admin";
       return;
     }
     tapTimerRef.current = window.setTimeout(() => {

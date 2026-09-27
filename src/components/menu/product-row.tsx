@@ -1,31 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Layers, Share2, ShoppingBag } from "lucide-react";
-import { toast } from "sonner";
+import { Heart, Layers, ShoppingBag } from "lucide-react";
 import { money } from "@/lib/store";
-import { productSlug } from "@/lib/slug";
 import type { Product } from "@/lib/types";
 import { productDesc, productName, useLang, useTr } from "@/lib/i18n";
-
-/** Comparte (o copia) el enlace propio del producto: /producto/&lt;slug&gt; */
-async function shareProduct(product: Product, name: string, tr: (es: string, en: string) => string) {
-  const url = `${window.location.origin}/producto/${productSlug(product)}`;
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: name, url });
-      return;
-    } catch {
-      return; // el cliente canceló el diálogo de compartir
-    }
-  }
-  try {
-    await navigator.clipboard.writeText(url);
-    toast.success(tr("Enlace copiado 🔗", "Link copied 🔗"));
-  } catch {
-    /* sin portapapeles: no molestamos con un error */
-  }
-}
 
 const TAGS_EN: Record<string, string> = {
   "Bien frío": "Ice cold",
@@ -170,14 +149,6 @@ export function ProductRow({
               {lang === "en" ? (TAGS_EN[t] ?? t) : t}
             </span>
           ))}
-          <button
-            type="button"
-            onClick={() => void shareProduct(product, name, tr)}
-            className="ml-auto grid size-8 shrink-0 place-items-center rounded-full text-[#8a7350] ring-1 ring-[#f0dfc0] transition hover:bg-[#fdf3e0]"
-            aria-label={tr(`Compartir ${product.name}`, `Share ${name}`)}
-          >
-            <Share2 className="size-3.5" aria-hidden="true" />
-          </button>
           {product.available ? (
             <button
               type="button"

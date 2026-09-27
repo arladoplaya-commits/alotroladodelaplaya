@@ -310,3 +310,15 @@ Work Log:
 - Carrito: aviso claro (no solo un toast) cuando está cerrado — el pedido no se envía, queda guardado en el teléfono, y el botón cambia a «Cerrado ahora».
 - Revisado: los precios ya estaban en el árbol de accesibilidad desde el primer render (sin lazy-load ni content-visibility); no se encontró el problema descrito.
 - Verificado en navegador: página de producto, enlace directo abre el personalizador, sitemap.xml con todos los productos, robots.txt, carrito cerrado con el aviso y sin poder confirmar, flujo completo v15 (upsell, cupón, fidelidad, repetir pedido, inglés) sigue funcionando.
+
+---
+Task ID: 20
+Agent: Claude
+Task: Quitar icono de compartir en tarjetas y separar el admin en ruta propia
+
+Work Log:
+- product-row.tsx: quitado el botón/icono de compartir de cada tarjeta de la lista (se veía mal); la página propia del producto (/producto/slug) conserva su botón «Compartir este antojo», que ahí sí tiene sentido.
+- Admin separado en su propia ruta de Next: src/app/admin/page.tsx + layout.tsx (noindex). src/app/page.tsx ya no importa AdminView: la carta pública nunca descarga el código del panel.
+- Triple toque en el logo y los enlaces «Ver menú» del panel ahora navegan de verdad (href real), no solo cambian el hash — así cada ruta carga su propio JS.
+- Enlace viejo tipo #/admin sigue funcionando: la home lo detecta y redirige a /admin.
+- Verificado: build genera /admin como ruta aparte; los <script> de la home no incluyen nada del admin; 3 toques al logo navegan a /admin; el panel entra igual que antes; flujo completo del carrito (v15) sigue funcionando; tsc y eslint en 0.

@@ -174,7 +174,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
             {checking ? "Comprobando…" : "Entrar al panel"}
           </Button>
           <a
-            href="#/"
+            href="/"
             className="mt-3 text-center text-sm font-bold text-[#e2574c] transition hover:underline"
           >
             ← Ver menú
@@ -218,7 +218,7 @@ export function AdminView() {
           </div>
           <div className="ml-auto flex items-center gap-2">
             <a
-              href="#/"
+              href="/"
               className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#c2542f] ring-1 ring-[#f0dfc0] transition hover:bg-[#fdf3e0]"
             >
               <Eye className="size-3.5" aria-hidden="true" />
