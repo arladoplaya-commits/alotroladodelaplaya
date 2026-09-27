@@ -15,6 +15,7 @@ import {
 import type { GalleryItem } from "@/lib/types";
 import { DEFAULT_GALLERY } from "@/components/menu/gallery-data";
 import { QrCard } from "./qr-card";
+import { PdfMenuButton } from "@/components/menu/pdf-menu";
 import { Switch } from "@/components/ui/switch";
 import { publicMenuJson, useAutoPublish } from "@/lib/autopublish";
 
@@ -191,6 +192,16 @@ export function TabPublicar() {
 
   return (
     <div className="grid gap-4">
+      <section className="rounded-3xl border border-[#e8dcc0] bg-white p-5 shadow-sm">
+        <h2 className="font-display text-xl text-[#c2542f]">📄 Carta en PDF</h2>
+        <p className="mb-3 mt-1 text-sm text-[#8a7350]">
+          Una sola hoja A4 con el estilo de la web: toda la carta, combos,
+          agregos, mensajería, pagos y el QR para pedir. Ideal para imprimir o
+          mandar por WhatsApp.
+        </p>
+        <PdfMenuButton className="inline-flex items-center gap-2 rounded-2xl bg-[#e2574c] px-4 py-2.5 text-sm font-extrabold text-white shadow-[0_6px_18px_-4px_rgba(226,87,76,0.55)] transition hover:bg-[#d34a40] active:scale-95" />
+      </section>
+
       <QrCard />
 
       <section className="rounded-3xl border border-[#e8dcc0] bg-white p-5 shadow-sm">

@@ -152,6 +152,17 @@ begin
 end;
 $$;
 
+-- 4b) Comprobar la contraseña al entrar al panel (misma en todos los teléfonos)
+create or replace function public.check_panel_pass(p_pass text)
+returns boolean
+language sql security definer
+as $$
+  select exists (
+    select 1 from public.panel_pass p
+    where p.id = 1 and p.hash = crypt(p_pass, p.hash)
+  );
+$$;
+
 -- 5) Clientes de la marea (registro desde la carta, sin contraseñas)
 create table if not exists public.customers (
   id text primary key,
@@ -455,6 +466,20 @@ export async function sbAdminDeleteOrder(
   id: string
 ): Promise<{ ok: boolean; status?: number; body?: unknown }> {
   return rpc(creds, "admin_delete_order", { p_pass: pass, p_id: id });
+}
+
+/**
+ * Comprueba la contraseña del panel en la nube.
+ * "ok" / "wrong" si la nube respondió; "offline" sin conexión;
+ * "nosetup" si aún no se ejecutó el SQL (la función no existe).
+ */
+export async function sbCheckPanelPass(
+  creds: SupaCreds,
+  pass: string
+): Promise<"ok" | "wrong" | "offline" | "nosetup"> {
+  const res = await rpc<boolean>(creds, "check_panel_pass", { p_pass: pass });
+  if (!res.ok) return res.status === 0 ? "offline" : "nosetup";
+  return res.data === true ? "ok" : "wrong";
 }
 
 export async function sbAdminSetPass(

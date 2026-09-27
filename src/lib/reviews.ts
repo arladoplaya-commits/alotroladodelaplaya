@@ -49,7 +49,7 @@ export const SEED_REVIEWS: Review[] = [
     name: "Mariana G.",
     place: "Vedado",
     rating: 5,
-    text: "La Doble Mixta es otro nivel: jugosa y con ese toque dulce de las chips de boniato. Brutal.",
+    text: "La Gran Marejada es otro nivel: jugosa y con ese toque dulce de las chips de boniato. Brutal.",
     createdAt: "2026-08-20T19:40:00.000Z",
   },
   {
@@ -65,7 +65,7 @@ export const SEED_REVIEWS: Review[] = [
     name: "Camila & Leo",
     place: "Centro Habana",
     rating: 5,
-    text: "El Crispy con esos chips no lo encuentras ni en la playa. Repetimos seguro.",
+    text: "El Surfista con esos chips no lo encuentras ni en la playa. Repetimos seguro.",
     createdAt: "2026-09-05T20:05:00.000Z",
   },
 ];
@@ -97,6 +97,11 @@ function sortNew(list: Review[]): Review[] {
 
 function seedsOff(): boolean {
   return readJson<boolean>(SEEDS_OFF_KEY) === true;
+}
+
+/** Credenciales de la nube activas en este dispositivo (o null) */
+export function cloudCreds(): SupaCreds | null {
+  return credsOf();
 }
 
 function credsOf(): SupaCreds | null {

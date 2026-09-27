@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useMenuStore } from "@/lib/store";
 import type { Settings } from "@/lib/types";
+import { changePanelPass } from "@/lib/panel-auth";
 
 /* ------------------------------------------------------------------ */
 /*  Ajustes del negocio + restaurar datos de fábrica                   */
@@ -38,7 +39,9 @@ export function TabAjustes() {
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(settings);
 
-  const save = () => {
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
     if (!draft.businessName.trim()) {
       toast.error("El nombre del negocio es obligatorio");
       return;
@@ -49,9 +52,23 @@ export function TabAjustes() {
       );
       return;
     }
-    if (draft.adminPassword.trim().length < 4) {
-      toast.error("La contraseña debe tener al menos 4 caracteres");
+    if (draft.adminPassword.trim().length < 6) {
+      toast.error("La contraseña debe tener al menos 6 caracteres");
       return;
+    }
+    const newPass = draft.adminPassword.trim();
+    let passNote = "";
+    if (newPass !== settings.adminPassword) {
+      setSaving(true);
+      const res = await changePanelPass(settings.adminPassword, newPass);
+      setSaving(false);
+      if (!res.ok) {
+        toast.error(res.error);
+        return;
+      }
+      passNote = res.cloud
+        ? "Contraseña nueva guardada en la nube: vale en todos los teléfonos 🔐"
+        : "Contraseña cambiada solo en este teléfono (la nube aún no está lista).";
     }
     saveSettings({
       ...draft,
@@ -59,7 +76,7 @@ export function TabAjustes() {
       tagline: draft.tagline.trim().slice(0, 120),
       adminPassword: draft.adminPassword.trim(),
     });
-    toast.success("Ajustes guardados ✅");
+    toast.success("Ajustes guardados ✅", passNote ? { description: passNote } : undefined);
   };
 
   return (
@@ -188,7 +205,8 @@ export function TabAjustes() {
               </button>
             </div>
             <p className="text-xs text-[#a58a5f]">
-              Protege el acceso a este panel en cada dispositivo.
+              Es la misma en todos los teléfonos: se guarda cifrada en la nube
+              (Supabase). Mínimo 6 caracteres; evita la de fábrica.
             </p>
           </div>
         </div>
@@ -196,8 +214,8 @@ export function TabAjustes() {
         <div className="mt-4 flex flex-wrap gap-2">
           <Button
             type="button"
-            onClick={save}
-            disabled={!dirty}
+            onClick={() => void save()}
+            disabled={!dirty || saving}
             className="rounded-2xl bg-[#e2574c] font-extrabold text-white hover:bg-[#d34a40] disabled:opacity-50"
           >
             Guardar ajustes

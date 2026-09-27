@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "updatedAt": "2026-09-26T07:30:00.000Z",
   "categories": [
     {
@@ -48,7 +48,7 @@
   "products": [
     {
       "id": "p-clasica",
-      "name": "Clásica",
+      "name": "La Orilla",
       "description": "Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1200,
       "category": "hamburguesas",
@@ -68,7 +68,7 @@
     },
     {
       "id": "p-cerdo",
-      "name": "De Cerdo",
+      "name": "Marea Alta",
       "description": "Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1400,
       "category": "hamburguesas",
@@ -88,7 +88,7 @@
     },
     {
       "id": "p-res",
-      "name": "De Res",
+      "name": "El Arrecife",
       "description": "Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1600,
       "category": "hamburguesas",
@@ -108,7 +108,7 @@
     },
     {
       "id": "p-doble",
-      "name": "Doble",
+      "name": "Doble Ola",
       "description": "Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
       "price": 1550,
       "category": "hamburguesas",
@@ -131,7 +131,7 @@
     },
     {
       "id": "p-doble-mixta",
-      "name": "Doble Mixta",
+      "name": "La Gran Marejada",
       "description": "Cerdo y pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1750,
       "category": "hamburguesas",
@@ -154,7 +154,7 @@
     },
     {
       "id": "p-perro-clasico",
-      "name": "Clásico",
+      "name": "El Salvavidas",
       "description": "Pan con perro, ketchup, mayonesa y mostaza.",
       "price": 700,
       "category": "perros",
@@ -173,7 +173,7 @@
     },
     {
       "id": "p-perro-crispy",
-      "name": "El Crispy",
+      "name": "El Surfista",
       "description": "Pan con perro, ketchup, mostaza y chips de boniato.",
       "price": 750,
       "category": "perros",
@@ -194,7 +194,7 @@
     },
     {
       "id": "p-perro-isleno",
-      "name": "El Isleño",
+      "name": "Cayo Piña",
       "description": "Pan con perro, ketchup, mostaza y piña glaseada.",
       "price": 850,
       "category": "perros",
@@ -215,7 +215,7 @@
     },
     {
       "id": "p-perro-saludable",
-      "name": "El Saludable",
+      "name": "Brisa Verde",
       "description": "Pan con perro, ketchup, mostaza y vegetales.",
       "price": 850,
       "category": "perros",
@@ -236,7 +236,7 @@
     },
     {
       "id": "p-perro-cheesy",
-      "name": "El Cheesy",
+      "name": "Puesta de Sol",
       "description": "Pan con perro, ketchup, mostaza y queso gouda.",
       "price": 900,
       "category": "perros",
@@ -257,7 +257,7 @@
     },
     {
       "id": "p-baguette-rustico",
-      "name": "Rústico",
+      "name": "El Muelle",
       "description": "Pan baguette, jamón, queso gouda, vegetales y mayonesa.",
       "price": 1320,
       "category": "baguette",
@@ -276,7 +276,7 @@
     },
     {
       "id": "p-albondiga-cerdo",
-      "name": "Albóndiga de Cerdo",
+      "name": "Perlas de Cerdo",
       "description": "Ración de 5 albóndigas con ketchup.",
       "price": 800,
       "category": "raciones",
@@ -292,7 +292,7 @@
     },
     {
       "id": "p-albondiga-pollo",
-      "name": "Albóndiga de Pollo",
+      "name": "Perlas de Pollo",
       "description": "Ración de 5 albóndigas con ketchup.",
       "price": 800,
       "category": "raciones",
@@ -308,7 +308,7 @@
     },
     {
       "id": "p-croquetas",
-      "name": "Croquetas",
+      "name": "Croquetas del Malecón",
       "description": "Ración de 10 croquetas.",
       "price": 850,
       "category": "raciones",
@@ -323,7 +323,7 @@
     },
     {
       "id": "p-fajitas-pollo",
-      "name": "Fajitas de Pollo",
+      "name": "Fajitas del Velero",
       "description": "Fajitas de pollo con porción de mayonesa.",
       "price": 1200,
       "category": "raciones",
@@ -339,7 +339,7 @@
     },
     {
       "id": "p-papas-fritas",
-      "name": "Papas Fritas",
+      "name": "Papas de Arena",
       "description": "Ración de papas fritas.",
       "price": 850,
       "category": "raciones",
@@ -354,7 +354,7 @@
     },
     {
       "id": "p-papischis",
-      "name": "Papischis",
+      "name": "Papischis Tiburón",
       "description": "Papas fritas y salchichas con salsa.",
       "price": 1000,
       "category": "raciones",
@@ -373,7 +373,7 @@
     },
     {
       "id": "p-alitas-pollo",
-      "name": "Alitas de Pollo",
+      "name": "Alitas del Faro",
       "description": "Ración de alitas de pollo.",
       "price": 1400,
       "category": "raciones",
@@ -388,7 +388,7 @@
     },
     {
       "id": "p-refrescos",
-      "name": "Refrescos",
+      "name": "Ola Fría",
       "description": "Gaseosas bien frías: cola, naranja o limón. El clásico de la arena.",
       "price": 600,
       "category": "bebidas-refrescos",
@@ -408,7 +408,7 @@
     },
     {
       "id": "p-malta",
-      "name": "Malta",
+      "name": "Malta Marinera",
       "description": "Malta bien helada con su espuma dorada. Energía playera.",
       "price": 650,
       "category": "bebidas-refrescos",
@@ -428,7 +428,7 @@
     },
     {
       "id": "p-cerveza",
-      "name": "Cerveza Importada",
+      "name": "Cerveza Horizonte",
       "description": "Lager importada, helada hasta el último sorbo. Brindis al atardecer.",
       "price": 650,
       "category": "bebidas-refrescos",
@@ -447,7 +447,7 @@
     },
     {
       "id": "p-jugos",
-      "name": "Jugos Naturales",
+      "name": "Jugo Tropical",
       "description": "Jugos de frutas naturales del día: naranja, papaya o piña.",
       "price": 700,
       "category": "bebidas-jugos",
@@ -467,7 +467,7 @@
     },
     {
       "id": "p-malteada",
-      "name": "Malteada",
+      "name": "Espuma de Mar",
       "description": "Malteada cremosa con crema batida. Dulce como la brisa.",
       "price": 850,
       "category": "bebidas-jugos",
@@ -486,7 +486,7 @@
     },
     {
       "id": "p-batidos",
-      "name": "Batidos de Frutas Naturales",
+      "name": "Batido Coral",
       "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce.",
       "price": 900,
       "category": "bebidas-jugos",
@@ -505,7 +505,7 @@
     },
     {
       "id": "p-maracuya",
-      "name": "Jugo de Maracuyá",
+      "name": "Maracuyá Atardecer",
       "description": "Maracuyá bien fría, entre dulce y ácida. El favorito del cangrejo.",
       "price": 900,
       "category": "bebidas-jugos",
@@ -525,7 +525,7 @@
     },
     {
       "id": "p-limonada",
-      "name": "Limonada Natural",
+      "name": "Limonada Brisa",
       "description": "Limonada natural con hielo y menta fresca. Sombra y frescura.",
       "price": 700,
       "category": "bebidas-jugos",
@@ -545,7 +545,7 @@
     },
     {
       "id": "p-limonada-brasilena",
-      "name": "Limonada Brasileña",
+      "name": "Limonada Copacabana",
       "description": "La clásica brasileña: limón batido con crema, suave y helada.",
       "price": 850,
       "category": "bebidas-jugos",
@@ -565,7 +565,7 @@
     },
     {
       "id": "p-espresso",
-      "name": "Café Espresso",
+      "name": "Espresso Marinero",
       "description": "Espresso corto e intenso con su crema dorada. Chispa instantánea.",
       "price": 250,
       "category": "bebidas-cafe",
@@ -582,7 +582,7 @@
     },
     {
       "id": "p-cortado",
-      "name": "Café Cortado",
+      "name": "Cortado Amanecer",
       "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto.",
       "price": 350,
       "category": "bebidas-cafe",
@@ -599,7 +599,7 @@
     },
     {
       "id": "p-bombon",
-      "name": "Café Bombón",
+      "name": "Bombón de Arena",
       "description": "Espresso sobre leche condensada, en capas como un atardecer.",
       "price": 450,
       "category": "bebidas-cafe",
@@ -660,7 +660,7 @@
       "id": "c-playero",
       "name": "Combo Playero",
       "emoji": "🏖️",
-      "description": "Clásica + papas fritas + refresco bien frío.",
+      "description": "La Orilla + papas de arena + Ola Fría bien fría.",
       "items": [
         {
           "productId": "p-clasica",
@@ -680,9 +680,9 @@
     },
     {
       "id": "c-perro-refresco",
-      "name": "Crispy + Refresco",
+      "name": "Surfista + Ola Fría",
       "emoji": "🌭",
-      "description": "El Crispy crujiente con su refresco.",
+      "description": "El Surfista crujiente con su refresco helado.",
       "items": [
         {
           "productId": "p-perro-crispy",
@@ -700,7 +700,7 @@
       "id": "c-pareja",
       "name": "Combo Pareja",
       "emoji": "💑",
-      "description": "2 Doble Mixta, papischis para compartir y 2 limonadas.",
+      "description": "2 Gran Marejada, papischis para compartir y 2 limonadas.",
       "items": [
         {
           "productId": "p-doble-mixta",

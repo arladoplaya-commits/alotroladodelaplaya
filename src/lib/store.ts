@@ -20,6 +20,43 @@ export const SEED = seedRaw as unknown as MenuData;
 const STORAGE_KEY = "aol-menu-v1";
 
 /**
+ * Nombres de fábrica anteriores a la carta playera (v5). Si el negocio no
+ * los había cambiado, al actualizar se renombran con los nombres playeros.
+ */
+const OLD_DEFAULT_NAMES: Record<string, string> = {
+  "p-clasica": "Clásica",
+  "p-cerdo": "De Cerdo",
+  "p-res": "De Res",
+  "p-doble": "Doble",
+  "p-doble-mixta": "Doble Mixta",
+  "p-perro-clasico": "Clásico",
+  "p-perro-crispy": "El Crispy",
+  "p-perro-isleno": "El Isleño",
+  "p-perro-saludable": "El Saludable",
+  "p-perro-cheesy": "El Cheesy",
+  "p-baguette-rustico": "Rústico",
+  "p-albondiga-cerdo": "Albóndiga de Cerdo",
+  "p-albondiga-pollo": "Albóndiga de Pollo",
+  "p-croquetas": "Croquetas",
+  "p-fajitas-pollo": "Fajitas de Pollo",
+  "p-papas-fritas": "Papas Fritas",
+  "p-papischis": "Papischis",
+  "p-alitas-pollo": "Alitas de Pollo",
+  "p-refrescos": "Refrescos",
+  "p-malta": "Malta",
+  "p-cerveza": "Cerveza Importada",
+  "p-jugos": "Jugos Naturales",
+  "p-malteada": "Malteada",
+  "p-batidos": "Batidos de Frutas Naturales",
+  "p-maracuya": "Jugo de Maracuyá",
+  "p-limonada": "Limonada Natural",
+  "p-limonada-brasilena": "Limonada Brasileña",
+  "p-espresso": "Café Espresso",
+  "p-cortado": "Café Cortado",
+  "p-bombon": "Café Bombón",
+};
+
+/**
  * Completa con los valores de fábrica lo que falte (datos guardados de una
  * versión anterior o un menu.json publicado antes de estas funciones).
  */
@@ -393,9 +430,27 @@ export const useMenuStore = create<MenuState>()(
           ...(p.categories ?? []),
           ...SEED.categories.filter((c) => !catIds.has(c.id)),
         ];
+        // nombres playeros: solo donde seguía el nombre de fábrica antiguo
+        let renamed = false;
+        const seedById = new Map(SEED.products.map((x) => [x.id, x]));
+        const products2 = products.map((x) => {
+          const fresh = seedById.get(x.id);
+          if (fresh && OLD_DEFAULT_NAMES[x.id] === x.name && fresh.name !== x.name) {
+            renamed = true;
+            return { ...x, name: fresh.name };
+          }
+          return x;
+        });
         return {
           ...current,
-          data: normalizeMenu({ ...p, products, categories, version: seedVersion }),
+          data: normalizeMenu({
+            ...p,
+            products: products2,
+            categories,
+            version: seedVersion,
+            // si hubo cambios, cuentan como edición nueva (se publican solos)
+            ...(renamed ? { updatedAt: new Date().toISOString() } : {}),
+          }),
         };
       },
     }

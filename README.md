@@ -31,7 +31,9 @@ Los avisos funcionan en 3 niveles, según lo que actives:
 
 > **Toca el logo 3 veces seguidas** (en menos de ~1 segundo entre toques).
 
-- Contraseña inicial: `playa2026` (cámbiala en Ajustes).
+- Contraseña de fábrica: `playa2026`. **Cámbiala en Ajustes nada más ejecutar el
+  SQL de Supabase**: se guarda cifrada en la nube y es la misma en todos los
+  teléfonos. Sin conexión solo se puede entrar en un teléfono que ya entró antes.
 - También puedes abrir `#/admin` en la URL.
 - El panel gestiona: abierto/cerrado, «¿hay hoy?», productos, agregos,
   pedidos, reseñas, avisos a clientes, publicación en GitHub y ajustes.
@@ -158,7 +160,7 @@ juntos. En la cabecera del panel se ve el estado: *Cambios sin subir…* →
 
 ## 📄 Carta en PDF (una hoja A4)
 
-Botón **«Carta en PDF»** en la carta (y en el panel → Publicar, junto al QR):
+Solo en el panel: **Publicar → 📄 Carta en PDF**:
 muestra la hoja con la estética de la web (postal, colores, fuentes, 3 columnas,
 combos, agregos, QR, mensajería y pagos). La letra se ajusta sola para que todo
 quepa en **una sola hoja**. «Descargar PDF» abre la ventana de imprimir: elige

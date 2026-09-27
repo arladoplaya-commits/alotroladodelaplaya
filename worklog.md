@@ -237,3 +237,14 @@ Work Log:
 - autosave-status.tsx: estado en la cabecera del panel. Publicar: interruptor «Guardado automático».
 - BUG corregido: «Guardar datos» con el campo del token vacío borraba el token guardado.
 - Verificado con GitHub simulado: 2 cambios seguidos = 1 subida, Authorization correcto, adminPassword vacío.
+
+---
+Task ID: 14
+Agent: Claude Code
+Task: PDF solo en el panel; contraseña del panel igual en todos los teléfonos y sin pista; nombres playeros.
+
+Work Log:
+- PDF: fuera de la carta pública; tarjeta «📄 Carta en PDF» en Panel → Publicar.
+- Contraseña: SQL check_panel_pass (bcrypt); panel-auth.ts verifica en la nube al entrar (se recuerda en el teléfono para entrar sin red solo si ya entró antes); Ajustes cambia la contraseña en la nube con change_panel_pass (mínimo 6 caracteres). Quitada la pista «Contraseña inicial: playa2026» de la pantalla de entrada.
+- Nombres playeros (seed v5): La Orilla, Marea Alta, El Arrecife, Doble Ola, La Gran Marejada, El Salvavidas, El Surfista, Cayo Piña, Brisa Verde, Puesta de Sol, El Muelle, Perlas de Cerdo/Pollo, Croquetas del Malecón, Fajitas del Velero, Papas de Arena, Papischis Tiburón, Alitas del Faro, Ola Fría, Malta Marinera, Cerveza Horizonte, Jugo Tropical, Espuma de Mar, Batido Coral, Maracuyá Atardecer, Limonada Brisa, Limonada Copacabana, Espresso Marinero, Cortado Amanecer, Bombón de Arena. Migración: solo se renombra lo que seguía con el nombre de fábrica antiguo (lo editado por el negocio se respeta) y se publica solo.
+- Verificado: pass de fábrica rechazada con nube, pass correcta entra, teléfono nuevo sin red no entra, teléfono verificado sin red entra; carta sin botón PDF; migración respeta nombres editados.

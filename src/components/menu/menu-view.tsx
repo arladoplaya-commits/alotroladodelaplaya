@@ -36,7 +36,6 @@ import { DEFAULT_GALLERY } from "./gallery-data";
 import { CombosSection, DailySection } from "./specials";
 import { LiteModeButton, NightGlow } from "./night-glow";
 import { HeroPostcard } from "./hero-postcard";
-import { PdfMenuButton } from "./pdf-menu";
 import type { MenuData, Product } from "@/lib/types";
 
 /* Vistas de la carta: menú, favoritos guardados y carrito */
@@ -809,8 +808,6 @@ export function MenuView() {
               <UserRound className="size-3.5" aria-hidden="true" />
               {profile ? `Hola, ${profile.name}` : "Hazte cliente 🌊"}
             </button>
-
-            <PdfMenuButton />
 
             <InstallButton />
           </div>

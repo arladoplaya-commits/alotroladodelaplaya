@@ -37,6 +37,7 @@ import { TabResenas } from "./tab-resenas";
 import { TabPublicar } from "./tab-publicar";
 import { TabAjustes } from "./tab-ajustes";
 import { AutoSaveStatus } from "./autosave-status";
+import { verifyPanelPass } from "@/lib/panel-auth";
 
 /* ------------------------------------------------------------------ */
 /*  Panel del Negocio: acceso con contraseña + 7 pestañas              */
@@ -90,9 +91,19 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
   const [pass, setPass] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState(false);
+  const [checking, setChecking] = useState(false);
 
-  const tryUnlock = () => {
-    if (pass === adminPassword) {
+  const tryUnlock = async () => {
+    if (!pass || checking) return;
+    setChecking(true);
+    const res = await verifyPanelPass(pass, adminPassword);
+    setChecking(false);
+    if (res.ok) {
+      // se recuerda en este teléfono para poder entrar sin conexión
+      const st = useMenuStore.getState();
+      if (st.data.settings.adminPassword !== pass) {
+        st.saveSettings({ ...st.data.settings, adminPassword: pass });
+      }
       try {
         localStorage.setItem(SESSION_KEY, "1");
       } catch {
@@ -100,6 +111,11 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
       }
       toast.success("¡Bienvenido, jefe! 🌴");
       onUnlock();
+    } else if (res.reason === "offline") {
+      setError(true);
+      toast.error("Sin conexión con la nube", {
+        description: "La primera vez en este teléfono hace falta internet para comprobar la contraseña.",
+      });
     } else {
       setError(true);
       toast.error("Contraseña incorrecta");
@@ -132,7 +148,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
                 setPass(e.target.value);
                 setError(false);
               }}
-              onKeyDown={(e) => e.key === "Enter" && tryUnlock()}
+              onKeyDown={(e) => e.key === "Enter" && void tryUnlock()}
               placeholder="••••••••"
               className={`h-11 border-[#f0dfc0] pr-11 focus-visible:ring-[#e2574c] ${
                 error ? "border-[#e2574c]" : ""
@@ -150,14 +166,12 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
           </div>
           <Button
             type="button"
-            onClick={tryUnlock}
+            onClick={() => void tryUnlock()}
+            disabled={checking}
             className="mt-2 h-11 rounded-2xl bg-[#e2574c] font-extrabold text-white hover:bg-[#d34a40]"
           >
-            Entrar al panel
+            {checking ? "Comprobando…" : "Entrar al panel"}
           </Button>
-          <p className="mt-1 text-center text-xs text-[#a58a5f]">
-            Contraseña inicial: <code className="rounded bg-[#fdf3e0] px-1 font-bold text-[#c2542f]">playa2026</code>
-          </p>
           <a
             href="#/"
             className="mt-3 text-center text-sm font-bold text-[#e2574c] transition hover:underline"

@@ -79,7 +79,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
     return products.find((p) => p.id === id)?.image;
   };
 
-  /** Qué trae un combo: «1× Clásica, 1× Papas Fritas…» */
+  /** Qué trae un combo: «1× La Orilla, 1× Papas de Arena…» */
   const comboContents = (comboId?: string): string => {
     if (!comboId) return "";
     const c = combos.find((x) => x.id === comboId);
