@@ -1,0 +1,6 @@
+:HL["/alotroladodelaplaya/_next/static/chunks/536a5ee0aaacea2f.css","style"]
+:HL["/alotroladodelaplaya/_next/static/chunks/9b36754084c3a76c.css","style"]
+:HL["/alotroladodelaplaya/_next/static/media/c432471d2cba538b-s.p.efda4bc0.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/alotroladodelaplaya/_next/static/media/cb065f3ef140709c-s.p.0b820cda.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/alotroladodelaplaya/_next/static/media/fba5a26ea33df6a3-s.p.1bbdebe6.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"buildId":"VwEQzjEcDEpuA9NiqUu9y","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"admin","paramType":null,"paramKey":"admin","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
