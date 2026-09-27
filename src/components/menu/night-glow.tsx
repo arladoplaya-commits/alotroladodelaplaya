@@ -31,28 +31,104 @@ export function NightGlow() {
   );
 }
 
-type NetInfo = { saveData?: boolean; effectiveType?: string };
+type NetInfo = {
+  saveData?: boolean;
+  effectiveType?: string;
+  addEventListener?: (type: "change", cb: () => void) => void;
+  removeEventListener?: (type: "change", cb: () => void) => void;
+};
+type BatteryInfo = { level: number; charging: boolean };
+type Nav = Navigator & {
+  connection?: NetInfo;
+  deviceMemory?: number;
+  getBattery?: () => Promise<BatteryInfo>;
+};
 
-/** ¿Arrancamos en modo ligero? Lo elegido por el cliente manda. */
-function initialLite(): boolean {
+type Why = "" | "ahorro de datos" | "conexión lenta" | "teléfono modesto" | "batería baja" | "animaciones lentas" | "elegido por ti";
+
+const SAVED_KEY = "aol-lite"; // "1" / "0" solo si el cliente lo eligió a mano
+
+function saved(): "1" | "0" | null {
   try {
-    const saved = localStorage.getItem("aol-lite");
-    if (saved === "1") return true;
-    if (saved === "0") return false;
+    const v = localStorage.getItem(SAVED_KEY);
+    return v === "1" || v === "0" ? v : null;
   } catch {
-    /* sin localStorage */
+    return null;
   }
-  const c = (navigator as Navigator & { connection?: NetInfo }).connection;
-  return !!c && (!!c.saveData || /(^|-)(2g|3g)$/.test(c.effectiveType ?? ""));
 }
 
-/** Botón ⚡ del encabezado: activa/desactiva el modo ligero */
+/** Lo que se sabe al instante: conexión y capacidades del teléfono */
+function quickCheck(): Why {
+  const n = navigator as Nav;
+  const c = n.connection;
+  if (c?.saveData) return "ahorro de datos";
+  if (c && /(^|-)(2g|3g)$/.test(c.effectiveType ?? "")) return "conexión lenta";
+  if ((n.deviceMemory ?? 8) <= 2 || (navigator.hardwareConcurrency ?? 8) <= 2) return "teléfono modesto";
+  return "";
+}
+
+/** Mide cuántos cuadros por segundo logra el teléfono (≈1,2 s) */
+function measureFps(): Promise<number> {
+  return new Promise((resolve) => {
+    let frames = 0;
+    let start = 0;
+    const tick = (t: number) => {
+      if (!start) start = t;
+      frames += 1;
+      if (t - start < 1200) requestAnimationFrame(tick);
+      else resolve((frames * 1000) / (t - start));
+    };
+    requestAnimationFrame(tick);
+  });
+}
+
+/**
+ * Modo ligero automático: la carta mira la conexión y el teléfono y, si
+ * puede, va con todas las animaciones; si no, se aligera sola. La etiqueta
+ * solo aparece cuando el modo ligero está activo, para poder quitarlo.
+ */
 export function LiteModeButton() {
-  const [lite, setLite] = useState(initialLite);
+  const [why, setWhy] = useState<Why>(() => {
+    const s = saved();
+    if (s === "1") return "elegido por ti";
+    if (s === "0") return "";
+    return quickCheck();
+  });
+  const lite = why !== "";
 
   useEffect(() => {
     document.documentElement.classList.toggle("lite", lite);
   }, [lite]);
+
+  // Revisión continua: cambios de conexión, batería y prueba de fluidez
+  useEffect(() => {
+    if (saved() !== null) return;
+    const n = navigator as Nav;
+    const recheck = () => setWhy((w) => (w === "batería baja" || w === "animaciones lentas" ? w : quickCheck()));
+    n.connection?.addEventListener?.("change", recheck);
+
+    let cancelled = false;
+    n.getBattery?.()
+      .then((b) => {
+        if (!cancelled && b.level < 0.2 && !b.charging) setWhy((w) => w || "batería baja");
+      })
+      .catch(() => undefined);
+
+    // prueba de fluidez con la carta ya pintada y la pestaña visible
+    const timer = window.setTimeout(async () => {
+      if (cancelled || document.hidden || document.documentElement.classList.contains("lite")) return;
+      const fps = await measureFps();
+      if (cancelled) return;
+      // solo para esta visita: un tirón puntual no marca el teléfono para siempre
+      if (fps < 40) setWhy((w) => w || "animaciones lentas");
+    }, 2500);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      n.connection?.removeEventListener?.("change", recheck);
+    };
+  }, []);
 
   // Con la pestaña oculta nada se anima: ahorra batería
   useEffect(() => {
@@ -62,35 +138,27 @@ export function LiteModeButton() {
     return () => document.removeEventListener("visibilitychange", onVis);
   }, []);
 
-  const toggle = () => {
-    const next = !lite;
-    setLite(next);
+  if (!lite) return null;
+
+  const turnOnAnimations = () => {
     try {
-      localStorage.setItem("aol-lite", next ? "1" : "0");
+      localStorage.setItem(SAVED_KEY, "0");
     } catch {
       /* noop */
     }
-    toast(next ? "⚡ Modo ligero activado" : "✨ Animaciones activadas", {
-      description: next
-        ? "Menos animaciones: ahorra datos y batería"
-        : "Toda la playa en movimiento",
-    });
+    setWhy("");
+    toast("✨ Animaciones activadas", { description: "Toda la playa en movimiento" });
   };
 
   return (
     <button
       type="button"
-      onClick={toggle}
-      aria-pressed={lite}
-      title="Menos animaciones: ahorra datos y batería"
-      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition active:scale-95 ${
-        lite
-          ? "bg-[#f2c230] text-[#7a5410]"
-          : "aol-chip bg-white text-[#8a7350] ring-1 ring-[#f0dfc0] hover:bg-[#fdf3e0]"
-      }`}
+      onClick={turnOnAnimations}
+      title="Toca para ver todas las animaciones"
+      className="inline-flex items-center gap-1 rounded-full bg-[#f2c230] px-3 py-1 text-xs font-bold text-[#7a5410] transition active:scale-95"
     >
       <Zap className="size-3.5" aria-hidden="true" />
-      {lite ? "Modo ligero activo" : "Modo ligero"}
+      Modo ligero · {why} · <span className="underline">ver animaciones</span>
     </button>
   );
 }

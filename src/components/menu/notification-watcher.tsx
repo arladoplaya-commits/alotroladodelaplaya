@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useMenuStore } from "@/lib/store";
+import { openStateFor, useMenuStore } from "@/lib/store";
+import type { Settings } from "@/lib/types";
 import { useReviewsStore } from "@/lib/reviews";
 import { sbFetchAnnouncements } from "@/lib/supabase";
 import { syncCustomerToCloud } from "@/lib/cloud";
@@ -26,8 +27,8 @@ function readSnapshotFromStorage(): Snapshot | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as {
       state?: {
-        data?: { settings?: { ordersOpen?: boolean }; products?: { id: string }[] };
-        settings?: { ordersOpen?: boolean };
+        data?: { settings?: Settings; products?: { id: string }[] };
+        settings?: Settings;
         products?: { id: string }[];
       };
     };
@@ -37,7 +38,8 @@ function readSnapshotFromStorage(): Snapshot | null {
     const products = s?.products ?? s?.data?.products;
     if (!settings || !Array.isArray(products)) return null;
     return {
-      open: !!settings.ordersOpen,
+      // abierto/cerrado según el horario (y el interruptor «cerrado hoy»)
+      open: openStateFor(settings).open,
       productIds: products.map((p) => p.id),
     };
   } catch {
@@ -75,8 +77,9 @@ export function NotificationWatcher() {
     const snap = readSnapshotFromStorage();
     const ids = snap?.productIds ?? data.products.map((p) => p.id);
     syncSeenProducts(ids);
-    setLastKnownOpen(snap?.open ?? data.settings.ordersOpen);
-    openRef.current = snap?.open ?? data.settings.ordersOpen;
+    const nowOpen = openStateFor(data.settings).open;
+    setLastKnownOpen(snap?.open ?? nowOpen);
+    openRef.current = snap?.open ?? nowOpen;
     idsRef.current = ids;
     // Registro del cliente a la nube (idempotente; silencioso si no hay Supabase)
     void syncCustomerToCloud();
@@ -121,7 +124,7 @@ export function NotificationWatcher() {
     };
 
     // Estado inicial del ciclo
-    openRef.current = data.settings.ordersOpen;
+    openRef.current = openStateFor(data.settings).open;
     idsRef.current = data.products.map((p) => p.id);
 
     // Sondeo cada 15 s (cubre cambios de otras pestañas/dispositivo)

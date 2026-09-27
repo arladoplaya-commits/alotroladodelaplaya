@@ -248,3 +248,14 @@ Work Log:
 - Contraseña: SQL check_panel_pass (bcrypt); panel-auth.ts verifica en la nube al entrar (se recuerda en el teléfono para entrar sin red solo si ya entró antes); Ajustes cambia la contraseña en la nube con change_panel_pass (mínimo 6 caracteres). Quitada la pista «Contraseña inicial: playa2026» de la pantalla de entrada.
 - Nombres playeros (seed v5): La Orilla, Marea Alta, El Arrecife, Doble Ola, La Gran Marejada, El Salvavidas, El Surfista, Cayo Piña, Brisa Verde, Puesta de Sol, El Muelle, Perlas de Cerdo/Pollo, Croquetas del Malecón, Fajitas del Velero, Papas de Arena, Papischis Tiburón, Alitas del Faro, Ola Fría, Malta Marinera, Cerveza Horizonte, Jugo Tropical, Espuma de Mar, Batido Coral, Maracuyá Atardecer, Limonada Brisa, Limonada Copacabana, Espresso Marinero, Cortado Amanecer, Bombón de Arena. Migración: solo se renombra lo que seguía con el nombre de fábrica antiguo (lo editado por el negocio se respeta) y se publica solo.
 - Verificado: pass de fábrica rechazada con nube, pass correcta entra, teléfono nuevo sin red no entra, teléfono verificado sin red entra; carta sin botón PDF; migración respeta nombres editados.
+
+---
+Task ID: 15
+Agent: Claude Code
+Task: Modo ligero automático según conexión/teléfono; abierto/cerrado y avisos según el horario.
+
+Work Log:
+- night-glow.tsx: detección automática (saveData, 2G/3G, deviceMemory ≤2, ≤2 núcleos, batería <20 % sin cargar, prueba de fluidez <40 fps a los 2,5 s solo para esa visita; se revisa al cambiar la conexión). La etiqueta solo aparece en modo ligero, con el motivo y «ver animaciones» para quitarlo.
+- Horario automático por defecto (seed v6) y migración para datos guardados; notification-watcher calcula abierto/cerrado con openStateFor (horario + interruptor), así los avisos «¡Abrimos!/Cerramos» llegan solos a la hora.
+- Pestaña Hoy: el interruptor explica «Según el horario: ABIERTO/CERRADO ahora · apágalo para cerrar hoy».
+- Verificado: 4G/teléfono bueno = animaciones; 3G, ahorro de datos y 2 GB RAM = modo ligero con motivo; 10 am «Abrimos hoy a las 12 pm (en 2 h)», 8 pm «Cierra a las 11:30 pm», 1 am cerrado; aviso «¡Abrimos la marea!» a las 12:00 con reloj simulado.

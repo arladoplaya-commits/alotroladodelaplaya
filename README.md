@@ -130,9 +130,17 @@ de verdad:
 - **Combos y ofertas** con «Ahorras $X», **Menú del día** arriba de la carta
   y productos **«Se acabó hoy»** que se actualizan solos cada ~90 s.
 - **Horario visible**: «Cierra a las 11:30 pm» / «Abrimos hoy a las 7 pm (en 2 h)».
-- **Modo Noche de playa** (luna del encabezado): cielo añil, luciérnagas y
-  mar que brilla. **⚡ Modo ligero**: se activa solo con «Ahorro de datos» o
-  conexión 2G/3G (o con el botón ⚡); quita animaciones y efectos pesados.
+- **Modo Noche de playa** (interruptor ☀️/🌙 de la postal): cielo añil, luna,
+  luciérnagas y mar que brilla.
+- **Modo ligero automático**: la carta mira el teléfono y la conexión. Si puede,
+  va con todas las animaciones; se aligera sola con «Ahorro de datos», 2G/3G,
+  teléfonos de ≤2 GB de RAM o 2 núcleos, batería <20 % sin cargar, o si en el
+  primer segundo va a menos de 40 cuadros/s. Solo entonces aparece la etiqueta
+  «⚡ Modo ligero · motivo · ver animaciones».
+- **Abierto/cerrado según el horario** (Entrega y pago → Horario): la etiqueta
+  de la carta y los avisos «¡Abrimos!/Cerramos» a los clientes registrados
+  siguen el horario solos. En **Hoy**, el interruptor sirve para *cerrar hoy*
+  aunque sea horario.
 - Precios en **MN**.
 
 ### Para el negocio (panel)

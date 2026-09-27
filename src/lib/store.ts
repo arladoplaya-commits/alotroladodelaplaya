@@ -441,17 +441,21 @@ export const useMenuStore = create<MenuState>()(
           }
           return x;
         });
-        return {
-          ...current,
-          data: normalizeMenu({
-            ...p,
-            products: products2,
-            categories,
-            version: seedVersion,
-            // si hubo cambios, cuentan como edición nueva (se publican solos)
-            ...(renamed ? { updatedAt: new Date().toISOString() } : {}),
-          }),
-        };
+        const migrated = normalizeMenu({
+          ...p,
+          products: products2,
+          categories,
+          version: seedVersion,
+        });
+        // v6: abierto/cerrado según el horario (antes solo el interruptor)
+        let changed = renamed;
+        if ((p.version ?? 1) < 6 && !migrated.settings.schedule.auto) {
+          migrated.settings.schedule = { ...migrated.settings.schedule, auto: true };
+          changed = true;
+        }
+        // si hubo cambios, cuentan como edición nueva (se publican solos)
+        if (changed) migrated.updatedAt = new Date().toISOString();
+        return { ...current, data: migrated };
       },
     }
   )

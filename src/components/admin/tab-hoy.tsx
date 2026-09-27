@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { money, useMenuStore } from "@/lib/store";
+import { money, openStateFor, useMenuStore } from "@/lib/store";
 import { useCartStore } from "@/lib/cart";
 import { useReviewsStore } from "@/lib/reviews";
 import { explain, sbAdminAnnounce } from "@/lib/supabase";
@@ -94,6 +94,7 @@ export function TabHoy() {
     return groups;
   }, [data, query]);
 
+  const shop = openStateFor(data.settings);
   const allEnabled = data.products.every((p) => p.available);
   const allAgregosOn = data.agregos.every((a) => a.available);
 
@@ -107,12 +108,18 @@ export function TabHoy() {
             <div>
               <p className="flex items-center gap-2 text-sm font-extrabold text-[#4a3b28]">
                 <Power className="size-4 text-[#e2574c]" aria-hidden="true" />
-                {data.settings.ordersOpen ? "Pedidos ABIERTOS" : "Pedidos CERRADOS"}
+                {!data.settings.ordersOpen
+                  ? "CERRADO hoy (a mano)"
+                  : data.settings.schedule.auto
+                    ? `Según el horario: ${shop.open ? "ABIERTO" : "CERRADO"} ahora`
+                    : "Pedidos ABIERTOS"}
               </p>
               <p className="mt-0.5 text-xs text-[#8a7350]">
-                {data.settings.ordersOpen
-                  ? "Los clientes pueden ordenar por WhatsApp"
-                  : "El menú se ve, pero no se puede ordenar"}
+                {!data.settings.ordersOpen
+                  ? "Nadie puede pedir aunque sea horario. Enciéndelo para volver al horario."
+                  : data.settings.schedule.auto
+                    ? `${shop.label || "Abre y cierra solo"} · apágalo para cerrar hoy (el horario se cambia en Entrega y pago)`
+                    : "Los clientes pueden ordenar por WhatsApp"}
               </p>
             </div>
             <Switch
