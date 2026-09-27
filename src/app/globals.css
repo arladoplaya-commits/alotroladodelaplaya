@@ -328,12 +328,26 @@
 
 [data-theme="sunset"] body,
 [data-theme="sunset"] .aol-page {
+  background: #150f29;
+}
+
+/* El cielo nocturno va en una capa fija propia: el teléfono la pinta una
+   vez y no la redibuja en cada scroll (background-attachment: fixed sí). */
+[data-theme="sunset"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
     radial-gradient(900px 520px at 50% -160px, rgba(255, 122, 89, 0.32), transparent 65%),
     radial-gradient(640px 520px at 105% 28%, rgba(155, 79, 143, 0.22), transparent 60%),
     radial-gradient(620px 520px at -8% 72%, rgba(47, 191, 180, 0.12), transparent 60%),
     linear-gradient(180deg, #1c1336 0%, #150f29 42%, #100c20 100%);
-  background-attachment: fixed;
+}
+
+[data-theme="sunset"] .aol-page {
+  background: transparent;
 }
 
 [data-theme="sunset"] .aol-title {
@@ -631,44 +645,6 @@
   --tw-ring-color: rgba(255, 255, 255, 0.1);
 }
 
-/* luciérnagas / plancton bioluminiscente: solo de noche */
-.aol-glow {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-  display: none;
-}
-
-[data-theme="sunset"] .aol-glow {
-  display: block;
-}
-
-.aol-glow span {
-  position: absolute;
-  bottom: -10px;
-  width: var(--s);
-  height: var(--s);
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff6c8 0%, #ffcf5c 40%, transparent 70%);
-  box-shadow: 0 0 10px 2px rgba(255, 207, 92, 0.55);
-  animation: aol-float-up var(--d) linear infinite;
-  animation-delay: var(--dl);
-}
-
-.aol-glow span.teal {
-  background: radial-gradient(circle, #e0fffb 0%, #7ff0e6 40%, transparent 70%);
-  box-shadow: 0 0 10px 2px rgba(127, 240, 230, 0.5);
-}
-
-@keyframes aol-float-up {
-  0% { transform: translate(0, 0); opacity: 0; }
-  10% { opacity: 0.9; }
-  50% { transform: translate(var(--x), -55vh); opacity: 0.7; }
-  90% { opacity: 0.5; }
-  100% { transform: translate(calc(var(--x) * -0.5), -110vh); opacity: 0; }
-}
 
 /* ======================================================================= */
 /*  RENDIMIENTO · móviles modestos y conexión lenta                        */
@@ -683,10 +659,6 @@ textarea {
 }
 
 /* Modo ligero (ahorro de datos, 2G/3G o elegido por el cliente) */
-html.lite .aol-glow {
-  display: none !important;
-}
-
 html.lite .animate-marquee,
 html.lite .animate-wave,
 html.lite .animate-wave-slow,
@@ -711,11 +683,6 @@ html.aol-paused *::after {
   animation-play-state: paused !important;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .aol-glow {
-    display: none !important;
-  }
-}
 
 /* ======================================================================= */
 /*  POSTAL DEL ENCABEZADO (día de playa ⇄ noche de playa)                   */
@@ -1230,4 +1197,216 @@ html.lite .aol-layer {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+}
+
+/* ======================================================================= */
+/*  OPTIMIZACIÓN PARA MÓVILES (pensada para Cuba: gama media/baja)          */
+/* ======================================================================= */
+
+/* Luciérnagas: solo 7 y dentro de la postal, sin sombras (solo degradado) */
+.pc-fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.pc-fireflies span {
+  position: absolute;
+  bottom: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6c8 0%, #ffcf5c 45%, transparent 72%);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: pc-firefly 9s ease-in-out infinite;
+}
+
+.pc-fireflies span.teal {
+  background: radial-gradient(circle, #e0fffb 0%, #7ff0e6 45%, transparent 72%);
+}
+
+@keyframes pc-firefly {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  20% { opacity: 1; }
+  60% { transform: translate3d(14px, -110px, 0); opacity: 0.8; }
+  100% { transform: translate3d(-8px, -190px, 0); opacity: 0; }
+}
+
+/* Bloques fuera de pantalla: animaciones en pausa */
+.aol-offscreen,
+.aol-offscreen * {
+  animation-play-state: paused !important;
+}
+
+@media (max-width: 1023px) {
+  /* El desenfoque «cristal» se recalcula en cada cuadro del scroll:
+     en móvil las barras usan un fondo casi opaco, igual de bonito */
+  .aol-navbar,
+  .aol-nav > div,
+  .pc-round {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .aol-navbar {
+    background-color: rgba(253, 243, 224, 0.97) !important;
+  }
+
+  .aol-nav > div {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+  }
+
+  .pc-round {
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  [data-theme="sunset"] .aol-navbar {
+    background: rgba(27, 20, 50, 0.97) !important;
+  }
+
+  [data-theme="sunset"] .aol-nav > div {
+    background-color: rgba(24, 18, 44, 0.98) !important;
+  }
+
+  [data-theme="sunset"] .pc-round {
+    background: rgba(20, 14, 40, 0.8);
+  }
+
+  /* Sombras de tarjeta más ligeras (menos píxeles difuminados que pintar) */
+  .aol-float,
+  .aol-float:hover {
+    box-shadow:
+      0 2px 4px rgba(148, 116, 62, 0.08),
+      0 10px 22px -10px rgba(120, 90, 50, 0.3);
+  }
+
+  [data-theme="sunset"] .aol-float,
+  [data-theme="sunset"] .aol-float:hover {
+    box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.7);
+  }
+}
+
+html.lite .pc-fireflies {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-fireflies {
+    display: none;
+  }
+}
+
+/* ======================================================================= */
+/*  HOJAS (Armar pedido, Hazte cliente, Avisos, Reseña) EN MODO NOCHE      */
+/* ======================================================================= */
+
+[data-theme="sunset"] .aol-sheet {
+  background: #1a1331 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fbefe3;
+}
+
+[data-theme="sunset"] .aol-sheet .bg-white\/95,
+[data-theme="sunset"] .aol-sheet .bg-background,
+[data-theme="sunset"] .aol-sheet .bg-\[\#fffcf4\],
+[data-theme="sunset"] .aol-sheet .bg-white {
+  background-color: #231b42 !important;
+}
+
+[data-theme="sunset"] .aol-sheet .bg-\[\#fdf3e0\],
+[data-theme="sunset"] .aol-sheet .bg-\[\#fdf3e0\]\/70,
+[data-theme="sunset"] .aol-sheet .bg-\[\#fdf8ec\],
+[data-theme="sunset"] .aol-sheet .bg-\[\#fdf3d8\],
+[data-theme="sunset"] .aol-sheet .bg-\[\#e6f6ea\],
+[data-theme="sunset"] .aol-sheet .bg-\[\#eef0fb\] {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="sunset"] .aol-sheet .bg-\[\#fdeae0\] {
+  background-color: rgba(255, 111, 94, 0.12) !important;
+}
+
+[data-theme="sunset"] .aol-sheet .bg-\[\#eef9fc\] {
+  background-color: rgba(127, 240, 230, 0.08) !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#4a3b28\] {
+  color: #fbefe3 !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#8a7350\],
+[data-theme="sunset"] .aol-sheet .text-\[\#a58a5f\],
+[data-theme="sunset"] .aol-sheet .text-\[\#4d7c8a\] {
+  color: #c7b7da !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#c4b08c\],
+[data-theme="sunset"] .aol-sheet .text-\[\#e8d5b5\] {
+  color: #9384b0 !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#c2542f\],
+[data-theme="sunset"] .aol-sheet .text-\[\#b3562e\] {
+  color: #ffb48f !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#e2574c\] {
+  color: #ff8574 !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#2b7a93\] {
+  color: #7ff0e6 !important;
+}
+
+[data-theme="sunset"] .aol-sheet .text-\[\#7a5410\] {
+  color: #ffd479 !important;
+}
+
+[data-theme="sunset"] .aol-sheet .border-\[\#f0dfc0\],
+[data-theme="sunset"] .aol-sheet .border-\[\#e8c9a0\],
+[data-theme="sunset"] .aol-sheet .border-\[\#e8b08a\],
+[data-theme="sunset"] .aol-sheet .border-\[\#bfe3f2\] {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="sunset"] .aol-sheet .ring-\[\#f0dfc0\],
+[data-theme="sunset"] .aol-sheet .ring-\[\#bfe3f2\] {
+  --tw-ring-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="sunset"] .aol-sheet input,
+[data-theme="sunset"] .aol-sheet textarea,
+[data-theme="sunset"] .aol-sheet select {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #fbefe3 !important;
+}
+
+[data-theme="sunset"] .aol-sheet input::placeholder,
+[data-theme="sunset"] .aol-sheet textarea::placeholder {
+  color: #9384b0 !important;
+}
+
+[data-theme="sunset"] .aol-sheet [data-slot="sheet-close"],
+[data-theme="sunset"] .aol-sheet button[class*="absolute"][class*="top-4"] {
+  color: #fbefe3;
+}
+
+/* la bandeja de capas: fondo oscuro, las franjas de colores se ven más */
+[data-theme="sunset"] .aol-sheet .aol-layers {
+  filter: saturate(1.05);
+}
+
+/* avisos emergentes (sonner) de noche */
+[data-theme="sunset"] [data-sonner-toast][data-styled="true"]:not([data-type="success"]):not([data-type="error"]):not([data-type="info"]) {
+  background: #231b42;
+  color: #fbefe3;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Tarjeta de fidelidad de noche: sellos vacíos oscuros, no blancos */
+[data-theme="sunset"] .aol-stamp:not(.is-done) {
+  background: rgba(255, 255, 255, 0.06);
+  --tw-ring-color: rgba(255, 214, 150, 0.28);
 }

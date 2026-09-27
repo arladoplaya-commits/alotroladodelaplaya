@@ -17,7 +17,8 @@ import { Button } from "@/components/ui/button";
 import { useCartStore, unitPriceFor } from "@/lib/cart";
 import { money, useMenuStore } from "@/lib/store";
 import { buzz, useCustomerStore } from "@/lib/customer";
-import { removableOf, sinText } from "@/lib/ingredients";
+import { removableOf } from "@/lib/ingredients";
+import { ingredientName, productDesc, productName, useLang, useTr, withoutText } from "@/lib/i18n";
 import type { Product } from "@/lib/types";
 import { LayerStack } from "./layer-stack";
 
@@ -29,9 +30,13 @@ interface CustomizerSheetProps {
   product: Product | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Se llama después de añadir al carrito (para sugerir acompañantes) */
+  onAdded?: (product: Product) => void;
 }
 
-export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheetProps) {
+export function CustomizerSheet({ product, open, onOpenChange, onAdded }: CustomizerSheetProps) {
+  const tr = useTr();
+  const lang = useLang();
   const agregos = useMenuStore((s) => s.data.agregos);
   const settings = useMenuStore((s) => s.data.settings);
   const add = useCartStore((s) => s.add);
@@ -87,6 +92,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
   );
 
   const totalCustom = unitPrice * qty;
+  const ingredientLabel = (n: string) => ingredientName(n, lang);
 
   const reset = () => {
     setSelected([]);
@@ -112,17 +118,19 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
     // Guardamos sus gustos y confirmamos con un toquecito
     useCustomerStore.getState().bumpOrderCount(product.id, qty);
     buzz(35);
-    toast.success(`${product.emoji} ${product.name} al carrito`, {
+    const shown = productName(product, lang);
+    toast.success(tr(`${product.emoji} ${shown} al carrito`, `${product.emoji} ${shown} added`), {
       description:
         [
-          chosen.length ? `Con ${chosen.map((a) => a.name).join(", ")}` : "",
-          sinText(removed),
+          chosen.length ? `${tr("Con", "With")} ${chosen.map((a) => ingredientLabel(a.name)).join(", ")}` : "",
+          withoutText(removed, lang),
         ]
           .filter(Boolean)
-          .join(" · ") || "Listo para la marea 🌊",
+          .join(" · ") || tr("Listo para la marea 🌊", "Ready for the tide 🌊"),
     });
     reset();
     onOpenChange(false);
+    onAdded?.(product);
   };
 
   return (
@@ -135,7 +143,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
     >
       <SheetContent
         side="bottom"
-        className="max-h-[92dvh] overflow-y-auto rounded-t-3xl border-[#f0dfc0] bg-[#fffcf4] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+        className="aol-sheet max-h-[92dvh] overflow-y-auto rounded-t-3xl border-[#f0dfc0] bg-[#fffcf4] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
       >
         {product && (
           <>
@@ -158,7 +166,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                 <div className="absolute inset-0 bg-gradient-to-t from-[#281a0e]/80 via-transparent to-transparent" />
                 <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-3">
                   <SheetTitle className="font-display text-[26px] leading-none text-white">
-                    {product.name}
+                    {productName(product, lang)}
                   </SheetTitle>
                   <span className="shrink-0 rounded-full bg-white/95 px-3 py-1 font-display text-base text-[#c2542f]">
                     {money(settings.currency, product.price)}
@@ -166,7 +174,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                 </div>
               </div>
               <SheetDescription className="text-sm text-[#8a7350]">
-                {product.description}
+                {productDesc(product, lang)}
               </SheetDescription>
             </SheetHeader>
 
@@ -187,25 +195,25 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                 {removed.length > 0 && (
                   <div className="mb-2 flex items-center gap-2">
                     <Ban className="size-4 text-[#e2574c]" aria-hidden="true" />
-                    <h3 className="text-sm font-extrabold text-[#4a3b28]">Tus cambios</h3>
+                    <h3 className="text-sm font-extrabold text-[#4a3b28]">{tr("Tus cambios", "Your changes")}</h3>
                     <button
                       type="button"
                       onClick={() => setTouched({ pid: product.id, list: [] })}
                       className="ml-auto inline-flex items-center gap-1 text-xs font-bold text-[#c2542f] hover:underline"
                     >
                       <RotateCcw className="size-3.5" aria-hidden="true" />
-                      Ponerlo todo
+                      {tr("Ponerlo todo", "Put it all back")}
                     </button>
                   </div>
                 )}
                 {fromMemory && (
                   <p className="mb-2 rounded-xl bg-[#f2c230]/20 px-3 py-2 text-xs font-bold text-[#7a5410]">
-                    💾 Te lo dejamos como la última vez: {sinText(removed).toLowerCase()}
+                    💾 {tr("Te lo dejamos como la última vez:", "Just like last time:")} {withoutText(removed, lang).toLowerCase()}
                   </p>
                 )}
                 {removed.length > 0 && (
                   <p className="aol-removed mb-1 text-sm font-extrabold text-[#c0392b]">
-                    {sinText(removed)}
+                    {withoutText(removed, lang)}
                   </p>
                 )}
                 <label className="mt-2.5 flex items-center gap-2 text-xs font-semibold text-[#8a7350]">
@@ -215,7 +223,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                     checked={remember}
                     onChange={(e) => setRemember(e.target.checked)}
                   />
-                  Recordar mis gustos para la próxima vez
+                  {tr("Recordar mis gustos para la próxima vez", "Remember my choices for next time")}
                 </label>
               </div>
             )}
@@ -226,13 +234,13 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                 <div className="mb-2 mt-1 flex items-center gap-2">
                   <Flame className="size-4 text-[#e2574c]" aria-hidden="true" />
                   <h3 className="text-sm font-extrabold text-[#4a3b28]">
-                    Agregos disponibles hoy
+                    {tr("Agregos disponibles hoy", "Extras available today")}
                   </h3>
                 </div>
 
                 {availableAgregos.length === 0 ? (
                   <p className="rounded-xl bg-[#fdf3e0] px-3 py-2.5 text-sm text-[#8a7350]">
-                    Hoy no hay agregos disponibles
+                    {tr("Hoy no hay agregos disponibles", "No extras available today")}
                   </p>
                 ) : (
                   <ul className="grid gap-2">
@@ -261,7 +269,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                                 }
                               />
                               <span className="text-sm font-semibold text-[#4a3b28]">
-                                {a.name}
+                                {ingredientLabel(a.name)}
                               </span>
                             </span>
                             <span className="text-sm font-bold text-[#c2542f]">
@@ -278,19 +286,19 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
             {isDrink && (
               <p className="mt-1 flex items-center gap-2 rounded-xl bg-[#eef9fc] px-3 py-2.5 text-sm font-semibold text-[#2b7a93] ring-1 ring-[#bfe3f2]">
                 <span aria-hidden="true">🧊</span>
-                Bebida bien fría · puedes pedirnos el hielo aparte en las notas
+                {tr("Bebida bien fría · puedes pedirnos el hielo aparte en las notas", "Served ice-cold · ask for ice on the side in the notes")}
               </p>
             )}
 
             {/* Notas */}
             <div className="mt-4">
               <h3 className="mb-1.5 text-sm font-extrabold text-[#4a3b28]">
-                Notas para la cocina 📝
+                {tr("Notas para la cocina 📝", "Notes for the kitchen 📝")}
               </h3>
               <Textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value.slice(0, 140))}
-                placeholder="Ej: sin cebolla, salsas aparte, bien dorado..."
+                placeholder={tr("Ej: sin cebolla, salsas aparte, bien dorado...", "E.g. no onion, sauces on the side, extra crispy...")}
                 className="min-h-[64px] resize-none border-[#f0dfc0] bg-white text-sm placeholder:text-[#c4b08c] focus-visible:ring-[#e2574c]"
               />
               <p className="mt-1 text-right text-[11px] text-[#a58a5f]">
@@ -308,7 +316,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                     size="icon"
                     className="size-9 rounded-full border-[#f0dfc0] text-[#c2542f] hover:bg-[#fdf3e0]"
                     onClick={() => setQty((q) => Math.max(1, q - 1))}
-                    aria-label="Quitar uno"
+                    aria-label={tr("Quitar uno", "One less")}
                   >
                     <Minus className="size-4" />
                   </Button>
@@ -321,7 +329,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                     size="icon"
                     className="size-9 rounded-full border-[#f0dfc0] text-[#c2542f] hover:bg-[#fdf3e0]"
                     onClick={() => setQty((q) => Math.min(30, q + 1))}
-                    aria-label="Agregar uno"
+                    aria-label={tr("Agregar uno", "One more")}
                   >
                     <Plus className="size-4" />
                   </Button>
@@ -329,7 +337,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                 {/* Total */}
                 <div className="text-right">
                   <p className="text-[11px] font-semibold uppercase tracking-wide text-[#a58a5f]">
-                    Total personalizado
+                    {tr("Total personalizado", "Your total")}
                   </p>
                   <p className="font-display text-xl text-[#c2542f]">
                     {money(settings.currency, totalCustom)}
@@ -343,7 +351,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
                 className="h-12 w-full rounded-2xl bg-[#e2574c] text-base font-extrabold text-white shadow-[0_8px_24px_-4px_rgba(226,87,76,0.5)] transition hover:bg-[#d34a40] active:scale-[0.98]"
               >
                 <ShoppingBag className="size-5" />
-                Agregar al carrito · {money(settings.currency, totalCustom)}
+                {tr("Agregar al carrito", "Add to cart")} · {money(settings.currency, totalCustom)}
               </Button>
             </SheetFooter>
           </>

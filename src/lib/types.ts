@@ -5,6 +5,7 @@ export interface Category {
   name: string;
   emoji: string;
   visible: boolean;
+  nameEn?: string;
 }
 
 export interface Product {
@@ -19,6 +20,9 @@ export interface Product {
   available: boolean;
   featured: boolean;
   ingredients: string[];
+  /** Traducciones para la carta en inglés (opcionales) */
+  nameEn?: string;
+  descriptionEn?: string;
 }
 
 export interface Agrego {
@@ -52,6 +56,29 @@ export interface Settings {
   daily: DailyMenu;
   /** Dirección pública de la carta (para el código QR). Vacío = la actual */
   publicUrl: string;
+  /** Tarjeta de fidelidad (sellos por pedido) */
+  loyalty: Loyalty;
+  /** Cupones de descuento */
+  coupons: Coupon[];
+}
+
+export interface Loyalty {
+  enabled: boolean;
+  /** Pedidos necesarios para el premio */
+  stamps: number;
+  /** Premio, p. ej. «1 Ola Fría gratis» */
+  reward: string;
+}
+
+export interface Coupon {
+  id: string;
+  code: string;
+  kind: "percent" | "amount";
+  /** % o MN según kind */
+  value: number;
+  /** Pedido mínimo en MN (0 = sin mínimo) */
+  minTotal: number;
+  active: boolean;
 }
 
 export interface DeliveryZone {

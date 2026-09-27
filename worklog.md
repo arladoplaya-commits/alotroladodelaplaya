@@ -259,3 +259,40 @@ Work Log:
 - Horario automático por defecto (seed v6) y migración para datos guardados; notification-watcher calcula abierto/cerrado con openStateFor (horario + interruptor), así los avisos «¡Abrimos!/Cerramos» llegan solos a la hora.
 - Pestaña Hoy: el interruptor explica «Según el horario: ABIERTO/CERRADO ahora · apágalo para cerrar hoy».
 - Verificado: 4G/teléfono bueno = animaciones; 3G, ahorro de datos y 2 GB RAM = modo ligero con motivo; 10 am «Abrimos hoy a las 12 pm (en 2 h)», 8 pm «Cierra a las 11:30 pm», 1 am cerrado; aviso «¡Abrimos la marea!» a las 12:00 con reloj simulado.
+
+---
+Task ID: 16
+Agent: Claude Code
+Task: Optimizar animaciones para teléfonos de gama media/baja (Cuba).
+
+Work Log:
+- Medición previa (Playwright, 390×844, CPU ×6): scroll en modo noche 29–30 fps; día 49–51 fps.
+- Luciérnagas: de 10–22 puntos con sombra flotando por TODA la página (capa fija) a 7 puntos sin sombra solo dentro de la postal y solo de noche.
+- Cielo nocturno: de background-attachment: fixed (redibujo en cada scroll) a una capa fija body::before que se pinta una vez.
+- Sin backdrop-filter en móvil: barra de búsqueda, barra inferior, botones de la postal y los 60 rótulos «Capas»/corazón de las tarjetas (fondos casi opacos).
+- Sombras de tarjeta más ligeras en móvil; estrellas de 38 a 20.
+- useOffscreenPause: la postal y la marquesina pausan sus animaciones al salir de pantalla.
+- Probado content-visibility: empeoraba (8 tirones) → descartado.
+- Medición final: scroll ~54 fps en día y noche con 0–2 tirones (antes noche 30 fps).
+
+---
+Task ID: 17
+Agent: Claude Code
+Task: Hojas (modales) en modo noche.
+
+Work Log:
+- Clase aol-sheet en Armar pedido, Hazte cliente, Avisos y Reseña; CSS nocturno que remapea fondos, textos, bordes, inputs y botones (incluido el precio sobre la foto y los botones −/+). Avisos emergentes oscuros de noche.
+- Hazte cliente: textos honestos (el registro se guarda en la nube del shack; favoritos solo en el teléfono; para borrarse, pedirlo por WhatsApp) y «Modo noche de playa».
+- Verificado: capturas de las 4 hojas de noche; rendimiento sin cambios (~52 fps con CPU ×6).
+
+---
+Task ID: 18
+Agent: Claude
+Task: Upsell, repetir pedido, fidelidad y cupones en el panel, carta en inglés
+
+Work Log:
+- src/lib/promos.ts: cupones (findCoupon/couponDiscount), fidelidad (loyaltyProgress), upsellFor, toLastOrder/rebuildOrder.
+- promo-cards.tsx: RepeatLastOrderCard, LoyaltyCard, UpsellSheet. Carrito con cupón, sellos, último pedido y mensaje WhatsApp con descuento/premio.
+- Panel: pestaña Promos (fidelidad + cupones), campos en inglés en el editor de productos.
+- i18n: toda la carta del cliente en ES/EN; useLang respeta la hidratación (sin error #418).
+- Verificado en navegador: upsell, cupón -10 % con mínimo, sello 1/5 en WhatsApp, repetir pedido, inglés día/noche, sin errores.

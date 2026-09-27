@@ -3,17 +3,28 @@
 import { Bell, Moon, Share2, Sun } from "lucide-react";
 import type { ThemeMode } from "@/lib/customer";
 import { Bunting, PalmSilhouette, SunSilhouette } from "./beach-scene";
+import { useOffscreenPause } from "@/hooks/use-offscreen-pause";
 
 /* ------------------------------------------------------------------ */
 /*  Postal del shack: cielo, sol, mar y palmeras. Al pasar al modo     */
 /*  noche el sol se esconde en el mar y salen la luna y las estrellas. */
 /* ------------------------------------------------------------------ */
 
-const STARS = Array.from({ length: 38 }, (_, i) => ({
+const STARS = Array.from({ length: 20 }, (_, i) => ({
   left: `${(i * 37.7) % 100}%`,
   top: `${(i * 23.3) % 58}%`,
   size: i % 5 === 0 ? 3 : 2,
   delay: `${(i % 7) * 0.4}s`,
+}));
+
+/* Luciérnagas: pocas y solo dentro de la postal (antes flotaban por
+   toda la página y obligaban al teléfono a redibujarla sin parar) */
+const FIREFLIES = Array.from({ length: 7 }, (_, i) => ({
+  left: `${8 + ((i * 13) % 84)}%`,
+  size: 3 + (i % 3),
+  dur: `${7 + (i % 4) * 2}s`,
+  delay: `${-i * 1.7}s`,
+  teal: i % 3 === 0,
 }));
 
 const WAVE_BACK = "M0 30 Q180 12 360 30 T720 30 T1080 30 T1440 30 V96 H0Z";
@@ -48,7 +59,11 @@ export function HeroPostcard({
   unread,
   onBell,
   onShare,
+  lang,
+  onToggleLang,
 }: {
+  lang: "es" | "en";
+  onToggleLang: () => void;
   theme: ThemeMode;
   onToggleTheme: (origin: HTMLElement) => void;
   unread: number;
@@ -56,8 +71,9 @@ export function HeroPostcard({
   onShare: () => void;
 }) {
   const night = theme === "sunset";
+  const ref = useOffscreenPause<HTMLDivElement>();
   return (
-    <div className="pc-hero">
+    <div ref={ref} className="pc-hero">
       <div className="pc-sky-night" aria-hidden="true" />
       <div className="pc-stars" aria-hidden="true">
         {STARS.map((s, i) => (
@@ -102,6 +118,18 @@ export function HeroPostcard({
       <span className="pc-sparkle" style={{ right: "33%", width: 26, bottom: 48, animationDelay: "-1s" }} aria-hidden="true" />
       <span className="pc-sparkle" style={{ right: "22%", width: 18, bottom: 40, animationDelay: "-2s" }} aria-hidden="true" />
 
+      {night && (
+        <div className="pc-fireflies" aria-hidden="true">
+          {FIREFLIES.map((f, i) => (
+            <span
+              key={i}
+              className={f.teal ? "teal" : ""}
+              style={{ left: f.left, width: f.size, height: f.size, animationDuration: f.dur, animationDelay: f.delay }}
+            />
+          ))}
+        </div>
+      )}
+
       <div className="pc-palm pc-palm-left" aria-hidden="true">
         <PalmSilhouette className="h-full w-full" />
       </div>
@@ -114,13 +142,25 @@ export function HeroPostcard({
           type="button"
           onClick={onBell}
           className="pc-round"
-          aria-label={`Avisos del shack${unread ? ` (${unread} sin leer)` : ""}`}
+          aria-label={
+            lang === "en"
+              ? `Shack notices${unread ? ` (${unread} unread)` : ""}`
+              : `Avisos del shack${unread ? ` (${unread} sin leer)` : ""}`
+          }
         >
           <Bell className="size-[18px]" aria-hidden="true" />
           {unread > 0 && <span className="pc-badge">{unread > 9 ? "9+" : unread}</span>}
         </button>
-        <button type="button" onClick={onShare} className="pc-round" aria-label="Compartir la carta">
+        <button type="button" onClick={onShare} className="pc-round" aria-label={lang === "en" ? "Share the menu" : "Compartir la carta"}>
           <Share2 className="size-[18px]" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          onClick={onToggleLang}
+          className="pc-round text-[12px] font-black tracking-wide"
+          aria-label={lang === "en" ? "Ver la carta en español" : "See the menu in English"}
+        >
+          {lang === "en" ? "ES" : "EN"}
         </button>
       </div>
       <div className="pc-toolbar pc-toolbar-right">
@@ -128,7 +168,11 @@ export function HeroPostcard({
           type="button"
           role="switch"
           aria-checked={night}
-          aria-label={night ? "Cambiar a modo día de playa" : "Cambiar a modo noche de playa"}
+          aria-label={
+            lang === "en"
+              ? night ? "Switch to beach day" : "Switch to beach night"
+              : night ? "Cambiar a modo día de playa" : "Cambiar a modo noche de playa"
+          }
           onClick={(e) => onToggleTheme(e.currentTarget)}
           className="pc-switch"
         >

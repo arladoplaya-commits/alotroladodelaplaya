@@ -10,6 +10,7 @@ import { buzz } from "@/lib/customer";
 import type { Combo, MenuData, Product } from "@/lib/types";
 import { CatTitle } from "./section-title";
 import { ProductRow } from "./product-row";
+import { productName, useLang, useTr } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /*  Especiales configurables desde el panel: combos y menú del día     */
@@ -46,6 +47,8 @@ export function CombosSection({ data }: { data: MenuData }) {
   const combos = useActiveCombos(data);
   const add = useCartStore((s) => s.add);
   const currency = data.settings.currency;
+  const tr = useTr();
+  const lang = useLang();
 
   if (!combos.length) return null;
 
@@ -63,14 +66,14 @@ export function CombosSection({ data }: { data: MenuData }) {
       notes: "",
     });
     buzz(35);
-    toast.success(`${combo.emoji} ${combo.name} al carrito`, {
-      description: "Combo listo para la marea 🌊",
+    toast.success(tr(`${combo.emoji} ${combo.name} al carrito`, `${combo.emoji} ${combo.name} added`), {
+      description: tr("Combo listo para la marea 🌊", "Combo ready for the tide 🌊"),
     });
   };
 
   return (
-    <section className="mt-6" aria-label="Combos y ofertas">
-      <CatTitle emoji="🔥">Combos y ofertas</CatTitle>
+    <section className="mt-6" aria-label={tr("Combos y ofertas", "Combos & deals")}>
+      <CatTitle emoji="🔥">{tr("Combos y ofertas", "Combos & deals")}</CatTitle>
       <div className="nice-scroll -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
         {combos.map((v) => {
           const save = v.regular - v.combo.price;
@@ -90,7 +93,7 @@ export function CombosSection({ data }: { data: MenuData }) {
                 )}
                 {save > 0 && (
                   <span className="absolute left-2 top-2 rounded-full bg-[#f2c230] px-2.5 py-1 text-[11px] font-black uppercase tracking-wide text-[#7a5410] shadow-sm">
-                    Ahorras {money(currency, save)}
+                    {tr("Ahorras", "Save")} {money(currency, save)}
                   </span>
                 )}
                 <span className="absolute bottom-2 right-2 grid size-10 place-items-center rounded-full bg-white/90 text-2xl shadow-sm" aria-hidden="true">
@@ -102,7 +105,7 @@ export function CombosSection({ data }: { data: MenuData }) {
                   {v.combo.name}
                 </h3>
                 <p className="text-xs leading-snug text-[#8a7350]">
-                  {v.products.map((x) => `${x.qty}× ${x.product.name}`).join(" · ")}
+                  {v.products.map((x) => `${x.qty}× ${productName(x.product, lang)}`).join(" · ")}
                 </p>
                 {v.combo.description && (
                   <p className="text-xs italic leading-snug text-[#a58a5f]">
@@ -126,7 +129,7 @@ export function CombosSection({ data }: { data: MenuData }) {
                     className="inline-flex items-center gap-1 rounded-full bg-[#e2574c] px-3.5 py-2 text-xs font-extrabold text-white shadow-[0_5px_14px_-4px_rgba(226,87,76,0.55)] transition hover:bg-[#d34a40] active:scale-95 disabled:opacity-50"
                   >
                     <Plus className="size-3.5" aria-hidden="true" />
-                    Agregar
+                    {tr("Agregar", "Add")}
                   </button>
                 </div>
               </div>
@@ -148,6 +151,11 @@ export function DailySection({
   favProps: (p: Product) => { fav: boolean; onFav: () => void };
 }) {
   const daily = data.settings.daily;
+  const tr = useTr();
+  const dailyTitle =
+    !daily.title || daily.title === "Menú del día"
+      ? tr("Menú del día", "Today's menu")
+      : daily.title;
   const list = useMemo(
     () =>
       daily.productIds
@@ -159,9 +167,9 @@ export function DailySection({
   return (
     <section
       className="aol-daily mt-6 rounded-3xl border-2 border-dashed border-[#e2574c]/40 bg-[#e2574c]/5 p-3 pt-4"
-      aria-label={daily.title || "Menú del día"}
+      aria-label={dailyTitle}
     >
-      <CatTitle emoji="🍽️">{daily.title || "Menú del día"}</CatTitle>
+      <CatTitle emoji="🍽️">{dailyTitle}</CatTitle>
       {daily.note && (
         <p className="aol-sub -mt-1 mb-3 text-center text-sm font-semibold text-[#8a7350]">
           {daily.note}

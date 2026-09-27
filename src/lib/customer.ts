@@ -30,9 +30,24 @@ export interface CustomerProfile {
 }
 
 export type ThemeMode = "day" | "sunset";
+export type Lang = "es" | "en";
+
+/** Lo que se envió en el último pedido (para «Repetir mi pedido») */
+export interface LastOrderItem {
+  productId: string;
+  comboId?: string;
+  name: string;
+  emoji: string;
+  qty: number;
+  agregoIds: string[];
+  removed: string[];
+  notes: string;
+}
 
 export interface CustomerPrefs {
   theme: ThemeMode;
+  /** Idioma de la carta (el pedido a WhatsApp siempre va en español) */
+  lang?: Lang;
   notifyOpenClose: boolean;
   notifyNewProducts: boolean;
   /** Permiso real del navegador para notificaciones del sistema */
@@ -54,6 +69,10 @@ interface CustomerState {
   orderCounts: Record<string, number>;
   /** ingredientes que suele quitar por producto (se recuerdan) */
   removedPrefs: Record<string, string[]>;
+  /** último pedido enviado por WhatsApp */
+  lastOrder: { at: string; items: LastOrderItem[] } | null;
+  /** sellos de la tarjeta de fidelidad (pedidos enviados) */
+  stamps: number;
   visits: number;
   lastVisit: string | null;
   /** apertura/cierre conocido por el watcher para detectar cambios */
@@ -72,6 +91,9 @@ interface CustomerState {
   syncSeenAnnouncements: (ids: string[]) => void;
   bumpOrderCount: (productId: string, qty: number) => void;
   setRemovedPref: (productId: string, removed: string[]) => void;
+  setLastOrder: (items: LastOrderItem[]) => void;
+  setStamps: (n: number) => void;
+  setLang: (lang: Lang) => void;
   noteVisit: () => void;
   setLastKnownOpen: (open: boolean) => void;
 }
@@ -94,6 +116,8 @@ export const useCustomerStore = create<CustomerState>()(
       seenAnnouncements: [],
       orderCounts: {},
       removedPrefs: {},
+      lastOrder: null,
+      stamps: 0,
       visits: 0,
       lastVisit: null,
       lastKnownOpen: null,
@@ -198,6 +222,13 @@ export const useCustomerStore = create<CustomerState>()(
           return { removedPrefs: next };
         }),
 
+      setLastOrder: (items) =>
+        set({ lastOrder: { at: new Date().toISOString(), items } }),
+
+      setStamps: (n) => set({ stamps: Math.max(0, n) }),
+
+      setLang: (lang) => set((st) => ({ prefs: { ...st.prefs, lang } })),
+
       noteVisit: () =>
         set((st) => ({
           visits: st.visits + 1,
@@ -250,10 +281,12 @@ export function buzz(pattern: number | number[] = 35): void {
  * Estimación amable de espera según la hora local (heurística playera):
  * mediodía y noche son hora pico en el shack.
  */
-export function waitEstimate(open: boolean): string {
-  if (!open) return "Abrimos esta noche 🌙";
+export function waitEstimate(open: boolean, lang: "es" | "en" = "es"): string {
+  const en = lang === "en";
+  if (!open) return en ? "We open tonight 🌙" : "Abrimos esta noche 🌙";
   const h = new Date().getHours();
   const peak = (h >= 19 && h <= 22) || (h >= 12 && h <= 13);
+  if (en) return peak ? "⏱️ Wait today ~20-30 min" : "⏱️ Wait today ~15 min";
   return peak ? "⏱️ Espera hoy ~20-30 min" : "⏱️ Espera hoy ~15 min";
 }
 

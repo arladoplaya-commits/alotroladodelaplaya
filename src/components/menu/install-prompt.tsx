@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { toast } from "sonner";
 import { buzz } from "@/lib/customer";
+import { useTr } from "@/lib/i18n";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -19,6 +20,7 @@ interface BeforeInstallPromptEvent extends Event {
 export function InstallButton() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [hidden, setHidden] = useState(true);
+  const tr = useTr();
 
   useEffect(() => {
     try {
@@ -63,8 +65,8 @@ export function InstallButton() {
         await deferred.prompt();
         const choice = await deferred.userChoice;
         if (choice.outcome === "accepted") {
-          toast.success("¡Carta instalada! 🌊", {
-            description: "Ya tienes el shack en tu pantalla de inicio.",
+          toast.success(tr("¡Carta instalada! 🌊", "Menu installed! 🌊"), {
+            description: tr("Ya tienes el shack en tu pantalla de inicio.", "The shack is now on your home screen."),
           });
         }
       } catch {
@@ -73,9 +75,11 @@ export function InstallButton() {
       setDeferred(null);
       return;
     }
-    toast("📱 Instalar la carta", {
-      description:
+    toast(tr("📱 Instalar la carta", "📱 Install the menu"), {
+      description: tr(
         "iPhone: Compartir ▲ → «Añadir a pantalla de inicio». Android: menú ⋮ → «Instalar aplicación».",
+        "iPhone: Share ▲ → “Add to Home Screen”. Android: menu ⋮ → “Install app”."
+      ),
       duration: 9000,
     });
   };
@@ -84,7 +88,7 @@ export function InstallButton() {
     <button
       type="button"
       onClick={() => void install()}
-      aria-label="Instalar la carta como aplicación"
+      aria-label={tr("Instalar la carta como aplicación", "Install the menu as an app")}
       className="grid size-9 place-items-center rounded-full bg-white text-[#c2542f] shadow-sm ring-1 ring-[#f0dfc0] transition hover:bg-[#fdf3e0] active:scale-95"
     >
       <Download className="size-4" aria-hidden="true" />

@@ -1,48 +1,55 @@
 {
-  "version": 6,
+  "version": 7,
   "updatedAt": "2026-09-26T07:30:00.000Z",
   "categories": [
     {
       "id": "hamburguesas",
       "name": "Hamburguesas",
       "emoji": "🍔",
-      "visible": true
+      "visible": true,
+      "nameEn": "Burgers"
     },
     {
       "id": "perros",
       "name": "Perros Calientes",
       "emoji": "🌭",
-      "visible": true
+      "visible": true,
+      "nameEn": "Hot Dogs"
     },
     {
       "id": "baguette",
       "name": "El Rincón del Baguette",
       "emoji": "🥖",
-      "visible": true
+      "visible": true,
+      "nameEn": "Baguette Corner"
     },
     {
       "id": "raciones",
       "name": "Raciones",
       "emoji": "🍟",
-      "visible": true
+      "visible": true,
+      "nameEn": "Sides & Bites"
     },
     {
       "id": "bebidas-refrescos",
       "name": "Refrescos y Malta",
       "emoji": "🥤",
-      "visible": true
+      "visible": true,
+      "nameEn": "Sodas & Malta"
     },
     {
       "id": "bebidas-jugos",
       "name": "Jugos y Batidos",
       "emoji": "🧃",
-      "visible": true
+      "visible": true,
+      "nameEn": "Juices & Smoothies"
     },
     {
       "id": "bebidas-cafe",
       "name": "Café",
       "emoji": "☕",
-      "visible": true
+      "visible": true,
+      "nameEn": "Coffee"
     }
   ],
   "products": [
@@ -64,7 +71,9 @@
         "Ketchup",
         "Mostaza",
         "Chips de boniato"
-      ]
+      ],
+      "nameEn": "The Shoreline",
+      "descriptionEn": "Chicken burger, veggies, ketchup, mustard and sweet potato chips."
     },
     {
       "id": "p-cerdo",
@@ -84,7 +93,9 @@
         "Ketchup",
         "Mostaza",
         "Chips de boniato"
-      ]
+      ],
+      "nameEn": "High Tide",
+      "descriptionEn": "Pork burger, veggies, ketchup, mustard and sweet potato chips."
     },
     {
       "id": "p-res",
@@ -104,7 +115,9 @@
         "Ketchup",
         "Mostaza",
         "Chips de boniato"
-      ]
+      ],
+      "nameEn": "The Reef",
+      "descriptionEn": "Beef burger, veggies, ketchup, mustard and sweet potato chips."
     },
     {
       "id": "p-doble",
@@ -127,7 +140,9 @@
         "Ketchup",
         "Mostaza",
         "Chips de boniato"
-      ]
+      ],
+      "nameEn": "Double Wave",
+      "descriptionEn": "Two chicken patties, veggies, ketchup, mustard and chips."
     },
     {
       "id": "p-doble-mixta",
@@ -150,7 +165,9 @@
         "Ketchup",
         "Mostaza",
         "Chips de boniato"
-      ]
+      ],
+      "nameEn": "The Big Swell",
+      "descriptionEn": "Pork and chicken patties, veggies, ketchup, mustard and sweet potato chips."
     },
     {
       "id": "p-perro-clasico",
@@ -169,7 +186,9 @@
         "Ketchup",
         "Salchicha",
         "Pan de perro"
-      ]
+      ],
+      "nameEn": "The Lifeguard",
+      "descriptionEn": "Hot dog with ketchup, mayo and mustard."
     },
     {
       "id": "p-perro-crispy",
@@ -190,7 +209,9 @@
         "Ketchup",
         "Salchicha",
         "Pan de perro"
-      ]
+      ],
+      "nameEn": "The Surfer",
+      "descriptionEn": "Hot dog with ketchup, mustard and sweet potato chips."
     },
     {
       "id": "p-perro-isleno",
@@ -211,7 +232,9 @@
         "Ketchup",
         "Salchicha",
         "Pan de perro"
-      ]
+      ],
+      "nameEn": "Pineapple Key",
+      "descriptionEn": "Hot dog with ketchup, mustard and glazed pineapple."
     },
     {
       "id": "p-perro-saludable",
@@ -232,7 +255,9 @@
         "Ketchup",
         "Salchicha",
         "Pan de perro"
-      ]
+      ],
+      "nameEn": "Green Breeze",
+      "descriptionEn": "Hot dog with ketchup, mustard and veggies."
     },
     {
       "id": "p-perro-cheesy",
@@ -253,7 +278,9 @@
         "Ketchup",
         "Salchicha",
         "Pan de perro"
-      ]
+      ],
+      "nameEn": "Sunset Dog",
+      "descriptionEn": "Hot dog with ketchup, mustard and gouda cheese."
     },
     {
       "id": "p-baguette-rustico",
@@ -272,7 +299,9 @@
         "Queso gouda",
         "Jamón",
         "Pan baguette"
-      ]
+      ],
+      "nameEn": "The Pier",
+      "descriptionEn": "Baguette with ham, gouda cheese, veggies and mayo."
     },
     {
       "id": "p-albondiga-cerdo",
@@ -288,7 +317,9 @@
       "ingredients": [
         "Albóndigas",
         "Ketchup"
-      ]
+      ],
+      "nameEn": "Pork Pearls",
+      "descriptionEn": "5 pork meatballs with ketchup."
     },
     {
       "id": "p-albondiga-pollo",
@@ -304,7 +335,9 @@
       "ingredients": [
         "Albóndigas",
         "Ketchup"
-      ]
+      ],
+      "nameEn": "Chicken Pearls",
+      "descriptionEn": "5 chicken meatballs with ketchup."
     },
     {
       "id": "p-croquetas",
@@ -319,7 +352,9 @@
       "featured": false,
       "ingredients": [
         "Croquetas"
-      ]
+      ],
+      "nameEn": "Malecón Croquettes",
+      "descriptionEn": "10 croquettes."
     },
     {
       "id": "p-fajitas-pollo",
@@ -335,7 +370,9 @@
       "ingredients": [
         "Fajitas de pollo",
         "Mayonesa"
-      ]
+      ],
+      "nameEn": "Sailboat Fajitas",
+      "descriptionEn": "Chicken fajitas with a side of mayo."
     },
     {
       "id": "p-papas-fritas",
@@ -350,7 +387,9 @@
       "featured": false,
       "ingredients": [
         "Papas fritas"
-      ]
+      ],
+      "nameEn": "Sand Fries",
+      "descriptionEn": "A portion of French fries."
     },
     {
       "id": "p-papischis",
@@ -369,7 +408,9 @@
         "Papas fritas",
         "Salchichas",
         "Salsa de la casa"
-      ]
+      ],
+      "nameEn": "Shark Papischis",
+      "descriptionEn": "Fries and sausages with sauce, great to share."
     },
     {
       "id": "p-alitas-pollo",
@@ -384,7 +425,9 @@
       "featured": false,
       "ingredients": [
         "Alitas de pollo"
-      ]
+      ],
+      "nameEn": "Lighthouse Wings",
+      "descriptionEn": "A portion of chicken wings."
     },
     {
       "id": "p-refrescos",
@@ -404,7 +447,9 @@
         "Gaseosa bien fría",
         "Hielo",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Cold Wave",
+      "descriptionEn": "Ice-cold sodas: cola, orange or lemon. A beach classic."
     },
     {
       "id": "p-malta",
@@ -424,7 +469,9 @@
         "Malta bien fría",
         "Hielo",
         "Vaso"
-      ]
+      ],
+      "nameEn": "Sailor's Malta",
+      "descriptionEn": "Ice-cold malt drink with its golden foam."
     },
     {
       "id": "p-cerveza",
@@ -443,7 +490,9 @@
         "Espuma bien fría",
         "Cerveza importada",
         "Vaso helado"
-      ]
+      ],
+      "nameEn": "Horizon Beer",
+      "descriptionEn": "Imported lager, cold to the last sip. Cheers at sunset."
     },
     {
       "id": "p-jugos",
@@ -463,7 +512,9 @@
         "Jugo natural",
         "Hielo",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Tropical Juice",
+      "descriptionEn": "Fresh fruit juice of the day: orange, papaya or pineapple."
     },
     {
       "id": "p-malteada",
@@ -482,7 +533,9 @@
         "Crema batida",
         "Malteada de leche bien cremosa",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Sea Foam",
+      "descriptionEn": "Creamy milkshake with whipped cream."
     },
     {
       "id": "p-batidos",
@@ -501,7 +554,9 @@
         "Frutas naturales frescas",
         "Batido cremoso",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Coral Smoothie",
+      "descriptionEn": "Fresh fruit smoothies blended to order."
     },
     {
       "id": "p-maracuya",
@@ -521,7 +576,9 @@
         "Jugo de maracuyá",
         "Hielo",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Passion Fruit Sunset",
+      "descriptionEn": "Ice-cold passion fruit juice, sweet and tangy."
     },
     {
       "id": "p-limonada",
@@ -541,7 +598,9 @@
         "Limonada natural",
         "Hielo",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Breeze Lemonade",
+      "descriptionEn": "Fresh lemonade with ice and mint."
     },
     {
       "id": "p-limonada-brasilena",
@@ -561,7 +620,9 @@
         "Limonada brasileña",
         "Hielo",
         "Vaso alto"
-      ]
+      ],
+      "nameEn": "Copacabana Lemonade",
+      "descriptionEn": "Brazilian-style creamy lemonade, smooth and icy."
     },
     {
       "id": "p-espresso",
@@ -578,7 +639,9 @@
         "Espuma dorada",
         "Café espresso",
         "Taza caliente"
-      ]
+      ],
+      "nameEn": "Sailor's Espresso",
+      "descriptionEn": "Short, intense espresso with golden crema."
     },
     {
       "id": "p-cortado",
@@ -595,7 +658,9 @@
         "Chorro de leche",
         "Café cortado",
         "Vasito de cristal"
-      ]
+      ],
+      "nameEn": "Sunrise Cortado",
+      "descriptionEn": "Espresso with a splash of milk."
     },
     {
       "id": "p-bombon",
@@ -614,7 +679,9 @@
         "Café recién hecho",
         "Leche condensada",
         "Vasito de cristal"
-      ]
+      ],
+      "nameEn": "Sand Bombón",
+      "descriptionEn": "Espresso over condensed milk, layered like a sunset."
     }
   ],
   "agregos": [
@@ -826,7 +893,22 @@
       "note": "",
       "productIds": []
     },
-    "publicUrl": ""
+    "publicUrl": "",
+    "loyalty": {
+      "enabled": false,
+      "stamps": 5,
+      "reward": "1 Ola Fría gratis"
+    },
+    "coupons": [
+      {
+        "id": "cp-vedado10",
+        "code": "VEDADO10",
+        "kind": "percent",
+        "value": 10,
+        "minTotal": 2000,
+        "active": false
+      }
+    ]
   },
   "github": {
     "owner": "",

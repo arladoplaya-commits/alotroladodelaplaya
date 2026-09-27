@@ -9,28 +9,6 @@ import { toast } from "sonner";
 /*  lentas y teléfonos modestos.                                        */
 /* ------------------------------------------------------------------ */
 
-/** Partículas que suben despacio (solo se ven en modo noche, vía CSS) */
-export function NightGlow() {
-  const [count] = useState(() =>
-    typeof window !== "undefined" && window.innerWidth < 640 ? 10 : 22
-  );
-  return (
-    <div className="aol-glow" aria-hidden="true">
-      {Array.from({ length: count }, (_, i) => {
-        const d = 14 + ((i * 7) % 16);
-        const style = {
-          left: `${(i * 53) % 100}%`,
-          "--s": `${3 + (i % 4)}px`,
-          "--d": `${d}s`,
-          "--dl": `${-((i * 3.7) % d)}s`,
-          "--x": `${(i % 2 ? 1 : -1) * (20 + ((i * 11) % 50))}px`,
-        } as React.CSSProperties;
-        return <span key={i} className={i % 3 === 0 ? "teal" : ""} style={style} />;
-      })}
-    </div>
-  );
-}
-
 type NetInfo = {
   saveData?: boolean;
   effectiveType?: string;

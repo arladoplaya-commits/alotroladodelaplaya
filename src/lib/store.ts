@@ -75,12 +75,23 @@ export function normalizeMenu(raw: Partial<MenuData>): MenuData {
   s.zones = Array.isArray(s.zones) ? s.zones : seed.settings.zones;
   s.payments = Array.isArray(s.payments) ? s.payments : seed.settings.payments;
   s.publicUrl = s.publicUrl ?? "";
+  s.loyalty = { ...seed.settings.loyalty, ...(s.loyalty ?? {}) };
+  s.coupons = Array.isArray(s.coupons) ? s.coupons : seed.settings.coupons;
   return {
     ...seed,
     ...raw,
     combos: Array.isArray(raw.combos) ? raw.combos : seed.combos,
     settings: s,
   } as MenuData;
+}
+
+/** Teléfono del negocio que publica en GitHub (tiene el token guardado) */
+function isPublisherDevice(): boolean {
+  try {
+    return !!localStorage.getItem("aol-gh-token");
+  } catch {
+    return false;
+  }
 }
 
 /** ¿El menú remoto es más nuevo que el que tenemos? */
@@ -127,6 +138,7 @@ async function fetchRemoteMenu(cfg: GitHubSync): Promise<MenuData | null> {
 
 /* ------------------------------ horario ------------------------------ */
 
+const DAY_NAMES_EN = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const DAY_NAMES = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
 
 function minutesOf(hhmm: string): number {
@@ -154,41 +166,57 @@ export interface OpenState {
  * Estado real del local: el interruptor manual del panel manda; si el
  * horario automático está activo, además hay que estar dentro de horario.
  */
-export function openStateFor(settings: Settings, now = new Date()): OpenState {
+export function openStateFor(
+  settings: Settings,
+  now = new Date(),
+  lang: "es" | "en" = "es"
+): OpenState {
+  const en = lang === "en";
   if (!settings.ordersOpen) {
-    return { open: false, label: "Cerrado por hoy" };
+    return { open: false, label: en ? "Closed today" : "Cerrado por hoy" };
   }
   const sched = settings.schedule;
   if (!sched?.auto) return { open: true, label: "" };
+  const closes = (h: string) => (en ? `Closes at ${prettyHour(h)}` : `Cierra a las ${prettyHour(h)}`);
   const day = now.getDay();
   const mins = now.getHours() * 60 + now.getMinutes();
   const today = sched.days[day];
   const yesterday = sched.days[(day + 6) % 7];
   // horario que cruza la medianoche (ej. 19:00 → 01:00)
   if (yesterday && !yesterday.closed && minutesOf(yesterday.close) < minutesOf(yesterday.open) && mins < minutesOf(yesterday.close)) {
-    return { open: true, label: `Cierra a las ${prettyHour(yesterday.close)}` };
+    return { open: true, label: closes(yesterday.close) };
   }
   if (today && !today.closed) {
     const o = minutesOf(today.open);
     const c = minutesOf(today.close);
     const crosses = c <= o;
     if (mins >= o && (crosses || mins < c)) {
-      return { open: true, label: `Cierra a las ${prettyHour(today.close)}` };
+      return { open: true, label: closes(today.close) };
     }
     if (mins < o) {
       const diff = o - mins;
-      const inTxt = diff < 60 ? `en ${diff} min` : `en ${Math.round(diff / 60)} h`;
-      return { open: false, label: `Abrimos hoy a las ${prettyHour(today.open)} (${inTxt})` };
+      const n = diff < 60 ? `${diff} min` : `${Math.round(diff / 60)} h`;
+      return {
+        open: false,
+        label: en
+          ? `Opens today at ${prettyHour(today.open)} (in ${n})`
+          : `Abrimos hoy a las ${prettyHour(today.open)} (en ${n})`,
+      };
     }
   }
   for (let i = 1; i <= 7; i++) {
-    const d = sched.days[(day + i) % 7];
+    const idx = (day + i) % 7;
+    const d = sched.days[idx];
     if (d && !d.closed) {
-      const when = i === 1 ? "mañana" : `el ${DAY_NAMES[(day + i) % 7]}`;
+      if (en) {
+        const when = i === 1 ? "tomorrow" : `on ${DAY_NAMES_EN[idx]}`;
+        return { open: false, label: `Opens ${when} at ${prettyHour(d.open)}` };
+      }
+      const when = i === 1 ? "mañana" : `el ${DAY_NAMES[idx]}`;
       return { open: false, label: `Abrimos ${when} a las ${prettyHour(d.open)}` };
     }
   }
-  return { open: false, label: "Cerrado por ahora" };
+  return { open: false, label: en ? "Closed for now" : "Cerrado por ahora" };
 }
 
 /* ------------------------------ helpers ------------------------------ */
@@ -426,8 +454,10 @@ export const useMenuStore = create<MenuState>()(
           ...SEED.products.filter((x) => !persistedIds.has(x.id)),
         ];
         const catIds = new Set((p.categories ?? []).map((c) => c.id));
+        const seedCat = new Map(SEED.categories.map((c) => [c.id, c]));
         const categories = [
-          ...(p.categories ?? []),
+          // v7: nombre en inglés de fábrica si falta
+          ...(p.categories ?? []).map((c) => ({ ...c, nameEn: c.nameEn ?? seedCat.get(c.id)?.nameEn })),
           ...SEED.categories.filter((c) => !catIds.has(c.id)),
         ];
         // nombres playeros: solo donde seguía el nombre de fábrica antiguo
@@ -435,11 +465,17 @@ export const useMenuStore = create<MenuState>()(
         const seedById = new Map(SEED.products.map((x) => [x.id, x]));
         const products2 = products.map((x) => {
           const fresh = seedById.get(x.id);
+          // v7: traducción al inglés de fábrica si falta
+          const withEn = {
+            ...x,
+            nameEn: x.nameEn ?? fresh?.nameEn,
+            descriptionEn: x.descriptionEn ?? fresh?.descriptionEn,
+          };
           if (fresh && OLD_DEFAULT_NAMES[x.id] === x.name && fresh.name !== x.name) {
             renamed = true;
-            return { ...x, name: fresh.name };
+            return { ...withEn, name: fresh.name };
           }
-          return x;
+          return withEn;
         });
         const migrated = normalizeMenu({
           ...p,
@@ -448,13 +484,15 @@ export const useMenuStore = create<MenuState>()(
           version: seedVersion,
         });
         // v6: abierto/cerrado según el horario (antes solo el interruptor)
-        let changed = renamed;
+        let changed = renamed || (p.version ?? 1) < 7;
         if ((p.version ?? 1) < 6 && !migrated.settings.schedule.auto) {
           migrated.settings.schedule = { ...migrated.settings.schedule, auto: true };
           changed = true;
         }
-        // si hubo cambios, cuentan como edición nueva (se publican solos)
-        if (changed) migrated.updatedAt = new Date().toISOString();
+        // Si hubo cambios cuentan como edición nueva (se publican solos), pero
+        // SOLO en el teléfono que publica: en el de un cliente marcaría su carta
+        // como «más nueva» que la publicada y dejaría de recibir actualizaciones.
+        if (changed && isPublisherDevice()) migrated.updatedAt = new Date().toISOString();
         return { ...current, data: migrated };
       },
     }

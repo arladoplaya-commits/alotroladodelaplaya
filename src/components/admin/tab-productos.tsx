@@ -156,6 +156,8 @@ export function TabProductos() {
       ...editing,
       name: editing.name.trim().slice(0, 60),
       description: editing.description.trim().slice(0, 200),
+      nameEn: editing.nameEn?.trim().slice(0, 60) || undefined,
+      descriptionEn: editing.descriptionEn?.trim().slice(0, 200) || undefined,
       tags: tagsText
         .split(",")
         .map((t) => t.trim())
@@ -302,6 +304,28 @@ export function TabProductos() {
                   className="min-h-[64px] resize-none border-[#f0dfc0] focus-visible:ring-[#e2574c]"
                 />
               </div>
+              <details className="rounded-2xl bg-[#fdf8ec] px-3 py-2 ring-1 ring-[#f0dfc0]">
+                <summary className="cursor-pointer text-sm font-bold text-[#4a3b28]">
+                  🇬🇧 En inglés (opcional, para turistas)
+                </summary>
+                <div className="mt-2 grid gap-2">
+                  <Input
+                    value={editing.nameEn ?? ""}
+                    onChange={(e) => setEditing({ ...editing, nameEn: e.target.value })}
+                    placeholder="Name in English"
+                    aria-label="Nombre en inglés"
+                    className="border-[#f0dfc0] bg-white focus-visible:ring-[#e2574c]"
+                  />
+                  <Textarea
+                    value={editing.descriptionEn ?? ""}
+                    onChange={(e) => setEditing({ ...editing, descriptionEn: e.target.value })}
+                    placeholder="Description in English"
+                    aria-label="Descripción en inglés"
+                    className="min-h-[56px] resize-none border-[#f0dfc0] bg-white focus-visible:ring-[#e2574c]"
+                  />
+                  <p className="text-xs text-[#8a7350]">Si lo dejas vacío, en inglés se ve el texto en español.</p>
+                </div>
+              </details>
               <div className="grid gap-1.5">
                 <Label
                   htmlFor="p-layers"

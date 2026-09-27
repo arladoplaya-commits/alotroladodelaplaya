@@ -18,6 +18,8 @@ import { buzz, unreadCount, useCustomerStore } from "@/lib/customer";
 import { useMenuStore } from "@/lib/store";
 import { subscribeToPush, syncCustomerToCloud } from "@/lib/cloud";
 
+import { productName, trNow, useLang, useTr } from "@/lib/i18n";
+
 /* ------------------------------------------------------------------ */
 /*  Cliente de la marea: registro, gustos, preferencias y bandeja.     */
 /* ------------------------------------------------------------------ */
@@ -27,8 +29,8 @@ function requestSystemPermission(): void {
   try {
     if (typeof Notification === "undefined") {
       st.setPref("systemPermission", "unsupported");
-      toast.info("Tu navegador no soporta notificaciones 📴", {
-        description: "Los avisos quedarán guardados en la campanita 🔔",
+      toast.info(trNow("Tu navegador no soporta notificaciones 📴", "Your browser does not support notifications 📴"), {
+        description: trNow("Los avisos quedarán guardados en la campanita 🔔", "Notices will stay in the bell 🔔"),
       });
       return;
     }
@@ -41,21 +43,28 @@ function requestSystemPermission(): void {
         // Si hay clave VAPID + Supabase, suscribimos también el push real
         void subscribeToPush().then((r) => {
           if (r === "ok") {
-            toast.success("¡Notificaciones activadas! 🔔", {
-              description:
+            toast.success(trNow("¡Notificaciones activadas! 🔔", "Notifications on! 🔔"), {
+              description: trNow(
                 "Te avisamos al abrir, al cerrar y con producto nuevo — incluso con la carta cerrada.",
+                "We'll tell you when we open, close or add something new — even with the menu closed."
+              ),
             });
           } else {
-            toast.success("¡Notificaciones activadas! 🔔", {
-              description:
+            toast.success(trNow("¡Notificaciones activadas! 🔔", "Notifications on! 🔔"), {
+              description: trNow(
                 "Te avisamos al abrir, al cerrar y con producto nuevo.",
+                "We'll tell you when we open, close or add something new."
+              ),
             });
           }
         });
         showWelcomeNotification();
       } else if (perm === "denied") {
-        toast.info("Notificaciones bloqueadas", {
-          description: "Puedes activarlas luego desde ajustes del navegador. La campanita seguirá funcionando.",
+        toast.info(trNow("Notificaciones bloqueadas", "Notifications blocked"), {
+          description: trNow(
+            "Puedes activarlas luego desde ajustes del navegador. La campanita seguirá funcionando.",
+            "You can turn them on later in your browser settings. The bell keeps working."
+          ),
         });
       }
     });
@@ -67,8 +76,8 @@ function requestSystemPermission(): void {
 function showWelcomeNotification(): void {
   try {
     if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-      new Notification("Bienvenido a la marea 🌊", {
-        body: "Ya eres cliente del shack. ¡Buen provecho!",
+      new Notification(trNow("Bienvenido a la marea 🌊", "Welcome to the tide 🌊"), {
+        body: trNow("Ya eres cliente del shack. ¡Buen provecho!", "You're now a shack regular. Enjoy!"),
         icon: "/images/icon-192.png",
         tag: "aol-welcome",
       });
@@ -123,6 +132,8 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
   const setPref = useCustomerStore((s) => s.setPref);
 
   const products = useMenuStore((s) => s.data.products);
+  const tr = useTr();
+  const lang = useLang();
   const [name, setName] = useState(profile?.name ?? "");
   const [whatsapp, setWhatsapp] = useState(profile?.whatsapp ?? "");
   const [wantNotifs, setWantNotifs] = useState(true);
@@ -144,7 +155,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
   const joined = useMemo(() => {
     if (!profile) return "";
     try {
-      return new Date(profile.joinedAt).toLocaleDateString("es-CU", {
+      return new Date(profile.joinedAt).toLocaleDateString(lang === "en" ? "en-US" : "es-CU", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -152,25 +163,27 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
     } catch {
       return "";
     }
-  }, [profile]);
+  }, [profile, lang]);
 
   const handleRegister = () => {
     if (name.trim().length < 2) {
-      toast.error("Dinos tu nombre 🌊", { description: "Al menos 2 letras para la etiqueta." });
+      toast.error(tr("Dinos tu nombre 🌊", "Tell us your name 🌊"), {
+        description: tr("Al menos 2 letras para la etiqueta.", "At least 2 letters."),
+      });
       return;
     }
     register(name, whatsapp);
     buzz([50, 30, 50]);
-    toast.success("¡Bienvenido a la marea! 🌊", {
+    toast.success(tr("¡Bienvenido a la marea! 🌊", "Welcome to the tide! 🌊"), {
       description: wantNotifs
-        ? "Guardamos tus gustos y activamos los avisos."
-        : "Ya guardamos tu espacio en el shack.",
+        ? tr("Guardamos tus gustos y activamos los avisos.", "We saved your tastes and turned on notices.")
+        : tr("Ya guardamos tu espacio en el shack.", "Your spot at the shack is saved."),
     });
     // Si el shack conectó Supabase, el registro queda guardado en la nube
     void syncCustomerToCloud().then((r) => {
       if (r === "ok") {
-        toast.info("Socio registrado en la nube ☁️", {
-          description: "El shack te tendrá en la lista de la marea.",
+        toast.info(tr("Socio registrado en la nube ☁️", "Signed up ☁️"), {
+          description: tr("El shack te tendrá en la lista de la marea.", "The shack has you on the list."),
         });
       }
     });
@@ -181,16 +194,19 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="max-h-[92dvh] overflow-y-auto rounded-t-3xl border-[#f0dfc0] bg-[#fffcf4] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+        className="aol-sheet max-h-[92dvh] overflow-y-auto rounded-t-3xl border-[#f0dfc0] bg-[#fffcf4] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
       >
         <SheetHeader className="items-center gap-1 pb-0 text-center sm:text-center">
           <SheetTitle className="font-display text-2xl text-[#c2542f]">
-            {profile ? "Tu rincón playero 🌊" : "Hazte cliente de la marea"}
+            {profile ? tr("Tu rincón playero 🌊", "Your beach corner 🌊") : tr("Hazte cliente de la marea", "Join the tide")}
           </SheetTitle>
           <SheetDescription className="text-sm text-[#8a7350]">
             {profile
-              ? `Cliente #${profile.memberNo} · desde ${joined}`
-              : "Sin cuentas ni contraseñas: todo queda en tu teléfono."}
+              ? tr(`Cliente #${profile.memberNo} · desde ${joined}`, `Member #${profile.memberNo} · since ${joined}`)
+              : tr(
+                  "Sin cuentas ni contraseñas: solo tu nombre para saludarte y avisarte.",
+                  "No accounts or passwords: just your name so we can greet you."
+                )}
           </SheetDescription>
         </SheetHeader>
 
@@ -200,15 +216,15 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value.slice(0, 40))}
-                placeholder="Tu nombre (o apodo playero)"
-                aria-label="Tu nombre"
+                placeholder={tr("Tu nombre (o apodo playero)", "Your name (or beach nickname)")}
+                aria-label={tr("Tu nombre", "Your name")}
                 className="h-11 border-[#f0dfc0] bg-white text-sm focus-visible:ring-[#e2574c]"
               />
               <Input
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(e.target.value.slice(0, 20))}
-                placeholder="WhatsApp (opcional, para el pedido)"
-                aria-label="WhatsApp opcional"
+                placeholder={tr("WhatsApp (opcional, para el pedido)", "WhatsApp (optional)")}
+                aria-label={tr("WhatsApp opcional", "WhatsApp optional")}
                 inputMode="tel"
                 className="h-11 border-[#f0dfc0] bg-white text-sm focus-visible:ring-[#e2574c]"
               />
@@ -217,15 +233,15 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
             <div className="grid gap-2">
               <PrefRow
                 icon={<Bell className="size-4" />}
-                title="Avisos del shack"
-                desc="Avísame cuando abra, cuando cierre y si sale producto nuevo."
+                title={tr("Avisos del shack", "Shack notices")}
+                desc={tr("Avísame cuando abra, cuando cierre y si sale producto nuevo.", "Tell me when it opens, closes or has something new.")}
                 checked={wantNotifs}
                 onCheckedChange={setWantNotifs}
               />
               <PrefRow
                 icon={<Moon className="size-4" />}
-                title="Modo atardecer"
-                desc="La carta con luz cálida de anochecer."
+                title={tr("Modo noche de playa", "Beach night mode")}
+                desc={tr("Cielo nocturno, luna y mar que brilla.", "Night sky, moon and a glowing sea.")}
                 checked={prefs.theme === "sunset"}
                 onCheckedChange={(v) => setTheme(v ? "sunset" : "day")}
               />
@@ -237,11 +253,13 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                 onClick={handleRegister}
                 className="h-12 w-full rounded-2xl bg-[#e2574c] text-base font-extrabold text-white shadow-[0_8px_24px_-4px_rgba(226,87,76,0.5)] transition hover:bg-[#d34a40] active:scale-[0.98]"
               >
-                🌊 Unirme a la marea
+                {tr("🌊 Unirme a la marea", "🌊 Join the tide")}
               </Button>
               <p className="text-center text-xs leading-snug text-[#8a7350]">
-                Guardamos tu nombre, favoritos y gustos solo en este dispositivo.
-                Nada viaja a la nube.
+                {tr(
+                  "Tus favoritos se quedan en este teléfono. Tu nombre, WhatsApp (si lo pones) y tus gustos se guardan en el registro del shack para reconocerte y avisarte de novedades. Si quieres que te borremos del registro, pídenoslo por WhatsApp.",
+                  "Your favorites stay on this phone. Your name, WhatsApp (if given) and tastes are kept in the shack's list to recognize you and send news. To be removed, ask us on WhatsApp."
+                )}
               </p>
             </SheetFooter>
           </>
@@ -257,7 +275,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                   {profile.name}
                 </p>
                 <p className="text-xs font-semibold text-[#b3562e]">
-                  Cliente de la marea #{profile.memberNo} · {visits} visitas
+                  {tr("Cliente de la marea", "Tide member")} #{profile.memberNo} · {visits} {tr("visitas", "visits")}
                 </p>
               </div>
             </div>
@@ -266,27 +284,29 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
             <div className="mt-3 grid grid-cols-3 gap-2 text-center">
               <div className="rounded-2xl bg-white p-2.5 ring-1 ring-[#f0dfc0]">
                 <p className="font-display text-xl text-[#e2574c]">{favorites.length}</p>
-                <p className="text-[11px] font-bold text-[#8a7350]">favoritos ❤️</p>
+                <p className="text-[11px] font-bold text-[#8a7350]">{tr("favoritos ❤️", "favorites ❤️")}</p>
               </div>
               <div className="rounded-2xl bg-white p-2.5 ring-1 ring-[#f0dfc0]">
                 <p className="font-display text-xl text-[#e2574c]">{totalOrders}</p>
-                <p className="text-[11px] font-bold text-[#8a7350]">pedidos armados</p>
+                <p className="text-[11px] font-bold text-[#8a7350]">{tr("pedidos armados", "orders built")}</p>
               </div>
               <div className="rounded-2xl bg-white p-2.5 ring-1 ring-[#f0dfc0]">
                 <p className="font-display text-xl text-[#e2574c]">{visits}</p>
-                <p className="text-[11px] font-bold text-[#8a7350]">visitas</p>
+                <p className="text-[11px] font-bold text-[#8a7350]">{tr("visitas", "visits")}</p>
               </div>
             </div>
 
             <div className="mt-3 rounded-2xl bg-white p-3.5 ring-1 ring-[#f0dfc0]">
               <p className="mb-1.5 flex items-center gap-1.5 text-sm font-extrabold text-[#4a3b28]">
                 <Heart className="size-4 fill-[#e2574c] text-[#e2574c]" aria-hidden="true" />
-                Tus gustos
+                {tr("Tus gustos", "Your tastes")}
               </p>
               {tastes.length === 0 ? (
                 <p className="text-xs leading-snug text-[#8a7350]">
-                  Aún no los conocemos: cada vez que armes un pedido lo apuntamos
-                  para recomendarte mejor.
+                  {tr(
+                    "Aún no los conocemos: cada vez que armes un pedido lo apuntamos para recomendarte mejor.",
+                    "We don't know them yet: every order you build helps us recommend better."
+                  )}
                 </p>
               ) : (
                 <ul className="grid gap-1.5">
@@ -299,7 +319,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                         {i + 1}
                       </span>
                       <span className="min-w-0 flex-1 truncate font-semibold text-[#4a3b28]">
-                        {product.emoji} {product.name}
+                        {product.emoji} {productName(product, lang)}
                       </span>
                       <span className="shrink-0 rounded-full bg-[#e2574c]/10 px-2 py-0.5 text-[11px] font-bold text-[#c2542f]">
                         {n}×
@@ -318,28 +338,28 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                   setName(e.target.value);
                   updateProfile({ name: e.target.value });
                 }}
-                placeholder="Tu nombre"
-                aria-label="Tu nombre"
+                placeholder={tr("Tu nombre", "Your name")}
+                aria-label={tr("Tu nombre", "Your name")}
                 className="h-11 border-[#f0dfc0] bg-white text-sm focus-visible:ring-[#e2574c]"
               />
               <PrefRow
                 icon={<Bell className="size-4" />}
-                title="Avisos de apertura y cierre"
-                desc="Un toque cuando el shack enciende o apaga el fuego."
+                title={tr("Avisos de apertura y cierre", "Open & close notices")}
+                desc={tr("Un toque cuando el shack enciende o apaga el fuego.", "A ping when the shack fires up or closes.")}
                 checked={prefs.notifyOpenClose}
                 onCheckedChange={(v) => setPref("notifyOpenClose", v)}
               />
               <PrefRow
                 icon={<Package className="size-4" />}
-                title="Productos nuevos"
-                desc="Aviso cuando entra un antojo nuevo a la carta."
+                title={tr("Productos nuevos", "New items")}
+                desc={tr("Aviso cuando entra un antojo nuevo a la carta.", "A notice when something new hits the menu.")}
                 checked={prefs.notifyNewProducts}
                 onCheckedChange={(v) => setPref("notifyNewProducts", v)}
               />
               <PrefRow
                 icon={prefs.theme === "sunset" ? <Moon className="size-4" /> : <Sun className="size-4" />}
-                title="Modo atardecer"
-                desc="Luz cálida de anochecer en toda la carta."
+                title={tr("Modo noche de playa", "Beach night mode")}
+                desc={tr("Cielo nocturno, luna y mar que brilla en toda la carta.", "Night sky, moon and a glowing sea across the menu.")}
                 checked={prefs.theme === "sunset"}
                 onCheckedChange={(v) => setTheme(v ? "sunset" : "day")}
               />
@@ -349,19 +369,25 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
             <div className="mt-3 rounded-2xl border-2 border-dashed border-[#bfe3f2] bg-[#eef9fc] p-3.5">
               <p className="flex items-center gap-1.5 text-sm font-extrabold text-[#2b7a93]">
                 <Bell className="size-4" aria-hidden="true" />
-                Notificaciones del teléfono
+                {tr("Notificaciones del teléfono", "Phone notifications")}
               </p>
               {prefs.systemPermission === "granted" ? (
                 <p className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-[#2b7a93]">
                   <Check className="size-3.5" aria-hidden="true" />
-                  Activadas: verás los avisos aunque estés en otra app.
+                  {tr("Activadas: verás los avisos aunque estés en otra app.", "On: you\u2019ll see notices even in another app.")}
                 </p>
               ) : (
                 <>
                   <p className="mt-1 text-xs leading-snug text-[#4d7c8a]">
                     {prefs.systemPermission === "denied"
-                      ? "Están bloqueadas en el navegador. Actívalas desde el candado de la dirección y vuelve aquí."
-                      : "Permite que el shack te avise aunque tengas la página en segundo plano."}
+                      ? tr(
+                          "Están bloqueadas en el navegador. Actívalas desde el candado de la dirección y vuelve aquí.",
+                          "They're blocked in the browser. Enable them from the padlock by the address and come back."
+                        )
+                      : tr(
+                          "Permite que el shack te avise aunque tengas la página en segundo plano.",
+                          "Let the shack notify you even when the page is in the background."
+                        )}
                   </p>
                   {prefs.systemPermission !== "denied" && (
                     <Button
@@ -370,7 +396,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                       className="mt-2 h-10 w-full rounded-xl bg-[#2b7a93] text-sm font-extrabold text-white transition hover:bg-[#256a81] active:scale-[0.98]"
                     >
                       <Bell className="size-4" aria-hidden="true" />
-                      Activar notificaciones
+                      {tr("Activar notificaciones", "Turn on notifications")}
                     </Button>
                   )}
                 </>
@@ -382,7 +408,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
               {confirmForget ? (
                 <div className="grid gap-2 rounded-2xl border border-[#e8b08a] bg-[#fdeae0] p-3">
                   <p className="text-xs font-semibold text-[#b3562e]">
-                    ¿Borrar tu perfil, favoritos y avisos de este teléfono?
+                    {tr("¿Borrar tu perfil, favoritos y avisos de este teléfono?", "Delete your profile, favorites and notices from this phone?")}
                   </p>
                   <div className="flex justify-center gap-2">
                     <Button
@@ -392,7 +418,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                       className="rounded-full border-[#e8b08a] text-[#b3562e]"
                       onClick={() => setConfirmForget(false)}
                     >
-                      Mejor no
+                      {tr("Mejor no", "No, keep them")}
                     </Button>
                     <Button
                       type="button"
@@ -403,10 +429,10 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                         setName("");
                         setWhatsapp("");
                         setConfirmForget(false);
-                        toast.info("Listo, borramos tu rastro 🏖️");
+                        toast.info(tr("Listo, borramos tu rastro 🏖️", "Done, your footprints are gone 🏖️"));
                       }}
                     >
-                      Sí, borrar
+                      {tr("Sí, borrar", "Yes, delete")}
                     </Button>
                   </div>
                 </div>
@@ -417,7 +443,7 @@ export function CustomerSheet({ open, onOpenChange }: CustomerSheetProps) {
                   className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-[#c4b08c] transition hover:bg-[#fdeae0] hover:text-[#b3562e]"
                 >
                   <BellOff className="size-3.5" aria-hidden="true" />
-                  Borrar mis datos de este teléfono
+                  {tr("Borrar mis datos de este teléfono", "Delete my data from this phone")}
                 </button>
               )}
             </div>
@@ -449,19 +475,21 @@ export function InboxSheet({ open, onOpenChange }: InboxSheetProps) {
   const markAllRead = useCustomerStore((s) => s.markAllRead);
   const clearInbox = useCustomerStore((s) => s.clearInbox);
   const unread = unreadCount(inbox);
+  const tr = useTr();
+  const lang = useLang();
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="max-h-[92dvh] overflow-y-auto rounded-t-3xl border-[#f0dfc0] bg-[#fffcf4] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
+        className="aol-sheet max-h-[92dvh] overflow-y-auto rounded-t-3xl border-[#f0dfc0] bg-[#fffcf4] px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]"
       >
         <SheetHeader className="items-center gap-1 pb-0 text-center sm:text-center">
           <SheetTitle className="font-display text-2xl text-[#c2542f]">
-            Avisos del shack 🔔
+            {tr("Avisos del shack 🔔", "Shack notices 🔔")}
           </SheetTitle>
           <SheetDescription className="text-sm text-[#8a7350]">
-            {unread > 0 ? `${unread} sin leer` : "Todo leído, al día con la marea"}
+            {unread > 0 ? tr(`${unread} sin leer`, `${unread} unread`) : tr("Todo leído, al día con la marea", "All caught up with the tide")}
           </SheetDescription>
         </SheetHeader>
 
@@ -470,9 +498,12 @@ export function InboxSheet({ open, onOpenChange }: InboxSheetProps) {
             <span className="text-5xl" aria-hidden="true">
               🌴
             </span>
-            <p className="font-display text-lg text-[#c2542f]">Sin novedades por ahora</p>
+            <p className="font-display text-lg text-[#c2542f]">{tr("Sin novedades por ahora", "Nothing new for now")}</p>
             <p className="max-w-xs text-sm leading-snug text-[#8a7350]">
-              Aquí te avisamos cuando el shack abra, cierre o saque algo nuevo a la carta.
+              {tr(
+                "Aquí te avisamos cuando el shack abra, cierre o saque algo nuevo a la carta.",
+                "We\u2019ll let you know here when the shack opens, closes or adds something new."
+              )}
             </p>
           </div>
         ) : (
@@ -499,7 +530,7 @@ export function InboxSheet({ open, onOpenChange }: InboxSheetProps) {
                       <p className="text-sm font-extrabold text-[#4a3b28]">{n.title}</p>
                       <p className="text-xs leading-snug text-[#8a7350]">{n.body}</p>
                       <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#c4b08c]">
-                        {new Date(n.createdAt).toLocaleString("es-CU", {
+                        {new Date(n.createdAt).toLocaleString(lang === "en" ? "en-US" : "es-CU", {
                           day: "numeric",
                           month: "short",
                           hour: "2-digit",
@@ -522,7 +553,7 @@ export function InboxSheet({ open, onOpenChange }: InboxSheetProps) {
                   onClick={markAllRead}
                 >
                   <Check className="size-4" aria-hidden="true" />
-                  Marcar todo como leído
+                  {tr("Marcar todo como leído", "Mark all as read")}
                 </Button>
               )}
               <Button
@@ -532,7 +563,7 @@ export function InboxSheet({ open, onOpenChange }: InboxSheetProps) {
                 className="rounded-full text-[#c4b08c] hover:bg-[#fdeae0] hover:text-[#b3562e]"
                 onClick={clearInbox}
               >
-                Vaciar bandeja
+                {tr("Vaciar bandeja", "Clear inbox")}
               </Button>
             </div>
           </>

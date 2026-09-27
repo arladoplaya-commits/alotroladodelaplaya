@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { canRemoveIngredient } from "@/lib/ingredients";
+import { ingredientName, useLang, useTr } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /*  Capas del antojo: una franja de color por ingrediente, con el      */
@@ -106,24 +107,26 @@ export function LayerStack({
   name: string;
 }) {
   const [compact, setCompact] = useState(false);
+  const tr = useTr();
+  const lang = useLang();
   const layers = buildLayers(ingredients, extras);
 
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <p className="text-sm font-extrabold text-[#4a3b28]">🧱 Capas de tu antojo</p>
+        <p className="text-sm font-extrabold text-[#4a3b28]">{tr("🧱 Capas de tu antojo", "🧱 Your layers")}</p>
         <button
           type="button"
           onClick={() => setCompact((v) => !v)}
           className="text-xs font-bold text-[#c2542f] hover:underline"
           aria-pressed={compact}
         >
-          {compact ? "Separar capas" : "Juntar capas"}
+          {compact ? tr("Separar capas", "Spread layers") : tr("Juntar capas", "Stack layers")}
         </button>
       </div>
       <ul
         className={`aol-layers flex flex-col items-center py-1 ${compact ? "is-compact" : "gap-1.5"}`}
-        aria-label={`Capas de ${name}`}
+        aria-label={tr(`Capas de ${name}`, `Layers of ${name}`)}
       >
         {layers.map((layer, i) => {
           const look = lookOf(layer.name);
@@ -142,13 +145,13 @@ export function LayerStack({
                 <span className="text-lg leading-none" aria-hidden="true">
                   {look.e}
                 </span>
-                <span className={off ? "line-through decoration-2" : ""}>{layer.name}</span>
+                <span className={off ? "line-through decoration-2" : ""}>{ingredientName(layer.name, lang)}</span>
               </span>
               {layer.extra && (
                 <span
                   className="absolute right-2.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-full bg-white/80 text-sm font-black text-[#3f9e5f]"
-                  title="Agrego"
-                  aria-label="agrego"
+                  title={tr("Agrego", "Extra")}
+                  aria-label={tr("agrego", "extra")}
                 >
                   +
                 </span>
@@ -180,7 +183,11 @@ export function LayerStack({
                   type="button"
                   onClick={() => onToggle(layer.name)}
                   aria-pressed={off}
-                  aria-label={off ? `Volver a poner ${layer.name}` : `Quitar ${layer.name}`}
+                  aria-label={
+                    off
+                      ? tr(`Volver a poner ${layer.name}`, `Add back ${ingredientName(layer.name, lang)}`)
+                      : tr(`Quitar ${layer.name}`, `Remove ${ingredientName(layer.name, lang)}`)
+                  }
                   className={cls}
                   style={style}
                 >
@@ -197,7 +204,7 @@ export function LayerStack({
       </ul>
       {removed.length === 0 && layers.some((l) => !l.extra && canRemoveIngredient(l.name)) && (
         <p className="mt-1.5 text-center text-[11px] font-semibold text-[#a58a5f]">
-          Toca la ✕ de una capa para quitarla
+          {tr("Toca la ✕ de una capa para quitarla", "Tap the ✕ on a layer to remove it")}
         </p>
       )}
     </div>

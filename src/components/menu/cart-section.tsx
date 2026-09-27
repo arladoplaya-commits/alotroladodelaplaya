@@ -2,12 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Copy, MapPin, Minus, Plus, Timer, Trash2 } from "lucide-react";
+import { Copy, MapPin, Minus, Plus, Tag, Timer, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cartTotals, money, openStateFor, useMenuStore } from "@/lib/store";
 import { sinText } from "@/lib/ingredients";
+import { ingredientName, productName, useLang, useTr, withoutText } from "@/lib/i18n";
+import { couponDiscount, couponLabel, findCoupon, loyaltyProgress, toLastOrder } from "@/lib/promos";
+import { LoyaltyCard, RepeatLastOrderCard } from "./promo-cards";
 import { useCartStore } from "@/lib/cart";
 import { useCustomerStore } from "@/lib/customer";
 import { buildOrder, saveOrder } from "@/lib/orders";
@@ -32,6 +35,20 @@ export function CartSection({ onBrowse }: CartSectionProps) {
   const settings = useMenuStore((s) => s.data.settings);
   const combos = useMenuStore((s) => s.data.combos);
   const products = useMenuStore((s) => s.data.products);
+  const tr = useTr();
+  const lang = useLang();
+  const stamps = useCustomerStore((s) => s.stamps);
+  const loyalty = settings.loyalty;
+  const [couponDraft, setCouponDraft] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const coupon = findCoupon(settings.coupons, couponCode);
+  const hasCoupons = settings.coupons.some((c) => c.active);
+  /** Nombre en el idioma de la carta (el de WhatsApp siempre en español) */
+  const shownName = (it: { productId: string; comboId?: string; name: string }) => {
+    if (it.comboId) return it.name;
+    const p = products.find((x) => x.id === it.productId);
+    return p ? productName(p, lang) : it.name;
+  };
 
   const zones = useMemo(() => settings.zones.filter((z) => z.active), [settings.zones]);
   const payments = useMemo(
@@ -126,10 +143,23 @@ export function CartSection({ onBrowse }: CartSectionProps) {
     }
   }, [customerName, customerAddress, modePref, zoneId, payId]);
 
-  const { subtotal, total } = useMemo(
-    () => cartTotals(items, fee),
-    [items, fee]
-  );
+  const { subtotal } = useMemo(() => cartTotals(items, 0), [items]);
+  const discount = couponDiscount(coupon, subtotal);
+  const total = subtotal - discount + fee;
+  const couponShort =
+    !!coupon && coupon.minTotal > 0 && subtotal < coupon.minTotal ? coupon.minTotal - subtotal : 0;
+  const loyaltyNow = loyalty.enabled ? loyaltyProgress(stamps, loyalty.stamps) : null;
+
+  const applyCoupon = () => {
+    const found = findCoupon(settings.coupons, couponDraft);
+    if (!found) {
+      toast.error(tr("Ese cupón no existe o ya no está activo", "That coupon does not exist or has expired"));
+      return;
+    }
+    setCouponCode(found.code);
+    setCouponDraft("");
+    toast.success(tr(`Cupón ${found.code} aplicado 🏷️`, `Coupon ${found.code} applied 🏷️`));
+  };
 
   const buildWhatsAppMessage = (code?: string): string => {
     const lines: string[] = [];
@@ -158,11 +188,16 @@ export function CartSection({ onBrowse }: CartSectionProps) {
       if (it.notes) lines.push(`   ↳ 📝 ${it.notes}`);
     }
     lines.push("━━━━━━━━━━━━━━━━━━");
-    if (fee) {
-      lines.push(`Subtotal: ${money(settings.currency, subtotal)}`);
-      lines.push(`Mensajería (${zone?.name}): ${money(settings.currency, fee)}`);
-    }
+    if (fee || discount) lines.push(`Subtotal: ${money(settings.currency, subtotal)}`);
+    if (coupon && discount)
+      lines.push(`🏷️ Cupón ${coupon.code} (${couponLabel(coupon, "MN")}): -${money(settings.currency, discount)}`);
+    if (fee) lines.push(`Mensajería (${zone?.name}): ${money(settings.currency, fee)}`);
     lines.push(`*TOTAL: ${money(settings.currency, total)} MN*`);
+    if (loyaltyNow) {
+      if (loyaltyNow.rewardReady)
+        lines.push(`🎁 *PREMIO FIDELIDAD: ${loyalty.reward}* (pedido ${loyaltyNow.goal} de ${loyaltyNow.goal})`);
+      else lines.push(`⭐ Tarjeta de fidelidad: sello ${loyaltyNow.filled + 1} de ${loyaltyNow.goal}`);
+    }
     return lines.join("\n");
   };
 
@@ -170,47 +205,47 @@ export function CartSection({ onBrowse }: CartSectionProps) {
   const persistOrder = async (order: ReturnType<typeof buildOrder>) => {
     const result = await saveOrder(order);
     if (result === "cloud") {
-      toast.success(`Pedido ${order.code} registrado en la nube 📦`, {
-        description: "Aparece en el panel → Pedidos.",
-      });
+      toast.success(tr(`Pedido ${order.code} registrado 📦`, `Order ${order.code} saved 📦`));
     } else if (result === "queued") {
-      toast.info(`Pedido ${order.code} en cola 📶`, {
-        description:
+      toast.info(tr(`Pedido ${order.code} en cola 📶`, `Order ${order.code} queued 📶`), {
+        description: tr(
           "Sin internet ahora mismo: se enviará solo cuando vuelva la conexión.",
+          "No internet right now: it will be sent when the connection is back."
+        ),
       });
     }
   };
 
   const handleConfirm = () => {
     if (!items.length) return;
-    const state = openStateFor(settings);
+    const state = openStateFor(settings, new Date(), lang);
     if (!state.open) {
-      toast.error("Ahora mismo no estamos tomando pedidos 🌙", {
+      toast.error(tr("Ahora mismo no estamos tomando pedidos 🌙", "We're not taking orders right now 🌙"), {
         description: state.label,
       });
       return;
     }
     if (!customerName.trim()) {
-      toast.error("Escribe tu nombre para el pedido ✋");
+      toast.error(tr("Escribe tu nombre para el pedido ✋", "Write your name for the order ✋"));
       return;
     }
     if (mode === "domicilio" && !zone) {
-      toast.error("Elige tu zona de entrega 🛵");
+      toast.error(tr("Elige tu zona de entrega 🛵", "Choose your delivery area 🛵"));
       return;
     }
     if (mode === "domicilio" && customerAddress.trim().length < 5) {
-      toast.error("Escribe la dirección de entrega 📍");
+      toast.error(tr("Escribe la dirección de entrega 📍", "Write the delivery address 📍"));
       return;
     }
     if (payments.length > 0 && !payment) {
-      toast.error("Elige cómo vas a pagar 💳");
+      toast.error(tr("Elige cómo vas a pagar 💳", "Choose how you will pay 💳"));
       return;
     }
     if (
       !settings.whatsapp ||
       settings.whatsapp.replace(/\D/g, "").length < 8
     ) {
-      toast.error("Configura el número de WhatsApp en el panel admin → Ajustes");
+      toast.error(tr("El local aún no ha puesto su WhatsApp", "The shack has not set its WhatsApp yet"));
       return;
     }
     setSending(true);
@@ -224,6 +259,8 @@ export function CartSection({ onBrowse }: CartSectionProps) {
               ? `🛵 ${zone?.name ?? ""} · ${customerAddress.trim()}`
               : "🏖️ Recoge en el local",
             payment ? `${payment.emoji} ${payment.name}` : "",
+            coupon && discount ? `🏷️ ${coupon.code}` : "",
+            loyaltyNow?.rewardReady ? `🎁 ${loyalty.reward}` : "",
           ]
             .filter(Boolean)
             .join(" · "),
@@ -246,18 +283,24 @@ export function CartSection({ onBrowse }: CartSectionProps) {
     )}`;
     window.open(url, "_blank");
 
-    toast.success("¡Pedido enviado a WhatsApp! 🌴", {
-      description: "Te confirmamos enseguida. Buen provecho.",
+    toast.success(tr("¡Pedido enviado a WhatsApp! 🌴", "Order sent to WhatsApp! 🌴"), {
+      description: loyaltyNow?.rewardReady
+        ? tr(`🎁 Te toca premio: ${loyalty.reward}`, `🎁 You earned: ${loyalty.reward}`)
+        : tr("Te confirmamos enseguida. Buen provecho.", "We will confirm right away. Enjoy!"),
     });
 
     if (order) void persistOrder(order);
+    const customer = useCustomerStore.getState();
+    customer.setLastOrder(toLastOrder(items));
+    if (loyalty.enabled) customer.setStamps(customer.stamps + 1);
+    setCouponCode("");
     clear();
     setSending(false);
   };
 
   return (
-    <section aria-label="Mi pedido">
-      <CatTitle emoji="🛒">Mi pedido playero</CatTitle>
+    <section aria-label={tr("Mi pedido", "My order")}>
+      <CatTitle emoji="🛒">{tr("Mi pedido playero", "My beach order")}</CatTitle>
       <p className="aol-sub mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-semibold text-[#8a7350]">
         <span className="inline-flex items-center gap-1">
           <MapPin className="size-3.5" aria-hidden="true" />
@@ -275,18 +318,25 @@ export function CartSection({ onBrowse }: CartSectionProps) {
             🛒
           </span>
           <p className="font-display text-lg text-[#c2542f]">
-            Tu carrito está vacío
+            {tr("Tu carrito está vacío", "Your cart is empty")}
           </p>
           <p className="max-w-xs text-sm leading-snug text-[#8a7350]">
-            Explora el menú, toca «Armar pedido» y tus antojos aparecerán aquí.
+            {tr(
+              "Explora el menú, toca «Armar pedido» y tus antojos aparecerán aquí.",
+              "Browse the menu, tap “Build order” and your cravings will show up here."
+            )}
           </p>
           <Button
             type="button"
             onClick={onBrowse}
             className="mt-2 rounded-full bg-[#e2574c] px-5 font-extrabold text-white shadow-[0_6px_18px_-4px_rgba(226,87,76,0.55)] hover:bg-[#d34a40]"
           >
-            🌊 Ver el menú
+            {tr("🌊 Ver el menú", "🌊 See the menu")}
           </Button>
+          <div className="mt-4 grid w-full max-w-md gap-3">
+            <RepeatLastOrderCard />
+            <LoyaltyCard />
+          </div>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -311,7 +361,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
                     <p className="truncate text-sm font-extrabold text-[#4a3b28]">
-                      {it.qty}× {it.name}
+                      {it.qty}× {shownName(it)}
                     </p>
                     <p className="shrink-0 text-sm font-bold text-[#c2542f]">
                       {money(settings.currency, it.unitPrice * it.qty)}
@@ -324,12 +374,12 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                   )}
                   {it.agregoNames.length > 0 && (
                     <p className="mt-0.5 truncate text-xs text-[#8a7350]">
-                      + {it.agregoNames.join(", ")}
+                      + {it.agregoNames.map((n) => ingredientName(n, lang)).join(", ")}
                     </p>
                   )}
                   {!!it.removed?.length && (
                     <p className="aol-removed mt-0.5 text-xs font-bold text-[#c0392b]">
-                      🚫 {sinText(it.removed)}
+                      🚫 {withoutText(it.removed, lang)}
                     </p>
                   )}
                   {it.notes && (
@@ -342,7 +392,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                       type="button"
                       className="grid size-7 place-items-center rounded-full bg-[#fdf3e0] text-[#c2542f] transition hover:bg-[#f6dfb2]"
                       onClick={() => setQty(it.id, it.qty - 1)}
-                      aria-label={`Menos ${it.name}`}
+                      aria-label={tr(`Menos ${it.name}`, `One less ${shownName(it)}`)}
                     >
                       <Minus className="size-3.5" />
                     </button>
@@ -350,7 +400,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                       type="button"
                       className="grid size-7 place-items-center rounded-full bg-[#fdf3e0] text-[#c2542f] transition hover:bg-[#f6dfb2]"
                       onClick={() => setQty(it.id, it.qty + 1)}
-                      aria-label={`Más ${it.name}`}
+                      aria-label={tr(`Más ${it.name}`, `One more ${shownName(it)}`)}
                     >
                       <Plus className="size-3.5" />
                     </button>
@@ -358,10 +408,10 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                       type="button"
                       className="ml-auto inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-[#b3562e] transition hover:bg-[#fdeae7]"
                       onClick={() => remove(it.id)}
-                      aria-label={`Quitar ${it.name}`}
+                      aria-label={tr(`Quitar ${it.name}`, `Remove ${shownName(it)}`)}
                     >
                       <Trash2 className="size-3.5" aria-hidden="true" />
-                      Quitar
+                      {tr("Quitar", "Remove")}
                     </button>
                   </div>
                 </div>
@@ -374,7 +424,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
               <div
                 className="aol-seg grid grid-cols-2 gap-1 rounded-full bg-[#fdf3e0] p-1"
                 role="group"
-                aria-label="Forma de entrega"
+                aria-label={tr("Forma de entrega", "Delivery method")}
               >
                 {(["domicilio", "recoger"] as const).map((m) => (
                   <button
@@ -388,7 +438,7 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                         : "text-[#8a7350]"
                     }`}
                   >
-                    {m === "domicilio" ? "🛵 A domicilio" : "🏖️ Recojo en el local"}
+                    {m === "domicilio" ? tr("🛵 A domicilio", "🛵 Delivery") : tr("🏖️ Recojo en el local", "🏖️ Pick up")}
                   </button>
                 ))}
               </div>
@@ -397,8 +447,8 @@ export function CartSection({ onBrowse }: CartSectionProps) {
             <Input
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value.slice(0, 60))}
-              placeholder="Tu nombre"
-              aria-label="Tu nombre"
+              placeholder={tr("Tu nombre", "Your name")}
+              aria-label={tr("Tu nombre", "Your name")}
               autoComplete="name"
               className="h-11 border-[#f0dfc0] bg-white text-sm focus-visible:ring-[#e2574c]"
             />
@@ -406,18 +456,18 @@ export function CartSection({ onBrowse }: CartSectionProps) {
             {mode === "domicilio" ? (
               <>
                 <label className="grid gap-1 text-xs font-extrabold uppercase tracking-wide text-[#8a7350]">
-                  Zona de entrega
+                  {tr("Zona de entrega", "Delivery area")}
                   <select
                     value={zone?.id ?? ""}
                     onChange={(e) => setZoneId(e.target.value)}
                     className="h-11 rounded-md border border-[#f0dfc0] bg-white px-3 text-sm font-semibold normal-case tracking-normal text-[#4a3b28] focus:outline-none focus:ring-2 focus:ring-[#e2574c]"
                   >
                     <option value="" disabled>
-                      Elige tu zona…
+                      {tr("Elige tu zona…", "Choose your area…")}
                     </option>
                     {zones.map((z) => (
                       <option key={z.id} value={z.id}>
-                        {z.name} · mensajería {z.fee ? money(settings.currency, z.fee) : "gratis"}
+                        {z.name} · {tr("mensajería", "delivery")} {z.fee ? money(settings.currency, z.fee) : tr("gratis", "free")}
                       </option>
                     ))}
                   </select>
@@ -425,22 +475,22 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                 <Input
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value.slice(0, 160))}
-                  placeholder="Dirección: calle, número, entre calles…"
-                  aria-label="Dirección de entrega"
+                  placeholder={tr("Dirección: calle, número, entre calles…", "Address: street, number, between streets…")}
+                  aria-label={tr("Dirección de entrega", "Delivery address")}
                   autoComplete="street-address"
                   className="h-11 border-[#f0dfc0] bg-white text-sm focus-visible:ring-[#e2574c]"
                 />
               </>
             ) : (
               <p className="rounded-xl bg-[#fdf3e0] px-3 py-2.5 text-sm font-semibold text-[#8a7350]">
-                📍 Recoges en {settings.deliveryPoint}
+                📍 {tr("Recoges en", "Pick up at")} {settings.deliveryPoint}
               </p>
             )}
 
             {payments.length > 0 && (
               <div className="grid gap-1.5">
                 <p className="text-xs font-extrabold uppercase tracking-wide text-[#8a7350]">
-                  ¿Cómo pagas?
+                  {tr("¿Cómo pagas?", "How will you pay?")}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {payments.map((p) => (
@@ -470,11 +520,11 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                       onClick={() => {
                         void navigator.clipboard
                           ?.writeText(payment.details)
-                          .then(() => toast.success("Copiado 📋"))
+                          .then(() => toast.success(tr("Copiado 📋", "Copied 📋")))
                           .catch(() => undefined);
                       }}
                       className="grid size-8 shrink-0 place-items-center rounded-full bg-white text-[#2b7a93]"
-                      aria-label="Copiar datos de pago"
+                      aria-label={tr("Copiar datos de pago", "Copy payment details")}
                     >
                       <Copy className="size-4" aria-hidden="true" />
                     </button>
@@ -484,6 +534,62 @@ export function CartSection({ onBrowse }: CartSectionProps) {
             )}
           </div>
 
+          {hasCoupons && (
+            <div className="aol-card grid gap-2 rounded-2xl border border-[#f0dfc0] bg-white p-3.5">
+              {coupon ? (
+                <div className="flex items-center gap-2 rounded-xl bg-[#e9f7ee] px-3 py-2 text-sm font-bold text-[#2f7a48] ring-1 ring-[#bfe5cc]">
+                  <Tag className="size-4 shrink-0" aria-hidden="true" />
+                  <span className="min-w-0 flex-1">
+                    {coupon.code} · {couponLabel(coupon, settings.currency)}
+                    {couponShort > 0 && (
+                      <span className="block text-xs font-semibold text-[#8a7350]">
+                        {tr(
+                          `Te faltan ${money(settings.currency, couponShort)} para usarlo`,
+                          `Add ${money(settings.currency, couponShort)} more to use it`
+                        )}
+                      </span>
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setCouponCode("")}
+                    className="grid size-8 shrink-0 place-items-center rounded-full bg-white"
+                    aria-label={tr("Quitar cupón", "Remove coupon")}
+                  >
+                    <X className="size-4" aria-hidden="true" />
+                  </button>
+                </div>
+              ) : (
+                <form
+                  className="flex gap-2"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    applyCoupon();
+                  }}
+                >
+                  <Input
+                    value={couponDraft}
+                    onChange={(e) => setCouponDraft(e.target.value.toUpperCase().slice(0, 20))}
+                    placeholder={tr("¿Tienes un cupón?", "Got a coupon?")}
+                    aria-label={tr("Código de cupón", "Coupon code")}
+                    autoCapitalize="characters"
+                    className="h-11 border-[#f0dfc0] bg-white text-sm font-bold tracking-wide focus-visible:ring-[#e2574c]"
+                  />
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    disabled={!couponDraft.trim()}
+                    className="h-11 shrink-0 rounded-2xl border-[#f0dfc0] font-bold text-[#c2542f]"
+                  >
+                    {tr("Aplicar", "Apply")}
+                  </Button>
+                </form>
+              )}
+            </div>
+          )}
+
+          <LoyaltyCard pending />
+
           <div className="aol-totals grid gap-1 rounded-2xl bg-[#fdf3e0] p-3.5 text-sm ring-1 ring-[#f0dfc0]">
             <div className="flex justify-between text-[#8a7350]">
               <span>Subtotal</span>
@@ -491,11 +597,17 @@ export function CartSection({ onBrowse }: CartSectionProps) {
                 {money(settings.currency, subtotal)}
               </span>
             </div>
+            {discount > 0 && coupon && (
+              <div className="flex justify-between font-bold text-[#2f7a48]">
+                <span>🏷️ {coupon.code}</span>
+                <span>-{money(settings.currency, discount)}</span>
+              </div>
+            )}
             {mode === "domicilio" && (
               <div className="flex justify-between text-[#8a7350]">
-                <span>Mensajería{zone ? ` · ${zone.name}` : ""}</span>
+                <span>{tr("Mensajería", "Delivery")}{zone ? ` · ${zone.name}` : ""}</span>
                 <span className="font-semibold">
-                  {zone ? (fee ? money(settings.currency, fee) : "Gratis") : "Elige tu zona"}
+                  {zone ? (fee ? money(settings.currency, fee) : tr("Gratis", "Free")) : tr("Elige tu zona", "Choose your area")}
                 </span>
               </div>
             )}
@@ -515,22 +627,22 @@ export function CartSection({ onBrowse }: CartSectionProps) {
               onClick={handleConfirm}
               className="h-13 w-full rounded-2xl bg-[#25d366] py-3.5 text-base font-extrabold text-white shadow-[0_8px_24px_-4px_rgba(37,211,102,0.5)] transition hover:bg-[#1fb857] active:scale-[0.98]"
             >
-              Confirmar por WhatsApp · {money(settings.currency, total)}
+              {tr("Confirmar por WhatsApp", "Confirm on WhatsApp")} · {money(settings.currency, total)}
             </Button>
             <div className="flex items-center justify-between">
               <p className="text-xs text-[#8a7350]">
-                Te confirmamos para el delivery 🌴
+                {tr("Te confirmamos para el delivery 🌴", "We confirm your order on WhatsApp 🌴")}
               </p>
               <button
                 type="button"
                 className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold text-[#b3562e] transition hover:bg-[#fdeae7]"
                 onClick={() => {
                   clear();
-                  toast.info("Carrito vacío otra vez 🧹");
+                  toast.info(tr("Carrito vacío otra vez 🧹", "Cart emptied 🧹"));
                 }}
               >
                 <Trash2 className="size-3.5" aria-hidden="true" />
-                Vaciar carrito
+                {tr("Vaciar carrito", "Empty cart")}
               </button>
             </div>
           </div>

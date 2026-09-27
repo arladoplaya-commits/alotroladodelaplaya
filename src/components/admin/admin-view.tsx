@@ -32,6 +32,7 @@ import { TabProductos } from "./tab-productos";
 import { TabAgregos } from "./tab-agregos";
 import { TabCombos } from "./tab-combos";
 import { TabServicio } from "./tab-servicio";
+import { TabPromos } from "./tab-promos";
 import { TabPedidos } from "./tab-pedidos";
 import { TabResenas } from "./tab-resenas";
 import { TabPublicar } from "./tab-publicar";
@@ -274,6 +275,13 @@ export function AdminView() {
               Entrega y pago
             </TabsTrigger>
             <TabsTrigger
+              value="promos"
+              className="gap-1.5 rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#c2542f]"
+            >
+              <span aria-hidden="true">🏷️</span>
+              Promos
+            </TabsTrigger>
+            <TabsTrigger
               value="pedidos"
               className="gap-1.5 rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#c2542f]"
             >
@@ -317,6 +325,9 @@ export function AdminView() {
           </TabsContent>
           <TabsContent value="servicio">
             <TabServicio />
+          </TabsContent>
+          <TabsContent value="promos">
+            <TabPromos />
           </TabsContent>
           <TabsContent value="pedidos">
             <TabPedidos />

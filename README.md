@@ -156,6 +156,14 @@ de verdad:
 > clientes: **Publicar → Publicar menú ahora**.
 > La contraseña del panel **ya no se publica** en `menu.json`.
 
+## 🏷️ Promos, idioma y pedidos rápidos
+
+- **¿Te lo acompañamos?** — al añadir comida, la carta sugiere hasta 3 bebidas o papas disponibles que aún no están en el carrito.
+- **Repetir mi último pedido** — en Favoritos y en el carrito vacío. Se rearma con los precios de hoy; lo agotado se salta y se avisa.
+- **Tarjeta de fidelidad** (panel → *Promos*, apagada por defecto) — cada pedido enviado suma un sello; al completar la tarjeta el WhatsApp llega con «🎁 PREMIO FIDELIDAD». Los sellos viven en el teléfono del cliente.
+- **Cupones** (panel → *Promos*) — código, % o importe fijo, pedido mínimo, encender/apagar. El descuento sale en el carrito y en el WhatsApp. Los códigos viajan con la carta publicada: son para promos, no secretos.
+- **Carta en inglés** — botón ES/EN en la postal (se elige solo si el teléfono está en inglés). Nombres y descripciones en inglés se editan en cada producto («🇬🇧 En inglés»). El pedido a la cocina siempre llega en español.
+
 ## ☁️ Guardado automático en GitHub
 
 Una vez puestos en **Publicar** el usuario, el repo y el token de GitHub, cada

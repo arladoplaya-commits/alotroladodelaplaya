@@ -26,6 +26,8 @@ import { BeachCart, CrabSilhouette, PalmSilhouette, ShellSilhouette, Shoreline, 
 import { CatTitle } from "./section-title";
 import { CustomizerSheet } from "./customizer-sheet";
 import { CartSection } from "./cart-section";
+import { UpsellSheet } from "./promo-cards";
+import { upsellFor } from "@/lib/promos";
 import { FavoritesSection, type TasteEntry } from "./favorites-section";
 import { ProductRow } from "./product-row";
 import { ReviewsSection } from "./reviews-section";
@@ -34,8 +36,18 @@ import { NotificationWatcher } from "./notification-watcher";
 import { InstallButton } from "./install-prompt";
 import { DEFAULT_GALLERY } from "./gallery-data";
 import { CombosSection, DailySection } from "./specials";
-import { LiteModeButton, NightGlow } from "./night-glow";
+import { LiteModeButton } from "./night-glow";
+import { useOffscreenPause } from "@/hooks/use-offscreen-pause";
 import { HeroPostcard } from "./hero-postcard";
+import { categoryName, productName, useLang, useTr } from "@/lib/i18n";
+import { SEED } from "@/lib/store";
+
+const DEFAULT_TAGLINE = SEED.settings.tagline;
+const CAPTIONS_EN: Record<string, string> = {
+  "El carrito al atardecer": "The cart at sunset",
+  "La barra y sus jugos": "The bar and its juices",
+  "Nuestra playa, la del otro lado": "Our beach, the one across the street",
+};
 import type { MenuData, Product } from "@/lib/types";
 
 /* Vistas de la carta: menú, favoritos guardados y carrito */
@@ -46,6 +58,7 @@ type View = "menu" | "favoritos" | "carrito";
 /* ------------------------------------------------------------------ */
 
 function OpenBadge({ open }: { open: boolean }) {
+  const tr = useTr();
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-wide shadow-sm ${
@@ -58,7 +71,7 @@ function OpenBadge({ open }: { open: boolean }) {
         className={`size-2 rounded-full ${open ? "animate-pulse bg-[#d6f5c9]" : "bg-[#fdf3e0]/70"}`}
         aria-hidden="true"
       />
-      {open ? "Abierto ahora" : "Cerrado ahora"}
+      {open ? tr("Abierto ahora", "Open now") : tr("Cerrado ahora", "Closed now")}
     </span>
   );
 }
@@ -76,8 +89,10 @@ function PhotoMarquee() {
     "/images/products/p-alitas-pollo.jpg",
     "/images/products/p-cerveza.jpg",
   ];
+  const ref = useOffscreenPause<HTMLDivElement>();
   return (
     <div
+      ref={ref}
       className="marquee-track relative overflow-hidden rounded-2xl ring-1 ring-[#e8d5b5]"
       aria-hidden="true"
     >
@@ -159,6 +174,8 @@ function MenuHome({
 }) {
   const [activeCat, setActiveCat] = useState<string>("todas");
   const [query, setQuery] = useState("");
+  const tr = useTr();
+  const lang = useLang();
 
   const visibleCategories = useMemo(
     () => data.categories.filter((c) => c.visible),
@@ -175,7 +192,10 @@ function MenuHome({
     if (q.length < 2) return [];
     return data.products.filter((p) => {
       if (data.settings.hideSoldOut && !p.available) return false;
-      const hay = normalizeText(`${p.name} ${p.description} ${p.tags.join(" ")}`);
+      // se busca en español y en inglés
+      const hay = normalizeText(
+        `${p.name} ${p.description} ${p.nameEn ?? ""} ${p.descriptionEn ?? ""} ${p.tags.join(" ")}`
+      );
       return q.split(/\s+/).every((w) => hay.includes(w));
     });
   }, [query, data]);
@@ -197,8 +217,11 @@ function MenuHome({
           className="aol-closed mb-4 rounded-2xl border-2 border-dashed border-[#e8b08a] bg-[#fdeae0] px-4 py-3 text-center text-sm font-semibold text-[#b3562e]"
           role="status"
         >
-          🌙 {openState.label || "Cerrado por hoy"} · Puedes ver la carta y
-          armar tu pedido para cuando abramos
+          🌙 {openState.label || tr("Cerrado por hoy", "Closed today")} ·{" "}
+          {tr(
+            "Puedes ver la carta y armar tu pedido para cuando abramos",
+            "You can browse the menu and build your order for when we open"
+          )}
         </div>
       )}
 
@@ -211,8 +234,8 @@ function MenuHome({
 
       {/* Destacados */}
       {featured.length > 0 && (
-        <section className="mt-6" aria-label="Recomendados del chef">
-          <CatTitle emoji="⭐">Los preferidos de la marea</CatTitle>
+        <section className="mt-6" aria-label={tr("Recomendados del chef", "Chef's picks")}>
+          <CatTitle emoji="⭐">{tr("Los preferidos de la marea", "Crowd favorites")}</CatTitle>
           <div className="nice-scroll -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
             {featured.map((p) => (
               <button
@@ -225,7 +248,7 @@ function MenuHome({
                   {p.image ? (
                     <Image
                       src={p.image}
-                      alt={p.name}
+                      alt={productName(p, lang)}
                       fill
                       sizes="192px"
                       className="object-cover"
@@ -236,12 +259,12 @@ function MenuHome({
                     </span>
                   )}
                   <span className="absolute left-2 top-2 rounded-full bg-[#f2c230] px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#7a5410]">
-                    DESTACADO
+                    {tr("DESTACADO", "FEATURED")}
                   </span>
                 </div>
                 <div className="flex items-center justify-between gap-1.5 p-2.5">
                   <span className="truncate text-sm font-extrabold text-[#4a3b28]">
-                    {p.name}
+                    {productName(p, lang)}
                   </span>
                   <span className="font-display text-sm text-[#c2542f]">
                     {money(data.settings.currency, p.price)}
@@ -256,7 +279,7 @@ function MenuHome({
       {/* Categorías */}
       <nav
         className="aol-navbar sticky top-2 z-20 -mx-1.5 mt-6 rounded-[26px] bg-[#fdf3e0]/90 p-2 backdrop-blur-md"
-        aria-label="Buscar y categorías del menú"
+        aria-label={tr("Buscar y categorías del menú", "Search and menu categories")}
       >
         <div className="aol-search-wrap relative mb-2">
           <Search
@@ -267,15 +290,15 @@ function MenuHome({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar antojos… limonada, perro, alitas"
-            aria-label="Buscar en el menú"
+            placeholder={tr("Buscar antojos… limonada, perro, alitas", "Search… lemonade, hot dog, wings")}
+            aria-label={tr("Buscar en el menú", "Search the menu")}
             className="aol-search h-12 w-full rounded-full border border-[#f0dfc0] bg-white pl-11 pr-12 text-[15px] font-semibold text-[#4a3b28] shadow-[0_6px_18px_-12px_rgba(120,80,40,0.45)] placeholder:font-medium placeholder:text-[#c4b08c] focus:border-transparent focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
-              aria-label="Limpiar búsqueda"
+              aria-label={tr("Limpiar búsqueda", "Clear search")}
               className="aol-search-clear absolute right-2.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full bg-[#fdf3e0] text-[#8a7350] transition hover:bg-[#f6dfb2]"
             >
               <X className="size-3.5" aria-hidden="true" />
@@ -287,7 +310,7 @@ function MenuHome({
             <CategoryPill
               active={activeCat === "todas"}
               emoji="🌊"
-              name="Todo"
+              name={tr("Todo", "All")}
               count={[...productsByCat.values()].reduce((a, l) => a + l.length, 0)}
               onClick={() => setActiveCat("todas")}
             />
@@ -296,7 +319,7 @@ function MenuHome({
                 key={c.id}
                 active={activeCat === c.id}
                 emoji={c.emoji}
-                name={c.name}
+                name={categoryName(c, lang)}
                 count={productsByCat.get(c.id)?.length ?? 0}
                 onClick={() => setActiveCat(c.id)}
               />
@@ -304,7 +327,7 @@ function MenuHome({
             <CategoryPill
               active={false}
               emoji="❤️"
-              name="Favoritos"
+              name={tr("Favoritos", "Favorites")}
               onClick={onGoFavorites}
             />
           </div>
@@ -313,15 +336,18 @@ function MenuHome({
 
       {/* Búsqueda / productos por categoría */}
       {query.trim().length >= 2 ? (
-        <section className="mt-3" aria-label="Resultados de búsqueda">
+        <section className="mt-3" aria-label={tr("Resultados de búsqueda", "Search results")}>
           <CatTitle emoji="🔍">
             {searchResults.length}{" "}
-            {searchResults.length === 1 ? "resultado" : "resultados"} para{" "}
-            “{query.trim()}”
+            {searchResults.length === 1 ? tr("resultado", "result") : tr("resultados", "results")}{" "}
+            {tr("para", "for")} “{query.trim()}”
           </CatTitle>
           {searchResults.length === 0 ? (
             <div className="aol-empty rounded-2xl border-2 border-dashed border-[#e8d5b5] bg-white/60 px-4 py-6 text-center text-sm text-[#8a7350]">
-              Nada con esa marea… prueba con “limonada”, “perro” o “alitas” 🌊
+              {tr(
+                "Nada con esa marea… prueba con “limonada”, “perro” o “alitas” 🌊",
+                "Nothing on this tide… try “lemonade”, “hot dog” or “wings” 🌊"
+              )}
             </div>
           ) : (
             <div className="grid gap-3 lg:grid-cols-2 lg:gap-4">
@@ -344,13 +370,16 @@ function MenuHome({
             .map((c) => {
               const list = productsByCat.get(c.id) ?? [];
               return (
-                <section key={c.id} aria-label={c.name}>
-                  <CatTitle emoji={c.emoji}>{c.name}</CatTitle>
+                <section key={c.id} aria-label={categoryName(c, lang)}>
+                  <CatTitle emoji={c.emoji}>{categoryName(c, lang)}</CatTitle>
                   {list.length === 0 ? (
                     <div className="aol-empty rounded-2xl border-2 border-dashed border-[#e8d5b5] bg-white/60 px-4 py-6 text-center text-sm text-[#8a7350]">
                       {data.settings.hideSoldOut
-                        ? "Nada por aquí por ahora"
-                        : "Se agotaron los antojos de esta categoría. ¡Prueba otra!"}
+                        ? tr("Nada por aquí por ahora", "Nothing here right now")
+                        : tr(
+                            "Se agotaron los antojos de esta categoría. ¡Prueba otra!",
+                            "This category sold out. Try another one!"
+                          )}
                     </div>
                   ) : (
                     <div className="grid gap-3 lg:grid-cols-2 lg:gap-4">
@@ -375,8 +404,8 @@ function MenuHome({
       <ReviewsSection />
 
       {/* Galería del shack (fotos reales del panel o las de serie) */}
-      <section className="mt-10" aria-label="Así se vive el shack">
-        <CatTitle emoji="📸">Así se vive el shack</CatTitle>
+      <section className="mt-10" aria-label={tr("Así se vive el shack", "Life at the shack")}>
+        <CatTitle emoji="📸">{tr("Así se vive el shack", "Life at the shack")}</CatTitle>
         <div className="nice-scroll -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
           {(data.settings.gallery?.length ? data.settings.gallery : DEFAULT_GALLERY).map(
             (g) => (
@@ -394,7 +423,7 @@ function MenuHome({
                 />
               </div>
               <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#4a3b28]/85 to-transparent px-3 pb-2 pt-8 text-xs font-bold text-white">
-                {g.caption}
+                {lang === "en" ? (CAPTIONS_EN[g.caption] ?? g.caption) : g.caption}
               </figcaption>
             </figure>
           ))}
@@ -405,12 +434,14 @@ function MenuHome({
       <div className="aol-closing aol-float relative mt-12 overflow-hidden rounded-3xl bg-[#f6dfb2] px-6 pb-0 pt-6 text-center ring-1 ring-[#e8d5b5]">
         <BeachCart className="mx-auto h-24 w-20" />
         <p className="font-display text-lg leading-snug text-[#b3562e]">
-          El shack te espera
+          {tr("El shack te espera", "The shack is waiting for you")}
           <br />
-          en {data.settings.deliveryPoint}
+          {tr("en", "at")} {data.settings.deliveryPoint}
         </p>
         <p className="mt-1 text-xs font-semibold text-[#a58a5f]">
-          {data.settings.deliveryTime}
+          {lang === "en" && data.settings.deliveryTime === "Pedidos por WhatsApp"
+            ? "Orders via WhatsApp"
+            : data.settings.deliveryTime}
         </p>
         <div className="relative mt-4 flex items-end justify-center gap-6">
           <CrabSilhouette className="mb-2 h-7 w-11 crab-walk" />
@@ -485,29 +516,30 @@ function BottomNav({
   cartTotal: number;
   currency: string;
 }) {
+  const tr = useTr();
   return (
     <nav
       className="aol-nav fixed inset-x-0 bottom-0 z-30 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
-      aria-label="Secciones de la carta"
+      aria-label={tr("Secciones de la carta", "Menu sections")}
     >
       <div className="mx-auto flex max-w-xl items-stretch gap-1.5 rounded-2xl border border-[#f0dfc0] bg-white/95 p-1.5 shadow-[0_12px_30px_-8px_rgba(180,140,80,0.5)] backdrop-blur lg:max-w-2xl">
         <NavTab
           active={view === "menu"}
           icon={<UtensilsCrossed className="size-4" aria-hidden="true" />}
-          label="Menú"
+          label={tr("Menú", "Menu")}
           onClick={() => onChange("menu")}
         />
         <NavTab
           active={view === "favoritos"}
           icon={<Heart className="size-4" aria-hidden="true" />}
-          label="Favoritos"
+          label={tr("Favoritos", "Favorites")}
           badge={favCount}
           onClick={() => onChange("favoritos")}
         />
         <NavTab
           active={view === "carrito"}
           icon={<ShoppingBag className="size-4" aria-hidden="true" />}
-          label="Carrito"
+          label={tr("Carrito", "Cart")}
           badge={cartCount}
           hint={cartCount > 0 ? money(currency, cartTotal) : undefined}
           onClick={() => onChange("carrito")}
@@ -519,6 +551,15 @@ function BottomNav({
 
 export function MenuView() {
   const data = useMenuStore((s) => s.data);
+  const [upsell, setUpsell] = useState<{ base: Product; list: Product[] } | null>(null);
+  const tr = useTr();
+  const lang = useLang();
+  const setLang = useCustomerStore((s) => s.setLang);
+
+  // idioma de la página (lectores de pantalla, traductores)
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
   const hydrate = useMenuStore((s) => s.hydrate);
   const hydrated = useMenuStore((s) => s.hydrated);
   const cartCount = useCartStore((s) => s.items.reduce((a, i) => a + i.qty, 0));
@@ -607,9 +648,11 @@ export function MenuView() {
         })
         .catch(() => undefined);
     }
-    toast(next === "sunset" ? "🌙 Noche de playa" : "☀️ Día de playa", {
+    toast(next === "sunset" ? tr("🌙 Noche de playa", "🌙 Beach night") : tr("☀️ Día de playa", "☀️ Beach day"), {
       description:
-        next === "sunset" ? "El sol se esconde y el mar empieza a brillar…" : "Arena, sol y agua clarita",
+        next === "sunset"
+          ? tr("El sol se esconde y el mar empieza a brillar…", "The sun sets and the sea starts to glow…")
+          : tr("Arena, sol y agua clarita", "Sand, sun and clear water"),
     });
   };
 
@@ -633,7 +676,7 @@ export function MenuView() {
     }, 900);
   };
 
-  const openState = openStateFor(data.settings, now);
+  const openState = openStateFor(data.settings, now, lang);
   const ordersOpen = openState.open;
 
   const favoriteProducts = useMemo(
@@ -664,7 +707,7 @@ export function MenuView() {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const text = `🌊 ${data.settings.businessName} — ${data.settings.tagline}\nSabor playero, al otro lado de tu calle 👉`;
+    const text = `🌊 ${data.settings.businessName} — ${data.settings.tagline}\n${tr("Sabor playero, al otro lado de tu calle", "Beach flavor, just across your street")} 👉`;
     try {
       if (navigator.share) {
         await navigator.share({ title: data.settings.businessName, text, url });
@@ -672,8 +715,8 @@ export function MenuView() {
       }
       await navigator.clipboard.writeText(`${text} ${url}`);
       buzz();
-      toast.success("Link copiado 📋", {
-        description: "Pégalo donde quieras compartir la carta.",
+      toast.success(tr("Link copiado 📋", "Link copied 📋"), {
+        description: tr("Pégalo donde quieras compartir la carta.", "Paste it anywhere to share the menu."),
       });
     } catch {
       /* canceló el compartir */
@@ -699,7 +742,7 @@ export function MenuView() {
           />
         </div>
         <p className="font-display text-sm font-bold tracking-wide text-[#c2542f]">
-          Preparando la carta...
+          {tr("Preparando la carta...", "Getting the menu ready...")}
         </p>
       </div>
     );
@@ -707,9 +750,6 @@ export function MenuView() {
 
   return (
     <div className="aol-page relative min-h-dvh bg-[#fdf3e0]">
-      {/* Luciérnagas: solo de noche */}
-      <NightGlow />
-
       {/* Decoración ambiental solo para pantallas grandes */}
       <div className="pointer-events-none fixed inset-0 z-0 hidden lg:block" aria-hidden="true">
         <div className="absolute right-[10%] top-12 opacity-30">
@@ -743,6 +783,17 @@ export function MenuView() {
           unread={unread}
           onBell={() => setInboxOpen(true)}
           onShare={() => void handleShare()}
+          lang={lang}
+          onToggleLang={() => {
+            const next = lang === "en" ? "es" : "en";
+            setLang(next);
+            toast(next === "en" ? "🇬🇧 Menu in English" : "🇨🇺 Carta en español", {
+              description:
+                next === "en"
+                  ? "Your order still reaches the kitchen in Spanish"
+                  : "El pedido llega a la cocina en español",
+            });
+          }}
         />
 
         {/* Encabezado */}
@@ -770,10 +821,12 @@ export function MenuView() {
             {data.settings.businessName}
           </h1>
           <p className="aol-sub mt-1.5 text-sm font-semibold text-[#8a7350]">
-            {data.settings.tagline}
+            {lang === "en" && data.settings.tagline === DEFAULT_TAGLINE
+              ? "Burgers, hot dogs, baguettes and bites · By Sol & Habana"
+              : data.settings.tagline}
           </p>
           <p className="aol-slogan font-display text-base text-[#e2574c]">
-            Sabor playero, al otro lado de tu calle
+            {tr("Sabor playero, al otro lado de tu calle", "Beach flavor, just across your street")}
           </p>
 
           <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
@@ -783,7 +836,7 @@ export function MenuView() {
             </span>
             {ordersOpen && (
               <span className="aol-chip inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#8a7350] ring-1 ring-[#f0dfc0]">
-                {waitEstimate(true)}
+                {waitEstimate(true, lang)}
               </span>
             )}
             {openState.label && (
@@ -806,7 +859,9 @@ export function MenuView() {
               }`}
             >
               <UserRound className="size-3.5" aria-hidden="true" />
-              {profile ? `Hola, ${profile.name}` : "Hazte cliente 🌊"}
+              {profile
+                ? tr(`Hola, ${profile.name}`, `Hi, ${profile.name}`)
+                : tr("Hazte cliente 🌊", "Join the tide 🌊")}
             </button>
 
             <InstallButton />
@@ -863,6 +918,16 @@ export function MenuView() {
         product={customizing}
         open={!!customizing}
         onOpenChange={(v) => !v && setCustomizing(null)}
+        onAdded={(p) => {
+          const list = upsellFor(p, data, useCartStore.getState().items);
+          // se abre cuando la hoja anterior ya bajó
+          if (list.length) window.setTimeout(() => setUpsell({ base: p, list }), 380);
+        }}
+      />
+      <UpsellSheet
+        base={upsell?.base ?? null}
+        suggestions={upsell?.list ?? []}
+        onClose={() => setUpsell(null)}
       />
       <CustomerSheet open={customerOpen} onOpenChange={setCustomerOpen} />
       <InboxSheet open={inboxOpen} onOpenChange={setInboxOpen} />
