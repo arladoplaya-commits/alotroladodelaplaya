@@ -63,7 +63,7 @@ export function TabServicio() {
   return (
     <div className="grid gap-4">
       <p className="rounded-2xl bg-[#eef9fc] px-4 py-3 text-sm font-semibold text-[#2b7a93] ring-1 ring-[#bfe3f2]">
-        💾 Todo se guarda al momento. Pulsa <b>Publicar → Publicar menú ahora</b>{" "}
+        💾 Todo se guarda al momento y, con GitHub configurado en <b>Publicar</b>, se sube solo{" "}
         para que los clientes vean los cambios.
       </p>
 

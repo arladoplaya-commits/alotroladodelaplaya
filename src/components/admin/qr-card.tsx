@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useMenuStore } from "@/lib/store";
+import { PdfMenuButton } from "@/components/menu/pdf-menu";
 
 /* ------------------------------------------------------------------ */
 /*  Código QR de la carta. Usa la dirección donde está publicada la    */
@@ -182,6 +183,7 @@ export function QrCard() {
             >
               Solo el QR
             </Button>
+            <PdfMenuButton className="inline-flex h-9 items-center gap-1.5 rounded-2xl border border-[#f0dfc0] bg-white px-4 text-sm font-bold text-[#8a7350] hover:bg-[#fdf3e0]" />
           </div>
         </div>
       </div>

@@ -82,7 +82,7 @@ export function TabCombos() {
       description: editing.description.trim().slice(0, 120),
     });
     toast.success(isNew ? "Combo creado 🔥" : "Combo actualizado", {
-      description: "Publica el menú para que lo vean todos.",
+      description: "Se sube solo a GitHub en unos segundos.",
     });
     setEditing(null);
   };

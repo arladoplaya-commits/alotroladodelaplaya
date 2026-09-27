@@ -36,6 +36,7 @@ import { TabPedidos } from "./tab-pedidos";
 import { TabResenas } from "./tab-resenas";
 import { TabPublicar } from "./tab-publicar";
 import { TabAjustes } from "./tab-ajustes";
+import { AutoSaveStatus } from "./autosave-status";
 
 /* ------------------------------------------------------------------ */
 /*  Panel del Negocio: acceso con contraseña + 7 pestañas              */
@@ -198,6 +199,7 @@ export function AdminView() {
             <p className="text-xs font-semibold text-[#8a7350]">
               Panel del Negocio
             </p>
+            <AutoSaveStatus />
           </div>
           <div className="ml-auto flex items-center gap-2">
             <a

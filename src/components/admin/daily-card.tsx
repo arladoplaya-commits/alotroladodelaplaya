@@ -91,8 +91,8 @@ export function DailyCard() {
             })}
           </div>
           <p className="text-xs text-[#a58a5f]">
-            Lo agotado no se muestra aunque esté marcado. Publica el menú para
-            que lo vean todos.
+            Lo agotado no se muestra aunque esté marcado. Con GitHub configurado,
+            los cambios se suben solos.
           </p>
         </div>
       )}

@@ -146,6 +146,24 @@ de verdad:
 > clientes: **Publicar → Publicar menú ahora**.
 > La contraseña del panel **ya no se publica** en `menu.json`.
 
+## ☁️ Guardado automático en GitHub
+
+Una vez puestos en **Publicar** el usuario, el repo y el token de GitHub, cada
+cambio del panel (precios, agotados, combos, horario…) **se sube solo** unos
+15 segundos después de dejar de editar. Varios cambios seguidos se suben
+juntos. En la cabecera del panel se ve el estado: *Cambios sin subir…* →
+*Guardado en GitHub* (o *No se pudo guardar · Reintentar*). Se puede apagar en
+**Publicar → Guardado automático**. Cada subida redespliega la web en Netlify
+(~1 min), por eso se agrupan los cambios.
+
+## 📄 Carta en PDF (una hoja A4)
+
+Botón **«Carta en PDF»** en la carta (y en el panel → Publicar, junto al QR):
+muestra la hoja con la estética de la web (postal, colores, fuentes, 3 columnas,
+combos, agregos, QR, mensajería y pagos). La letra se ajusta sola para que todo
+quepa en **una sola hoja**. «Descargar PDF» abre la ventana de imprimir: elige
+**Guardar como PDF** (en el móvil: Compartir/Imprimir → Guardar como PDF).
+
 ## 🚀 Publicar en Vercel (y el QR)
 
 1. Sube este proyecto a un repo de GitHub (sin `node_modules` ni `.next`).

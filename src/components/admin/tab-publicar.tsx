@@ -9,13 +9,14 @@ import { Label } from "@/components/ui/label";
 import { useMenuStore } from "@/lib/store";
 import {
   getGhToken,
-  putFileToGitHub,
   setGhToken,
   uploadPhotoToGitHub,
 } from "@/lib/gh";
 import type { GalleryItem } from "@/lib/types";
 import { DEFAULT_GALLERY } from "@/components/menu/gallery-data";
 import { QrCard } from "./qr-card";
+import { Switch } from "@/components/ui/switch";
+import { publicMenuJson, useAutoPublish } from "@/lib/autopublish";
 
 /* ------------------------------------------------------------------ */
 /*  Publicar: sincroniza el menú con GitHub (menu.json) + fotos del    */
@@ -48,7 +49,7 @@ export function TabPublicar() {
     setGalleryDirty(false);
     toast.success("Galería guardada en la carta", {
       description:
-        "Pulsa «Publicar menú ahora» para que todos la vean desde GitHub.",
+        "Con GitHub configurado se sube sola; si no, pulsa «Publicar menú ahora».",
     });
   };
 
@@ -112,7 +113,7 @@ export function TabPublicar() {
           : `¡${okCount} fotos del local subidas a GitHub! 📸`,
         {
           description:
-            "Pulsa «Publicar menú ahora» para que todos la vean en la carta.",
+            "Con GitHub configurado se sube sola; si no, pulsa «Publicar menú ahora».",
         }
       );
     }
@@ -125,25 +126,25 @@ export function TabPublicar() {
   };
 
   // La contraseña del panel nunca se publica: el menu.json es público
-  const json = useMemo(
-    () =>
-      JSON.stringify(
-        { ...data, settings: { ...data.settings, adminPassword: "" } },
-        null,
-        2
-      ),
-    [data]
-  );
+  const json = useMemo(() => publicMenuJson(data), [data]);
   const lastUpdated = useMemo(
     () => new Date(data.updatedAt).toLocaleString("es-CU"),
     [data.updatedAt]
   );
 
   const saveCreds = () => {
+    // el token solo se cambia si escribes uno nuevo (vacío = se conserva)
+    if (token.trim()) setGhToken(token);
     saveGitHub({ owner: owner.trim(), repo: repo.trim(), branch: branch.trim(), path: path.trim() });
-    setGhToken(token);
-    toast.success("Cambios locales guardados");
+    toast.success("Datos de GitHub guardados", {
+      description: getGhToken()
+        ? "Desde ahora cada cambio se sube solo."
+        : "Falta el token para poder subir los cambios.",
+    });
   };
+
+  const autoOn = useAutoPublish((s) => s.enabled);
+  const setAutoOn = useAutoPublish((s) => s.setEnabled);
 
   const publish = async () => {
     if (!owner.trim() || !repo.trim()) {
@@ -155,21 +156,17 @@ export function TabPublicar() {
       toast.error("Pega tu token de acceso personal de GitHub");
       return;
     }
+    setGhToken(t);
     setPublishing(true);
     saveGitHub({ owner: owner.trim(), repo: repo.trim(), branch: branch.trim(), path: path.trim() });
-    const res = await putFileToGitHub(
-      { owner: owner.trim(), repo: repo.trim(), branch: branch.trim(), path: path.trim() },
-      t,
-      json,
-      `chore: actualizar carta (${new Date().toISOString()})`
-    );
+    const ok = await useAutoPublish.getState().flush(() => useMenuStore.getState().data);
     setPublishing(false);
-    if (res.ok) {
+    if (ok) {
       toast.success("¡Publicado en GitHub! 🚀", {
-        description: "Los dispositivos leerán el menú actualizado en 1-2 min.",
+        description: "Los clientes verán la carta actualizada en 1-2 min.",
       });
     } else {
-      toast.error(res.error ?? "Error inesperado al publicar");
+      toast.error(useAutoPublish.getState().error || "Error inesperado al publicar");
     }
   };
 
@@ -275,6 +272,20 @@ export function TabPublicar() {
             />
           </div>
         </div>
+
+        <label className="mt-3 flex items-center justify-between gap-3 rounded-2xl bg-[#eef9fc] px-4 py-3 ring-1 ring-[#bfe3f2]">
+          <span>
+            <span className="block text-sm font-extrabold text-[#2b7a93]">
+              ☁️ Guardado automático en GitHub
+            </span>
+            <span className="block text-xs text-[#2b7a93]">
+              {autoOn
+                ? "Cada cambio del panel se sube solo a los pocos segundos. Arriba ves si ya se guardó."
+                : "Apagado: los cambios solo se suben al pulsar «Publicar menú ahora»."}
+            </span>
+          </span>
+          <Switch checked={autoOn} onCheckedChange={setAutoOn} aria-label="Guardado automático en GitHub" />
+        </label>
 
         <div className="mt-3 flex flex-wrap gap-2">
           <Button

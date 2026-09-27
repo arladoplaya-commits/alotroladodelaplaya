@@ -237,6 +237,12 @@ export const useMenuStore = create<MenuState>()(
           // conservamos la config de GitHub y la contraseña de este
           // dispositivo (la contraseña nunca viaja en el menú público)
           const local = get().data;
+          // lo que viene publicado ya está en GitHub: no hay que re-subirlo
+          try {
+            localStorage.setItem("aol-last-published", remote.updatedAt);
+          } catch {
+            /* noop */
+          }
           set({
             data: {
               ...remote,

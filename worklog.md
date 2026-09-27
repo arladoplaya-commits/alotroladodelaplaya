@@ -225,3 +225,15 @@ Work Log:
 - BUG corregido: la config de la nube solo existía en el teléfono donde se pegaba en el panel, así que los teléfonos de los clientes nunca guardaban pedidos/reseñas en Supabase. Ahora cloud-config.ts trae la URL + clave pública del negocio (sobrescribible con NEXT_PUBLIC_SUPABASE_URL/KEY) y reviews.ts la usa por defecto en todos los dispositivos.
 - Panel → Reseñas acepta y explica ambos formatos de clave.
 - No se pudo probar contra el proyecto real desde el entorno de trabajo (red bloqueada): falta ejecutar el SQL en Supabase y hacer un pedido de prueba.
+
+---
+Task ID: 13
+Agent: Claude Code
+Task: Carta en PDF de una sola hoja con la estética de la web + guardado automático en GitHub.
+
+Work Log:
+- pdf-menu.tsx: hoja A4 (794×1123) con postal, logo, datos rápidos, categorías en 3 columnas con líneas de puntos y precio, agregos, combos, pie con QR, mensajería y pagos. Auto-ajuste de letra (--fs) hasta que cabe en una hoja. Descarga con window.print + CSS @page A4 sin márgenes y colores exactos; título del documento = nombre del PDF. Verificado: PDF de 1 página A4 con toda la carta (letra ajustada a 11.25 px).
+- autopublish.ts: publishMenu/publicMenuJson compartidos (sin contraseña), guardado automático con agrupación de 15 s, reintento al minuto, subida al esconder la app; no re-sube lo que ya vino publicado.
+- autosave-status.tsx: estado en la cabecera del panel. Publicar: interruptor «Guardado automático».
+- BUG corregido: «Guardar datos» con el campo del token vacío borraba el token guardado.
+- Verificado con GitHub simulado: 2 cambios seguidos = 1 subida, Authorization correcto, adminPassword vacío.
