@@ -15,6 +15,7 @@ import {
 } from "@/lib/gh";
 import type { GalleryItem } from "@/lib/types";
 import { DEFAULT_GALLERY } from "@/components/menu/gallery-data";
+import { QrCard } from "./qr-card";
 
 /* ------------------------------------------------------------------ */
 /*  Publicar: sincroniza el menú con GitHub (menu.json) + fotos del    */
@@ -123,7 +124,16 @@ export function TabPublicar() {
     setGalleryDirty(true);
   };
 
-  const json = useMemo(() => JSON.stringify(data, null, 2), [data]);
+  // La contraseña del panel nunca se publica: el menu.json es público
+  const json = useMemo(
+    () =>
+      JSON.stringify(
+        { ...data, settings: { ...data.settings, adminPassword: "" } },
+        null,
+        2
+      ),
+    [data]
+  );
   const lastUpdated = useMemo(
     () => new Date(data.updatedAt).toLocaleString("es-CU"),
     [data.updatedAt]
@@ -184,6 +194,8 @@ export function TabPublicar() {
 
   return (
     <div className="grid gap-4">
+      <QrCard />
+
       <section className="rounded-3xl border border-[#e8dcc0] bg-white p-5 shadow-sm">
         <h2 className="font-display text-xl text-[#c2542f]">
           Publicar la carta en GitHub

@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "updatedAt": "2026-09-26T07:30:00.000Z",
   "categories": [
     {
@@ -655,6 +655,70 @@
       "available": true
     }
   ],
+  "combos": [
+    {
+      "id": "c-playero",
+      "name": "Combo Playero",
+      "emoji": "🏖️",
+      "description": "Clásica + papas fritas + refresco bien frío.",
+      "items": [
+        {
+          "productId": "p-clasica",
+          "qty": 1
+        },
+        {
+          "productId": "p-papas-fritas",
+          "qty": 1
+        },
+        {
+          "productId": "p-refrescos",
+          "qty": 1
+        }
+      ],
+      "price": 2400,
+      "active": true
+    },
+    {
+      "id": "c-perro-refresco",
+      "name": "Crispy + Refresco",
+      "emoji": "🌭",
+      "description": "El Crispy crujiente con su refresco.",
+      "items": [
+        {
+          "productId": "p-perro-crispy",
+          "qty": 1
+        },
+        {
+          "productId": "p-refrescos",
+          "qty": 1
+        }
+      ],
+      "price": 1200,
+      "active": true
+    },
+    {
+      "id": "c-pareja",
+      "name": "Combo Pareja",
+      "emoji": "💑",
+      "description": "2 Doble Mixta, papischis para compartir y 2 limonadas.",
+      "items": [
+        {
+          "productId": "p-doble-mixta",
+          "qty": 2
+        },
+        {
+          "productId": "p-papischis",
+          "qty": 1
+        },
+        {
+          "productId": "p-limonada",
+          "qty": 2
+        }
+      ],
+      "price": 5300,
+      "active": true
+    }
+  ],
   "settings": {
     "businessName": "Al Otro Lado de la Playa",
     "tagline": "Hamburguesas, perros calientes, baguettes y raciones · By Sol & Habana",
@@ -664,7 +728,105 @@
     "deliveryTime": "Pedidos por WhatsApp",
     "hideSoldOut": true,
     "adminPassword": "playa2026",
-    "ordersOpen": true
+    "ordersOpen": true,
+    "deliveryEnabled": true,
+    "pickupEnabled": true,
+    "zones": [
+      {
+        "id": "z-vedado",
+        "name": "Vedado",
+        "fee": 200,
+        "active": true
+      },
+      {
+        "id": "z-centro",
+        "name": "Centro Habana",
+        "fee": 300,
+        "active": true
+      },
+      {
+        "id": "z-plaza",
+        "name": "Plaza de la Revolución",
+        "fee": 300,
+        "active": true
+      },
+      {
+        "id": "z-playa",
+        "name": "Playa / Miramar",
+        "fee": 400,
+        "active": true
+      }
+    ],
+    "payments": [
+      {
+        "id": "pay-efectivo",
+        "name": "Efectivo",
+        "emoji": "💵",
+        "details": "",
+        "active": true
+      },
+      {
+        "id": "pay-transfermovil",
+        "name": "Transfermóvil",
+        "emoji": "📲",
+        "details": "",
+        "active": true
+      },
+      {
+        "id": "pay-enzona",
+        "name": "EnZona",
+        "emoji": "🟢",
+        "details": "",
+        "active": false
+      }
+    ],
+    "schedule": {
+      "auto": false,
+      "days": [
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        },
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        },
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        },
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        },
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        },
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        },
+        {
+          "closed": false,
+          "open": "12:00",
+          "close": "23:30"
+        }
+      ]
+    },
+    "daily": {
+      "active": false,
+      "title": "Menú del día",
+      "note": "",
+      "productIds": []
+    },
+    "publicUrl": ""
   },
   "github": {
     "owner": "",

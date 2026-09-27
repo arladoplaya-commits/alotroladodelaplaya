@@ -69,7 +69,7 @@ export function TabResenas() {
       return;
     }
     if (!isValidAnonKey(anonKey)) {
-      toast.error("La anon key parece incompleta. Cópiala completa (empieza por «eyJ»).");
+      toast.error("La clave parece incompleta. Cópiala completa (empieza por «sb_publishable_» o «eyJ»).");
       return;
     }
     setTesting(true);
@@ -93,7 +93,7 @@ export function TabResenas() {
       return;
     }
     if (!isValidAnonKey(anonKey)) {
-      toast.error("La anon key parece incompleta. Cópiala completa (empieza por «eyJ»).");
+      toast.error("La clave parece incompleta. Cópiala completa (empieza por «sb_publishable_» o «eyJ»).");
       return;
     }
     connect({ provider: "supabase", url: normalizeSupaUrl(url), anonKey: anonKey.trim() });
@@ -241,14 +241,14 @@ export function TabResenas() {
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="s-key" className="font-bold text-[#4a3b28]">
-              Anon public key
+              Clave pública (publishable / anon)
             </Label>
             <Input
               id="s-key"
               type="password"
               value={anonKey}
               onChange={(e) => setAnonKey(e.target.value)}
-              placeholder="eyJ..."
+              placeholder="sb_publishable_… (o eyJ… si es la antigua)"
               className="border-[#f0dfc0] focus-visible:ring-[#e2574c]"
             />
           </div>

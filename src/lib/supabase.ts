@@ -226,6 +226,16 @@ export function isValidSupaUrl(raw: string): boolean {
   return /^https?:\/\/\S+$/.test(normalizeSupaUrl(raw));
 }
 
+/**
+ * Cabeceras de autenticación. Las claves nuevas de Supabase
+ * («sb_publishable_…») van solo en `apikey`; las antiguas («eyJ…», que
+ * son JWT) también pueden ir en `Authorization`.
+ */
+export function sbAuth(key: string): Record<string, string> {
+  const k = key.trim();
+  return k.startsWith("eyJ") ? { apikey: k, Authorization: `Bearer ${k}` } : { apikey: k };
+}
+
 export function isValidAnonKey(raw: string): boolean {
   return raw.trim().length >= 20;
 }
@@ -243,8 +253,7 @@ async function rpc<T>(
     const res = await fetch(`${normalizeSupaUrl(creds.url)}/rest/v1/rpc/${fn}`, {
       method: "POST",
       headers: {
-        apikey: creds.anonKey,
-        Authorization: `Bearer ${creds.anonKey}`,
+        ...sbAuth(creds.anonKey),
         "Content-Type": "application/json",
         Prefer: "return=representation",
       },
@@ -293,7 +302,7 @@ export async function sbTestConnection(
     const res = await fetch(
       `${normalizeSupaUrl(creds.url)}/rest/v1/reviews?select=id&limit=1`,
       {
-        headers: { apikey: creds.anonKey, Authorization: `Bearer ${creds.anonKey}` },
+        headers: sbAuth(creds.anonKey),
         cache: "no-store",
       }
     );
@@ -317,7 +326,7 @@ export async function sbFetchReviews(
     const res = await fetch(
       `${normalizeSupaUrl(creds.url)}/rest/v1/reviews?select=*&order=created_at.desc&limit=100`,
       {
-        headers: { apikey: creds.anonKey, Authorization: `Bearer ${creds.anonKey}` },
+        headers: sbAuth(creds.anonKey),
         cache: "no-store",
       }
     );
@@ -339,8 +348,7 @@ export async function sbInsertReview(
       {
         method: "POST",
         headers: {
-          apikey: creds.anonKey,
-          Authorization: `Bearer ${creds.anonKey}`,
+          ...sbAuth(creds.anonKey),
           "Content-Type": "application/json",
           Prefer: "return=minimal",
         },
@@ -396,8 +404,7 @@ export async function sbInsertOrder(
     const res = await fetch(`${normalizeSupaUrl(creds.url)}/rest/v1/orders`, {
       method: "POST",
       headers: {
-        apikey: creds.anonKey,
-        Authorization: `Bearer ${creds.anonKey}`,
+        ...sbAuth(creds.anonKey),
         "Content-Type": "application/json",
         Prefer: "return=minimal",
       },
@@ -488,8 +495,7 @@ export async function sbUpsertCustomer(
       {
         method: "POST",
         headers: {
-          apikey: creds.anonKey,
-          Authorization: `Bearer ${creds.anonKey}`,
+          ...sbAuth(creds.anonKey),
           "Content-Type": "application/json",
           Prefer: "resolution=merge-duplicates,return=minimal",
         },
@@ -518,8 +524,7 @@ export async function sbInsertPushSubscription(
       {
         method: "POST",
         headers: {
-          apikey: creds.anonKey,
-          Authorization: `Bearer ${creds.anonKey}`,
+          ...sbAuth(creds.anonKey),
           "Content-Type": "application/json",
           Prefer: "resolution=merge-duplicates,return=minimal",
         },
@@ -552,8 +557,7 @@ export async function sbDeletePushSubscription(
       {
         method: "DELETE",
         headers: {
-          apikey: creds.anonKey,
-          Authorization: `Bearer ${creds.anonKey}`,
+          ...sbAuth(creds.anonKey),
         },
         cache: "no-store",
       }
@@ -571,7 +575,7 @@ export async function sbFetchAnnouncements(
     const res = await fetch(
       `${normalizeSupaUrl(creds.url)}/rest/v1/announcements?select=*&order=created_at.desc&limit=30`,
       {
-        headers: { apikey: creds.anonKey, Authorization: `Bearer ${creds.anonKey}` },
+        headers: sbAuth(creds.anonKey),
         cache: "no-store",
       }
     );

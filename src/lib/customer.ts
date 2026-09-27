@@ -52,6 +52,8 @@ interface CustomerState {
   seenAnnouncements: string[];
   /** cuántas veces armó cada producto → sus gustos */
   orderCounts: Record<string, number>;
+  /** ingredientes que suele quitar por producto (se recuerdan) */
+  removedPrefs: Record<string, string[]>;
   visits: number;
   lastVisit: string | null;
   /** apertura/cierre conocido por el watcher para detectar cambios */
@@ -69,6 +71,7 @@ interface CustomerState {
   syncSeenProducts: (ids: string[]) => { added: string[] };
   syncSeenAnnouncements: (ids: string[]) => void;
   bumpOrderCount: (productId: string, qty: number) => void;
+  setRemovedPref: (productId: string, removed: string[]) => void;
   noteVisit: () => void;
   setLastKnownOpen: (open: boolean) => void;
 }
@@ -90,6 +93,7 @@ export const useCustomerStore = create<CustomerState>()(
       seenProducts: [],
       seenAnnouncements: [],
       orderCounts: {},
+      removedPrefs: {},
       visits: 0,
       lastVisit: null,
       lastKnownOpen: null,
@@ -128,6 +132,7 @@ export const useCustomerStore = create<CustomerState>()(
           inbox: [],
           favorites: [],
           orderCounts: {},
+          removedPrefs: {},
           seenProducts: [],
           seenAnnouncements: [],
           prefs: { ...st.prefs, notifyOpenClose: true, notifyNewProducts: true },
@@ -184,6 +189,14 @@ export const useCustomerStore = create<CustomerState>()(
             [productId]: (st.orderCounts[productId] ?? 0) + qty,
           },
         })),
+
+      setRemovedPref: (productId, removed) =>
+        set((st) => {
+          const next = { ...st.removedPrefs };
+          if (removed.length) next[productId] = [...removed];
+          else delete next[productId];
+          return { removedPrefs: next };
+        }),
 
       noteVisit: () =>
         set((st) => ({

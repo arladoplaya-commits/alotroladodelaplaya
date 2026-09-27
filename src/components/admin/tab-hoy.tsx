@@ -10,6 +10,7 @@ import { money, useMenuStore } from "@/lib/store";
 import { useCartStore } from "@/lib/cart";
 import { useReviewsStore } from "@/lib/reviews";
 import { explain, sbAdminAnnounce } from "@/lib/supabase";
+import { DailyCard } from "./daily-card";
 
 /* ------------------------------------------------------------------ */
 /*  Hoy: pedidos abiertos/cerrados, ocultar agotados y «¿Hay hoy?»     */
@@ -37,7 +38,7 @@ export function TabHoy() {
     const cfg = useReviewsStore.getState().config;
     if (cfg.provider !== "supabase") {
       toast.error("Conecta Supabase primero", {
-        description: "Panel → Reseñas → Conectar nube (URL + anon key).",
+        description: "Panel → Reseñas → Conectar nube (URL + clave pública).",
       });
       return;
     }
@@ -218,6 +219,8 @@ export function TabHoy() {
       </section>
 
       {/* ¿Hay hoy? */}
+      <DailyCard />
+
       <section className="rounded-3xl border border-[#e8dcc0] bg-white p-5 shadow-sm">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-display text-xl text-[#c2542f]">Productos · ¿Hay hoy?</h2>

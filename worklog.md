@@ -174,3 +174,54 @@ Stage Summary:
 - Fotos reales: productos (por fila y en edición) y local (galería configurable) subidas desde el admin a GitHub, visibles para todos al publicar la carta.
 - Instalable como app (PWA) con botón en el encabezado; manifest + SW + iconos ya completaban los requisitos.
 - ZIP entregado: download/al-otro-lado-playa-2026-09-27-v5.zip.
+
+---
+Task ID: 9
+Agent: Claude Code
+Task: Pasar al proyecto real las mejoras del preview (quitar ingredientes, recordar gustos, modo noche de playa, buscador, modo ligero) y hacer configurable en el panel: entrega por zonas y formas de pago, menú del día, agotados en tiempo real, horario, combos y QR. Precios solo en MN.
+
+Work Log:
+- types.ts: Settings con deliveryEnabled, pickupEnabled, zones, payments, schedule, daily, publicUrl; MenuData.combos; CartItem.removed/comboId; Order items con removed.
+- seed.json v4: zonas (Vedado, Centro Habana, Plaza, Playa), pagos (Efectivo, Transfermóvil, EnZona apagado), horario 12:00-23:30 (auto apagado), menú del día apagado y 3 combos de ejemplo.
+- store.ts: normalizeMenu (datos viejos o menu.json antiguo se completan con los de fábrica), refreshRemote (raw.githubusercontent → /data/menu.json → GitHub Pages; solo aplica si es más nuevo, conserva contraseña y config de GitHub locales), saveCombo/deleteCombo, openStateFor + prettyHour (horario con cruces de medianoche).
+- lib/ingredients.ts (canRemoveIngredient, removableOf, sinText); customer.ts: removedPrefs + setRemovedPref.
+- customizer-sheet: «¿Le quitamos algo?», recordar gustos, capas quitadas apagadas en exploded-view.
+- cart-section: domicilio/recogida, zona con mensajería, forma de pago con datos copiables, validaciones, bloqueo fuera de horario, mensaje WhatsApp con SIN …, contenido de combos, subtotal + mensajería, total en MN.
+- menu-view: reloj de 30 s (horario) y refresco de la carta publicada cada ~90 s y al volver a la pestaña; chip de horario; aviso de cerrado con la próxima apertura; DailySection y CombosSection (specials.tsx); product-row muestra «Se acabó hoy».
+- Admin: pestañas Combos (tab-combos) y Entrega y pago (tab-servicio: zonas, pagos, horario); DailyCard en Hoy; QrCard en Publicar (qrcode-generator, cartel PNG). Publicar ya no incluye adminPassword en menu.json.
+- globals.css: modo Noche de playa (añil + brasas + luciérnagas .aol-glow), buscador flotante con anillo degradado, pastillas con contador, modo ligero (html.lite) y pausa con la pestaña oculta (html.aol-paused).
+- night-glow.tsx: NightGlow + LiteModeButton (auto con Save-Data / 2G / 3G).
+- Verificado: tsc solo con los 2 errores preexistentes, eslint 0, next build OK, Playwright 390 px día/noche: quitar mostaza/ketchup, recuerdo de gustos, combo al carrito, zona+pago, mensaje de WhatsApp completo, panel (menú del día, combos, entrega y pago, QR) sin desbordes.
+
+---
+Task ID: 10
+Agent: Claude Code
+Task: El proyecto real debe verse como el preview aprobado y no revelar el acceso al panel.
+
+Work Log:
+- hero-postcard.tsx + estilos .pc-*: postal del preview (cielo, sol que se pone en el mar, luna, estrellas, nubes, palmeras, olas, banderines, campanita/compartir e interruptor ☀️/🌙 con transición circular). Logo grande apoyado sobre la postal.
+- Se quitó el mar antiguo (WaveBand) y la decoración lateral en móvil; el modo ligero pasa a chip «⚡ Modo ligero».
+- Hoja «Armar pedido» con foto grande, nombre y precio; carrito con fotos; reseñas con resumen (nota, barras) y tarjetas deslizables.
+- Pie sin «El secreto del shack vive en el logo» y sin el aviso «Un toque más…» al tocar el logo 2 veces.
+- SunSilhouette con id de degradado único (el sol salía gris); sello oscuro en modo noche.
+
+---
+Task ID: 11
+Agent: Claude Code
+Task: Capas del antojo con el estilo de franjas de colores del preview y nombres centrados.
+
+Work Log:
+- layer-stack.tsx (nuevo): una franja de color por ingrediente con emoji y nombre centrado; pan de arriba en cúpula y base (pan, vaso, taza) redondeada abajo; agregos como capa con «+»; ✕ en la esquina para quitar (↺ para volver a poner); «Juntar/Separar capas».
+- customizer-sheet usa LayerStack; se quitan los botones duplicados de «¿Le quitamos algo?» (queda el resumen «Sin …», «Ponerlo todo» y «Recordar mis gustos»).
+- Borrados exploded-view.tsx e ingredient-layers.tsx (ya sin uso).
+
+---
+Task ID: 12
+Agent: Claude Code
+Task: Conectar la nube Supabase del negocio (clave nueva sb_publishable_…).
+
+Work Log:
+- supabase.ts: sbAuth() — las claves nuevas «sb_publishable_…» se envían solo en `apikey`; las antiguas «eyJ…» también en Authorization. Probado con servidor simulado (ambos formatos).
+- BUG corregido: la config de la nube solo existía en el teléfono donde se pegaba en el panel, así que los teléfonos de los clientes nunca guardaban pedidos/reseñas en Supabase. Ahora cloud-config.ts trae la URL + clave pública del negocio (sobrescribible con NEXT_PUBLIC_SUPABASE_URL/KEY) y reviews.ts la usa por defecto en todos los dispositivos.
+- Panel → Reseñas acepta y explica ambos formatos de clave.
+- No se pudo probar contra el proyecto real desde el entorno de trabajo (red bloqueada): falta ejecutar el SQL en Supabase y hacer un pedido de prueba.

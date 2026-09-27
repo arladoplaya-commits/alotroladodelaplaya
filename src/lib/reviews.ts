@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import type { Review, SupaCreds, SyncConfig } from "@/lib/types";
+import { CLOUD_KEY, CLOUD_URL } from "@/lib/cloud-config";
 import {
   sbAdminDeleteReview,
   sbAdminReviews,
@@ -25,6 +26,17 @@ const SEEDS_OFF_KEY = "aol-seeds-off-v1"; // semillas quitadas por el admin
 const CONFIG_KEY = "aol-sync-override-v1"; // config de este dispositivo
 
 const DEFAULT_SYNC: SyncConfig = { provider: "none", url: "", anonKey: "" };
+
+/** Nube del negocio incluida en la carta: todos los teléfonos la usan */
+const BUILT_IN_SYNC: SyncConfig =
+  CLOUD_URL && CLOUD_KEY
+    ? { provider: "supabase", url: CLOUD_URL.replace(/\/+$/, ""), anonKey: CLOUD_KEY }
+    : DEFAULT_SYNC;
+
+/** Lo elegido en este dispositivo (panel) o, si no, la nube del negocio */
+function effectiveSync(): SyncConfig {
+  return readJson<SyncConfig>(CONFIG_KEY) ?? BUILT_IN_SYNC;
+}
 
 /** Intervalo mínimo entre reseñas del mismo dispositivo (ms) */
 const RATE_LIMIT_MS = 45_000;
@@ -88,8 +100,8 @@ function seedsOff(): boolean {
 }
 
 function credsOf(): SupaCreds | null {
-  const cfg = readJson<SyncConfig>(CONFIG_KEY);
-  if (!cfg || cfg.provider !== "supabase") return null;
+  const cfg = effectiveSync();
+  if (cfg.provider !== "supabase") return null;
   if (!cfg.url || cfg.anonKey.trim().length < 20) return null;
   return { url: cfg.url, anonKey: cfg.anonKey };
 }
@@ -200,13 +212,13 @@ export const useReviewsStore = create<ReviewsState>()((set, get) => ({
   reviews: [],
   adminList: [],
   adminStatus: "",
-  config: DEFAULT_SYNC,
+  config: BUILT_IN_SYNC,
   lastSync: null,
   hydrated: false,
 
   hydrate: async () => {
     if (get().hydrated) return;
-    const cfg = readJson<SyncConfig>(CONFIG_KEY) ?? DEFAULT_SYNC;
+    const cfg = effectiveSync();
     const local = readJson<Review[]>(LOCAL_KEY) ?? [];
     const cache = readJson<Review[]>(CACHE_KEY) ?? [];
     set({ config: cfg, hydrated: true });

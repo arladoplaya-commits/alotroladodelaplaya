@@ -10,7 +10,7 @@ export function WaterBackdrop() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden rounded-b-3xl"
+      className="aol-water pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden rounded-b-3xl"
     >
       <svg
         viewBox="0 0 400 72"
@@ -54,7 +54,11 @@ export function ProductRow({
   onFav: () => void;
 }) {
   return (
-    <article className="aol-card aol-float group relative flex gap-3.5 rounded-3xl border border-[#f0dfc0] bg-gradient-to-b from-white via-white to-[#eef9fc] p-3.5">
+    <article
+      className={`aol-card aol-float group relative flex gap-3.5 rounded-3xl border border-[#f0dfc0] bg-gradient-to-b from-white via-white to-[#eef9fc] p-3.5 ${
+        product.available ? "" : "opacity-60 grayscale"
+      }`}
+    >
       <WaterBackdrop />
       {product.featured && (
         <span className="absolute -top-2.5 left-4 z-10 inline-flex rotate-[-4deg] items-center gap-1 rounded-full bg-[#f2c230] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#7a5410] shadow-sm">
@@ -64,7 +68,8 @@ export function ProductRow({
       <div className="relative size-20 shrink-0 sm:size-24">
         <button
           type="button"
-          onClick={() => onArm(product)}
+          onClick={() => product.available && onArm(product)}
+          disabled={!product.available}
           className="absolute inset-0 overflow-hidden rounded-2xl bg-[#fdf3e0] ring-1 ring-[#f0dfc0]"
           aria-label={`Ver capas de ${product.name}`}
         >
@@ -124,14 +129,20 @@ export function ProductRow({
               {t}
             </span>
           ))}
-          <button
-            type="button"
-            onClick={() => onArm(product)}
-            className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#e2574c] px-3.5 py-1.5 text-xs font-extrabold text-white shadow-[0_5px_14px_-4px_rgba(226,87,76,0.55)] transition hover:bg-[#d34a40] active:scale-95"
-          >
-            <ShoppingBag className="size-3.5" aria-hidden="true" />
-            Armar pedido
-          </button>
+          {product.available ? (
+            <button
+              type="button"
+              onClick={() => onArm(product)}
+              className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-[#e2574c] px-3.5 py-1.5 text-xs font-extrabold text-white shadow-[0_5px_14px_-4px_rgba(226,87,76,0.55)] transition hover:bg-[#d34a40] active:scale-95"
+            >
+              <ShoppingBag className="size-3.5" aria-hidden="true" />
+              Armar<span className="-ml-0.5 hidden min-[381px]:inline">pedido</span>
+            </button>
+          ) : (
+            <span className="ml-auto rounded-full bg-[#8a7350] px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-white">
+              Se acabó hoy
+            </span>
+          )}
         </div>
       </div>
     </article>

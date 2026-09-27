@@ -14,7 +14,9 @@ import {
   Settings2,
   Sparkles,
   Store,
+  Truck,
   UtensilsCrossed,
+  Zap,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -28,6 +30,8 @@ import { useReviewsStore } from "@/lib/reviews";
 import { TabHoy } from "./tab-hoy";
 import { TabProductos } from "./tab-productos";
 import { TabAgregos } from "./tab-agregos";
+import { TabCombos } from "./tab-combos";
+import { TabServicio } from "./tab-servicio";
 import { TabPedidos } from "./tab-pedidos";
 import { TabResenas } from "./tab-resenas";
 import { TabPublicar } from "./tab-publicar";
@@ -240,6 +244,20 @@ export function AdminView() {
               Agregos
             </TabsTrigger>
             <TabsTrigger
+              value="combos"
+              className="gap-1.5 rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#c2542f]"
+            >
+              <Zap className="size-4" aria-hidden="true" />
+              Combos
+            </TabsTrigger>
+            <TabsTrigger
+              value="servicio"
+              className="gap-1.5 rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#c2542f]"
+            >
+              <Truck className="size-4" aria-hidden="true" />
+              Entrega y pago
+            </TabsTrigger>
+            <TabsTrigger
               value="pedidos"
               className="gap-1.5 rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#c2542f]"
             >
@@ -277,6 +295,12 @@ export function AdminView() {
           </TabsContent>
           <TabsContent value="agregos">
             <TabAgregos />
+          </TabsContent>
+          <TabsContent value="combos">
+            <TabCombos />
+          </TabsContent>
+          <TabsContent value="servicio">
+            <TabServicio />
           </TabsContent>
           <TabsContent value="pedidos">
             <TabPedidos />

@@ -1,21 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import Image from "next/image";
 import {
-  Bell,
   Heart,
-  Moon,
   Search,
-  Share2,
   ShoppingBag,
-  Sun,
   UserRound,
   UtensilsCrossed,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import { money, useMenuStore } from "@/lib/store";
+import { money, openStateFor, useMenuStore, type OpenState } from "@/lib/store";
 import { useCartStore } from "@/lib/cart";
 import { cartTotals } from "@/lib/store";
 import {
@@ -25,7 +22,7 @@ import {
   useCustomerStore,
   waitEstimate,
 } from "@/lib/customer";
-import { Bunting, BeachCart, CrabSilhouette, PalmSilhouette, ShellSilhouette, Shoreline, StampBadge, SunSilhouette, Surfboard, WaveBand } from "./beach-scene";
+import { BeachCart, CrabSilhouette, PalmSilhouette, ShellSilhouette, Shoreline, StampBadge, SunSilhouette, Surfboard } from "./beach-scene";
 import { CatTitle } from "./section-title";
 import { CustomizerSheet } from "./customizer-sheet";
 import { CartSection } from "./cart-section";
@@ -36,6 +33,9 @@ import { CustomerSheet, InboxSheet } from "./customer-sheet";
 import { NotificationWatcher } from "./notification-watcher";
 import { InstallButton } from "./install-prompt";
 import { DEFAULT_GALLERY } from "./gallery-data";
+import { CombosSection, DailySection } from "./specials";
+import { LiteModeButton, NightGlow } from "./night-glow";
+import { HeroPostcard } from "./hero-postcard";
 import type { MenuData, Product } from "@/lib/types";
 
 /* Vistas de la carta: menú, favoritos guardados y carrito */
@@ -105,26 +105,37 @@ function CategoryPill({
   active,
   emoji,
   name,
+  count,
   onClick,
 }: {
   active: boolean;
   emoji: string;
   name: string;
+  count?: number;
   onClick: () => void;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold shadow-sm transition active:scale-95 ${
+      className={`inline-flex h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full pl-3 pr-3.5 text-sm font-bold shadow-sm transition active:scale-95 ${
         active
-          ? "bg-[#e2574c] text-white shadow-[0_6px_18px_-4px_rgba(226,87,76,0.55)]"
+          ? "bg-gradient-to-br from-[#e2574c] to-[#f08a4b] text-white shadow-[0_6px_18px_-4px_rgba(226,87,76,0.55)]"
           : "aol-pill bg-white text-[#8a7350] ring-1 ring-[#f0dfc0] hover:bg-[#fdf3e0]"
       }`}
       aria-pressed={active}
     >
-      <span aria-hidden="true">{emoji}</span>
+      <span aria-hidden="true" className="text-base leading-none">{emoji}</span>
       {name}
+      {count !== undefined && (
+        <span
+          className={`grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] leading-none ${
+            active ? "bg-white/25 text-white" : "aol-pill-count bg-[#e2574c]/10 text-[#c2542f]"
+          }`}
+        >
+          {count}
+        </span>
+      )}
     </button>
   );
 }
@@ -135,11 +146,13 @@ function CategoryPill({
 
 function MenuHome({
   data,
+  openState,
   onArm,
   favProps,
   onGoFavorites,
 }: {
   data: MenuData;
+  openState: OpenState;
   onArm: (p: Product) => void;
   favProps: (p: Product) => { fav: boolean; onFav: () => void };
   onGoFavorites: () => void;
@@ -179,18 +192,22 @@ function MenuHome({
 
   return (
     <>
-      {!data.settings.ordersOpen && (
+      {!openState.open && (
         <div
-          className="mb-4 rounded-2xl border-2 border-dashed border-[#e8b08a] bg-[#fdeae0] px-4 py-3 text-center text-sm font-semibold text-[#b3562e]"
+          className="aol-closed mb-4 rounded-2xl border-2 border-dashed border-[#e8b08a] bg-[#fdeae0] px-4 py-3 text-center text-sm font-semibold text-[#b3562e]"
           role="status"
         >
-          Cerrado por hoy · El shack abre pronto. Vuelve en la próxima noche
-          playera 🌙
+          🌙 {openState.label || "Cerrado por hoy"} · Puedes ver la carta y
+          armar tu pedido para cuando abramos
         </div>
       )}
 
       {/* Marquesina de fotos */}
       <PhotoMarquee />
+
+      {/* Menú del día y combos (se configuran en el panel) */}
+      <DailySection data={data} onArm={onArm} favProps={favProps} />
+      <CombosSection data={data} />
 
       {/* Destacados */}
       {featured.length > 0 && (
@@ -238,12 +255,12 @@ function MenuHome({
 
       {/* Categorías */}
       <nav
-        className="aol-navbar sticky top-0 z-20 -mx-4 mt-6 bg-[#fdf3e0]/95 px-4 py-2.5 backdrop-blur"
+        className="aol-navbar sticky top-2 z-20 -mx-1.5 mt-6 rounded-[26px] bg-[#fdf3e0]/90 p-2 backdrop-blur-md"
         aria-label="Buscar y categorías del menú"
       >
-        <div className="relative mb-2">
+        <div className="aol-search-wrap relative mb-2">
           <Search
-            className="aol-search-icon pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#c4b08c]"
+            className="aol-search-icon pointer-events-none absolute left-4 top-1/2 size-[18px] -translate-y-1/2 text-[#e2574c]"
             aria-hidden="true"
           />
           <input
@@ -252,25 +269,26 @@ function MenuHome({
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar antojos… limonada, perro, alitas"
             aria-label="Buscar en el menú"
-            className="aol-search h-10 w-full rounded-full border border-[#f0dfc0] bg-white pl-9 pr-10 text-sm text-[#4a3b28] placeholder:text-[#c4b08c] focus:outline-none focus:ring-2 focus:ring-[#e2574c]/50"
+            className="aol-search h-12 w-full rounded-full border border-[#f0dfc0] bg-white pl-11 pr-12 text-[15px] font-semibold text-[#4a3b28] shadow-[0_6px_18px_-12px_rgba(120,80,40,0.45)] placeholder:font-medium placeholder:text-[#c4b08c] focus:border-transparent focus:outline-none"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
               aria-label="Limpiar búsqueda"
-              className="aol-search-clear absolute right-2 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-full bg-[#fdf3e0] text-[#8a7350] transition hover:bg-[#f6dfb2]"
+              className="aol-search-clear absolute right-2.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full bg-[#fdf3e0] text-[#8a7350] transition hover:bg-[#f6dfb2]"
             >
               <X className="size-3.5" aria-hidden="true" />
             </button>
           )}
         </div>
         {!query && (
-          <div className="nice-scroll flex gap-2 overflow-x-auto pb-1">
+          <div className="aol-pills no-scrollbar flex gap-2 overflow-x-auto px-1 pb-0.5">
             <CategoryPill
               active={activeCat === "todas"}
               emoji="🌊"
               name="Todo"
+              count={[...productsByCat.values()].reduce((a, l) => a + l.length, 0)}
               onClick={() => setActiveCat("todas")}
             />
             {visibleCategories.map((c) => (
@@ -279,6 +297,7 @@ function MenuHome({
                 active={activeCat === c.id}
                 emoji={c.emoji}
                 name={c.name}
+                count={productsByCat.get(c.id)?.length ?? 0}
                 onClick={() => setActiveCat(c.id)}
               />
             ))}
@@ -522,6 +541,31 @@ export function MenuView() {
     void hydrate();
   }, [hydrate]);
 
+  /* Reloj de un minuto: horario (abierto/cerrado) y carta al día.
+     Cada ~90 s mira si el negocio publicó cambios (agotados, precios…). */
+  const refreshRemote = useMenuStore((s) => s.refreshRemote);
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    let ticks = 0;
+    const id = window.setInterval(() => {
+      if (document.hidden) return;
+      setNow(new Date());
+      ticks += 1;
+      if (ticks % 3 === 0 && navigator.onLine !== false) void refreshRemote();
+    }, 30_000);
+    const onVisible = () => {
+      if (!document.hidden) {
+        setNow(new Date());
+        void refreshRemote();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [refreshRemote]);
+
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
@@ -529,6 +573,44 @@ export function MenuView() {
   const goTo = (v: View) => {
     setView(v);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  /* Día ⇄ noche: el sol se esconde en el mar y la página cambia con un
+     círculo que se abre desde el interruptor */
+  const toggleTheme = (origin: HTMLElement) => {
+    const next = theme === "day" ? "sunset" : "day";
+    const root = document.documentElement;
+    const apply = () => {
+      root.dataset.theme = next;
+      flushSync(() => setTheme(next));
+    };
+    const doc = document as Document & {
+      startViewTransition?: (cb: () => void) => { ready: Promise<void> };
+    };
+    const calm =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      root.classList.contains("lite");
+    if (!doc.startViewTransition || calm) {
+      apply();
+    } else {
+      const r = origin.getBoundingClientRect();
+      const x = r.left + r.width / 2;
+      const y = r.top + r.height / 2;
+      const rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      doc
+        .startViewTransition(apply)
+        .ready.then(() => {
+          root.animate(
+            { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${rad}px at ${x}px ${y}px)`] },
+            { duration: 700, easing: "cubic-bezier(.4,0,.2,1)", pseudoElement: "::view-transition-new(root)" }
+          );
+        })
+        .catch(() => undefined);
+    }
+    toast(next === "sunset" ? "🌙 Noche de playa" : "☀️ Día de playa", {
+      description:
+        next === "sunset" ? "El sol se esconde y el mar empieza a brillar…" : "Arena, sol y agua clarita",
+    });
   };
 
   /* Triple toque en el logo → panel de administración (secreto del shack) */
@@ -546,15 +628,13 @@ export function MenuView() {
       window.location.hash = "#/admin";
       return;
     }
-    if (tapsRef.current === 2) {
-      toast("🔑 Un toque más…", { description: "Modo administrador" });
-    }
     tapTimerRef.current = window.setTimeout(() => {
       tapsRef.current = 0;
     }, 900);
   };
 
-  const ordersOpen = data.settings.ordersOpen;
+  const openState = openStateFor(data.settings, now);
+  const ordersOpen = openState.open;
 
   const favoriteProducts = useMemo(
     () =>
@@ -627,8 +707,8 @@ export function MenuView() {
 
   return (
     <div className="aol-page relative min-h-dvh bg-[#fdf3e0]">
-      {/* Mar animado detrás del encabezado */}
-      <WaveBand className="aol-waves z-0" />
+      {/* Luciérnagas: solo de noche */}
+      <NightGlow />
 
       {/* Decoración ambiental solo para pantallas grandes */}
       <div className="pointer-events-none fixed inset-0 z-0 hidden lg:block" aria-hidden="true">
@@ -655,57 +735,30 @@ export function MenuView() {
         </div>
       </div>
 
-      {/* Decoración ambiental para móvil/tablet: la playa vive en los bordes */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 overflow-hidden lg:hidden"
-        aria-hidden="true"
-      >
-        {/* Sol de atardecer bien alto, detrás de la copa de la palmera */}
-        <div className="absolute left-1 top-1 opacity-60">
-          <SunSilhouette className="h-14 w-14" />
-        </div>
-        <div className="absolute -right-8 top-28 opacity-[0.13]">
-          <PalmSilhouette className="h-36 w-36" />
-        </div>
-        <div className="absolute -left-4 bottom-[24%] -rotate-6 opacity-[0.14]">
-          <Surfboard className="h-40 w-14" />
-        </div>
-        <div className="absolute left-1 top-[36%] opacity-40">
-          <ShellSilhouette className="h-5 w-6" />
-        </div>
-        <div className="absolute right-1.5 bottom-[30%] opacity-30">
-          <ShellSilhouette className="h-5 w-6" />
-        </div>
-        <div className="absolute right-2 bottom-[16%] opacity-[0.16]">
-          <CrabSilhouette className="h-7 w-11 crab-walk" />
-        </div>
-      </div>
-
       <div className="relative z-10 mx-auto w-full max-w-xl px-4 pb-36 pt-3 sm:max-w-2xl lg:max-w-4xl">
-        {/* Banderines */}
-        <Bunting className="mx-auto -mt-3 mb-1 h-10 w-full max-w-md" aria-hidden />
+        {/* Postal: cielo, sol/luna, mar y palmeras */}
+        <HeroPostcard
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          unread={unread}
+          onBell={() => setInboxOpen(true)}
+          onShare={() => void handleShare()}
+        />
 
         {/* Encabezado */}
-        <header className="relative mb-4 text-center">
-          <div className="pointer-events-none absolute -left-4 -top-2 opacity-25 sm:-left-6 sm:-top-4 sm:opacity-90">
-            <PalmSilhouette className="h-16 w-16 sm:h-28 sm:w-28" />
-          </div>
-          <div className="pointer-events-none absolute -right-2 top-8 opacity-25 sm:-right-4 sm:top-10 sm:opacity-90">
-            <Surfboard className="h-20 w-7 rotate-12 sm:h-32 sm:w-11" />
-          </div>
-
-          <div className="mx-auto flex w-fit items-center gap-3">
+        <header className="relative z-10 -mt-14 mb-4 text-center">
+          <div className="mx-auto flex w-fit items-center gap-3.5">
             <button
               type="button"
               onClick={handleLogoTap}
               aria-label={`Logo de ${data.settings.businessName}`}
-              className="relative size-16 cursor-pointer overflow-hidden rounded-full border-2 border-[#e2574c]/50 shadow-md transition active:scale-90 sm:size-20"
+              className="pc-logo relative size-24 cursor-pointer overflow-hidden rounded-full bg-[#fdf3e0] transition active:scale-90 sm:size-28"
             >
               <Image
                 src="/images/logo.png"
                 alt=""
                 fill
-                sizes="80px"
+                sizes="112px"
                 className="object-cover"
                 priority
               />
@@ -713,13 +766,13 @@ export function MenuView() {
             <StampBadge className="stamp-pop" />
           </div>
 
-          <h1 className="mt-3 font-display text-3xl leading-none text-[#c2542f] sm:text-4xl">
+          <h1 className="aol-title mt-3 text-balance font-display text-[clamp(30px,8vw,44px)] leading-none text-[#c2542f]">
             {data.settings.businessName}
           </h1>
-          <p className="mt-1.5 text-sm font-semibold text-[#8a7350]">
+          <p className="aol-sub mt-1.5 text-sm font-semibold text-[#8a7350]">
             {data.settings.tagline}
           </p>
-          <p className="font-display text-base text-[#e2574c]">
+          <p className="aol-slogan font-display text-base text-[#e2574c]">
             Sabor playero, al otro lado de tu calle
           </p>
 
@@ -733,6 +786,12 @@ export function MenuView() {
                 {waitEstimate(true)}
               </span>
             )}
+            {openState.label && (
+              <span className="aol-chip inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#8a7350] ring-1 ring-[#f0dfc0]">
+                🕒 {openState.label}
+              </span>
+            )}
+            <LiteModeButton />
           </div>
 
           {/* Cliente de la marea + acciones rápidas */}
@@ -750,44 +809,6 @@ export function MenuView() {
               {profile ? `Hola, ${profile.name}` : "Hazte cliente 🌊"}
             </button>
 
-            <button
-              type="button"
-              onClick={() => setInboxOpen(true)}
-              aria-label={`Avisos del shack${unread ? ` (${unread} sin leer)` : ""}`}
-              className="relative grid size-9 place-items-center rounded-full bg-white text-[#c2542f] shadow-sm ring-1 ring-[#f0dfc0] transition hover:bg-[#fdf3e0] active:scale-95"
-            >
-              <Bell className="size-4" aria-hidden="true" />
-              {unread > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-[#e2574c] px-1 text-[9px] font-black leading-4 text-white">
-                  {unread > 9 ? "9+" : unread}
-                </span>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTheme(theme === "day" ? "sunset" : "day")}
-              aria-label={
-                theme === "day" ? "Activar modo atardecer" : "Volver al modo día"
-              }
-              className="grid size-9 place-items-center rounded-full bg-white text-[#c2542f] shadow-sm ring-1 ring-[#f0dfc0] transition hover:bg-[#fdf3e0] active:scale-95"
-            >
-              {theme === "day" ? (
-                <Moon className="size-4" aria-hidden="true" />
-              ) : (
-                <Sun className="size-4" aria-hidden="true" />
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => void handleShare()}
-              aria-label="Compartir la carta"
-              className="grid size-9 place-items-center rounded-full bg-white text-[#c2542f] shadow-sm ring-1 ring-[#f0dfc0] transition hover:bg-[#fdf3e0] active:scale-95"
-            >
-              <Share2 className="size-4" aria-hidden="true" />
-            </button>
-
             <InstallButton />
           </div>
         </header>
@@ -795,6 +816,7 @@ export function MenuView() {
         {view === "menu" && (
           <MenuHome
             data={data}
+            openState={openState}
             onArm={setCustomizing}
             favProps={favProps}
             onGoFavorites={() => goTo("favoritos")}
@@ -823,7 +845,6 @@ export function MenuView() {
           <p>
             {data.settings.businessName} · by Sol &amp; Habana · {new Date().getFullYear()}
           </p>
-          <p className="mt-1 italic">El secreto del shack vive en el logo 🔒</p>
         </footer>
       </div>
 

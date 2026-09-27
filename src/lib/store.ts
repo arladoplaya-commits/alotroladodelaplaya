@@ -7,6 +7,7 @@ import type {
   Agrego,
   CartItem,
   Category,
+  Combo,
   GalleryItem,
   GitHubSync,
   MenuData,
@@ -17,6 +18,141 @@ import type {
 export const SEED = seedRaw as unknown as MenuData;
 
 const STORAGE_KEY = "aol-menu-v1";
+
+/**
+ * Completa con los valores de fábrica lo que falte (datos guardados de una
+ * versión anterior o un menu.json publicado antes de estas funciones).
+ */
+export function normalizeMenu(raw: Partial<MenuData>): MenuData {
+  const seed = clone(SEED);
+  const s = { ...seed.settings, ...(raw.settings ?? {}) } as Settings;
+  const sched = s.schedule ?? seed.settings.schedule;
+  s.schedule = {
+    auto: !!sched.auto,
+    days: Array.from({ length: 7 }, (_, i) => ({
+      ...seed.settings.schedule.days[i],
+      ...(sched.days?.[i] ?? {}),
+    })),
+  };
+  s.daily = { ...seed.settings.daily, ...(s.daily ?? {}) };
+  s.zones = Array.isArray(s.zones) ? s.zones : seed.settings.zones;
+  s.payments = Array.isArray(s.payments) ? s.payments : seed.settings.payments;
+  s.publicUrl = s.publicUrl ?? "";
+  return {
+    ...seed,
+    ...raw,
+    combos: Array.isArray(raw.combos) ? raw.combos : seed.combos,
+    settings: s,
+  } as MenuData;
+}
+
+/** ¿El menú remoto es más nuevo que el que tenemos? */
+function isNewer(remote: MenuData, local: MenuData): boolean {
+  const r = Date.parse(remote.updatedAt || "") || 0;
+  const l = Date.parse(local.updatedAt || "") || 0;
+  return r > l;
+}
+
+/**
+ * Fuentes del menú publicado, de la más rápida en actualizarse a la más lenta:
+ * 1) raw.githubusercontent (se ve al minuto de pulsar «Publicar»)
+ * 2) el propio sitio (/data/menu.json tras el redeploy de Vercel)
+ * 3) GitHub Pages (versión anterior del proyecto)
+ */
+function remoteSources(cfg: GitHubSync): string[] {
+  const path = cfg.path || "public/data/menu.json";
+  const list: string[] = [];
+  if (cfg.owner && cfg.repo) {
+    list.push(
+      `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch || "main"}/${path}`
+    );
+  }
+  list.push(`/${path.replace(/^public\//, "")}`);
+  if (cfg.owner && cfg.repo) {
+    list.push(`https://${cfg.owner}.github.io/${cfg.repo}/${path.replace(/^public\//, "")}`);
+  }
+  return list;
+}
+
+async function fetchRemoteMenu(cfg: GitHubSync): Promise<MenuData | null> {
+  for (const url of remoteSources(cfg)) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) continue;
+      const remote = (await res.json()) as MenuData;
+      if (remote?.products?.length) return normalizeMenu(remote);
+    } catch {
+      /* sin internet o archivo inexistente: probamos la siguiente */
+    }
+  }
+  return null;
+}
+
+/* ------------------------------ horario ------------------------------ */
+
+const DAY_NAMES = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+
+function minutesOf(hhmm: string): number {
+  const [h, m] = hhmm.split(":").map((x) => parseInt(x, 10));
+  return (h || 0) * 60 + (m || 0);
+}
+
+/** 19:30 → «7:30 pm» */
+export function prettyHour(hhmm: string): string {
+  const mins = minutesOf(hhmm);
+  const h = Math.floor(mins / 60) % 24;
+  const m = mins % 60;
+  const suffix = h >= 12 ? "pm" : "am";
+  const h12 = h % 12 === 0 ? 12 : h % 12;
+  return `${h12}${m ? `:${String(m).padStart(2, "0")}` : ""} ${suffix}`;
+}
+
+export interface OpenState {
+  open: boolean;
+  /** Frase corta para el cliente: «Cierra a las 11:30 pm» */
+  label: string;
+}
+
+/**
+ * Estado real del local: el interruptor manual del panel manda; si el
+ * horario automático está activo, además hay que estar dentro de horario.
+ */
+export function openStateFor(settings: Settings, now = new Date()): OpenState {
+  if (!settings.ordersOpen) {
+    return { open: false, label: "Cerrado por hoy" };
+  }
+  const sched = settings.schedule;
+  if (!sched?.auto) return { open: true, label: "" };
+  const day = now.getDay();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const today = sched.days[day];
+  const yesterday = sched.days[(day + 6) % 7];
+  // horario que cruza la medianoche (ej. 19:00 → 01:00)
+  if (yesterday && !yesterday.closed && minutesOf(yesterday.close) < minutesOf(yesterday.open) && mins < minutesOf(yesterday.close)) {
+    return { open: true, label: `Cierra a las ${prettyHour(yesterday.close)}` };
+  }
+  if (today && !today.closed) {
+    const o = minutesOf(today.open);
+    const c = minutesOf(today.close);
+    const crosses = c <= o;
+    if (mins >= o && (crosses || mins < c)) {
+      return { open: true, label: `Cierra a las ${prettyHour(today.close)}` };
+    }
+    if (mins < o) {
+      const diff = o - mins;
+      const inTxt = diff < 60 ? `en ${diff} min` : `en ${Math.round(diff / 60)} h`;
+      return { open: false, label: `Abrimos hoy a las ${prettyHour(today.open)} (${inTxt})` };
+    }
+  }
+  for (let i = 1; i <= 7; i++) {
+    const d = sched.days[(day + i) % 7];
+    if (d && !d.closed) {
+      const when = i === 1 ? "mañana" : `el ${DAY_NAMES[(day + i) % 7]}`;
+      return { open: false, label: `Abrimos ${when} a las ${prettyHour(d.open)}` };
+    }
+  }
+  return { open: false, label: "Cerrado por ahora" };
+}
 
 /* ------------------------------ helpers ------------------------------ */
 
@@ -48,6 +184,10 @@ interface MenuState {
   data: MenuData;
   hydrated: boolean;
   hydrate: () => Promise<void>;
+  /** Vuelve a mirar el menú publicado (agotados, precios…) sin recargar */
+  refreshRemote: () => Promise<boolean>;
+  saveCombo: (c: Combo) => void;
+  deleteCombo: (id: string) => void;
   saveProduct: (p: Product) => void;
   deleteProduct: (id: string) => void;
   saveAgrego: (a: Agrego) => void;
@@ -68,6 +208,7 @@ interface PersistedShape {
   categories: Category[];
   products: Product[];
   agregos: Agrego[];
+  combos: Combo[];
   settings: Settings;
   github: GitHubSync;
 }
@@ -85,28 +226,49 @@ export const useMenuStore = create<MenuState>()(
       hydrate: async () => {
         if (get().hydrated) return;
         // El persist middleware ya restauró localStorage en create().
-        // Intenta mejorar con el menu.json publicado en GitHub Pages,
-        // solo si hay config de repo guardada.
-        const cfg = get().data.github;
-        if (cfg?.owner && cfg?.repo) {
-          try {
-            const base =
-              `https://${cfg.owner}.github.io/${cfg.repo}/` +
-              (cfg.path || "public/data/menu.json").replace(/^public\//, "");
-            const res = await fetch(base, { cache: "no-store" });
-            if (res.ok) {
-              const remote = (await res.json()) as MenuData;
-              if (remote?.products?.length) {
-                set({ data: remote, hydrated: true });
-                return;
-              }
-            }
-          } catch {
-            /* sin internet o repo: seguimos con lo local */
-          }
-        }
+        // Si hay una carta publicada más nueva, la usamos.
+        await get().refreshRemote();
         set({ hydrated: true });
       },
+
+      refreshRemote: async () => {
+        const remote = await fetchRemoteMenu(get().data.github);
+        if (remote && isNewer(remote, get().data)) {
+          // conservamos la config de GitHub y la contraseña de este
+          // dispositivo (la contraseña nunca viaja en el menú público)
+          const local = get().data;
+          set({
+            data: {
+              ...remote,
+              github: local.github.owner ? local.github : remote.github,
+              settings: {
+                ...remote.settings,
+                adminPassword: local.settings.adminPassword || SEED.settings.adminPassword,
+              },
+            },
+          });
+          return true;
+        }
+        return false;
+      },
+
+      saveCombo: (c) =>
+        set((st) => {
+          const combos = [...st.data.combos];
+          const i = combos.findIndex((x) => x.id === c.id);
+          if (i >= 0) combos[i] = c;
+          else combos.push(c);
+          return { data: { ...st.data, combos, updatedAt: new Date().toISOString() } };
+        }),
+
+      deleteCombo: (id) =>
+        set((st) => ({
+          data: {
+            ...st.data,
+            combos: st.data.combos.filter((c) => c.id !== id),
+            updatedAt: new Date().toISOString(),
+          },
+        })),
 
       saveProduct: (p) =>
         set((st) => {
@@ -190,7 +352,7 @@ export const useMenuStore = create<MenuState>()(
           },
         })),
 
-      resetToFactory: () => set({ data: clone(SEED) }),
+      resetToFactory: () => set({ data: normalizeMenu(clone(SEED)) }),
 
       exportJson: () => clone(get().data),
     }),
@@ -202,6 +364,7 @@ export const useMenuStore = create<MenuState>()(
         categories: st.data.categories,
         products: st.data.products,
         agregos: st.data.agregos,
+        combos: st.data.combos,
         settings: st.data.settings,
         github: st.data.github,
       }),
@@ -210,13 +373,7 @@ export const useMenuStore = create<MenuState>()(
         if (!p || !p.products?.length) return current;
         const seedVersion = SEED.version ?? 1;
         if ((p.version ?? 1) >= seedVersion) {
-          return {
-            ...current,
-            data: {
-              ...clone(SEED),
-              ...p,
-            } as MenuData,
-          };
+          return { ...current, data: normalizeMenu(p) };
         }
         // Datos de una versión anterior: incorporamos las categorías y
         // productos nuevos del seed SIN pisar las ediciones del negocio.
@@ -232,13 +389,7 @@ export const useMenuStore = create<MenuState>()(
         ];
         return {
           ...current,
-          data: {
-            ...clone(SEED),
-            ...p,
-            products,
-            categories,
-            version: seedVersion,
-          } as MenuData,
+          data: normalizeMenu({ ...p, products, categories, version: seedVersion }),
         };
       },
     }

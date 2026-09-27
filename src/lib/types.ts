@@ -40,6 +40,70 @@ export interface Settings {
   ordersOpen: boolean;
   /** Fotos reales del local subidas desde el panel (opcional) */
   gallery?: GalleryItem[];
+  /** Entrega: a domicilio (por zonas) y/o recogida en el local */
+  deliveryEnabled: boolean;
+  pickupEnabled: boolean;
+  zones: DeliveryZone[];
+  /** Formas de pago que acepta el negocio */
+  payments: PaymentMethod[];
+  /** Horario semanal (abre/cierra solo si auto está activo) */
+  schedule: Schedule;
+  /** Menú del día destacado arriba de la carta */
+  daily: DailyMenu;
+  /** Dirección pública de la carta (para el código QR). Vacío = la actual */
+  publicUrl: string;
+}
+
+export interface DeliveryZone {
+  id: string;
+  name: string;
+  /** Precio de la mensajería en MN */
+  fee: number;
+  active: boolean;
+}
+
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  emoji: string;
+  /** Datos que ve el cliente (nº de tarjeta, teléfono…) */
+  details: string;
+  active: boolean;
+}
+
+export interface DayHours {
+  closed: boolean;
+  /** "HH:MM" en 24 h */
+  open: string;
+  close: string;
+}
+
+export interface Schedule {
+  auto: boolean;
+  /** 0 = domingo … 6 = sábado */
+  days: DayHours[];
+}
+
+export interface DailyMenu {
+  active: boolean;
+  title: string;
+  note: string;
+  productIds: string[];
+}
+
+export interface ComboItem {
+  productId: string;
+  qty: number;
+}
+
+export interface Combo {
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  items: ComboItem[];
+  price: number;
+  active: boolean;
 }
 
 export interface GalleryItem {
@@ -61,6 +125,7 @@ export interface MenuData {
   categories: Category[];
   products: Product[];
   agregos: Agrego[];
+  combos: Combo[];
   settings: Settings;
   github: GitHubSync;
 }
@@ -76,6 +141,10 @@ export interface CartItem {
   unitPrice: number;
   agregoIds: string[];
   agregoNames: string[];
+  /** Ingredientes quitados: «Mostaza», «Ketchup»… */
+  removed?: string[];
+  /** Si el ítem es un combo, su id */
+  comboId?: string;
   notes: string;
 }
 
@@ -94,6 +163,7 @@ export interface Order {
     qty: number;
     unitPrice: number;
     agregoNames: string[];
+    removed?: string[];
     notes: string;
   }[];
   subtotal: number;

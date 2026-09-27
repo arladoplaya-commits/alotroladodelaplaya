@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 /* ------------------------------------------------------------------ */
 /*  Escena playera decorativa: banderines, olas, palmera, cangrejo,    */
 /*  concha, tabla de surf y carrito de playa. Solo SVG + CSS.          */
@@ -102,10 +104,12 @@ export function ShellSilhouette({ className }: { className?: string }) {
 
 /** Sol de atardecer: disco con degradado cálido, halo suave y rayos coral */
 export function SunSilhouette({ className }: { className?: string }) {
+  // id único: si hay varios soles (uno oculto), el degradado no se pierde
+  const gid = `aol-sun-core-${useId().replace(/:/g, "")}`;
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <defs>
-        <radialGradient id="aol-sun-core" cx="50%" cy="42%" r="62%">
+        <radialGradient id={gid} cx="50%" cy="42%" r="62%">
           <stop offset="0%" stopColor="#ffefad" />
           <stop offset="42%" stopColor="#ffc766" />
           <stop offset="76%" stopColor="#ff9550" />
@@ -114,7 +118,7 @@ export function SunSilhouette({ className }: { className?: string }) {
       </defs>
       <circle cx="32" cy="32" r="26" fill="#ff9d5c" opacity="0.16" />
       <circle cx="32" cy="32" r="20.5" fill="#ffb26b" opacity="0.22" />
-      <circle cx="32" cy="32" r="13.5" fill="url(#aol-sun-core)" />
+      <circle cx="32" cy="32" r="13.5" fill={`url(#${gid})`} />
       <g stroke="#ff8a4e" strokeWidth="3" strokeLinecap="round" opacity="0.9">
         <path d="M32 6v6.5M32 51.5V58M6 32h6.5M51.5 32H58M13.6 13.6l4.6 4.6M45.8 45.8l4.6 4.6M50.4 13.6l-4.6 4.6M18.2 45.8l-4.6 4.6" />
       </g>

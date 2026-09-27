@@ -68,12 +68,19 @@ Las fotos viven en `public/images/` y se suben con el repo:
 
 ## ☁️ Supabase: datos guardados y notificaciones push
 
+> **Ya conectado:** la carta trae la nube del negocio en `src/lib/cloud-config.ts`
+> (URL + clave `sb_publishable_…`), así que todos los teléfonos guardan pedidos
+> y reseñas solos. Solo falta ejecutar el SQL (paso 3) **una vez**.
+> Para cambiar de proyecto: edita ese archivo o define
+> `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_KEY` en Netlify.
+> Nunca pongas ahí la clave *secret* / *service_role*.
+
 La carta funciona 100% sin nube. Cuando quieras compartir datos entre
 dispositivos (pedidos, reseñas, clientes, avisos):
 
 1. Crea un proyecto gratis en [supabase.com](https://supabase.com).
 2. Abre el panel de la app (3 toques en el logo) → **Reseñas → Conectar nube**
-   y pega la URL del proyecto y la `anon public` key.
+   y pega la URL del proyecto y la clave pública (`sb_publishable_…`, o la antigua `anon` que empieza por `eyJ`).
 3. En Supabase → **SQL Editor**, ejecuta el SQL completo que la misma app te
    muestra ahí (botón «Ver SQL»). Crea estas tablas:
 
@@ -105,6 +112,52 @@ de verdad:
 4. Para **enviar** el push desde `announcements` necesitas un pequeño
    servidor/edge function con la clave privada + `web-push`
    (Supabase Edge Functions es la opción más simple).
+
+## ✨ Novedades (septiembre 2026)
+
+### Para el cliente
+- **Quitar ingredientes**: al armar un pedido, «¿Le quitamos algo?» →
+  *Sin mostaza*, *Sin ketchup*… Se ve en el carrito y llega a WhatsApp en
+  MAYÚSCULAS para que la cocina no lo pase por alto. Solo se quitan salsas,
+  vegetales y toppings (la base del plato no).
+- **Recuerda sus gustos**: si la última vez pidió sin mostaza, la próxima vez
+  ese producto ya sale sin mostaza (puede desmarcarlo).
+- **Entrega por zonas y forma de pago**: a domicilio (elige zona, se suma la
+  mensajería) o recogida en el local; paga en efectivo, Transfermóvil,
+  EnZona… Los datos de pago (tarjeta, teléfono) se copian con un toque.
+- **Combos y ofertas** con «Ahorras $X», **Menú del día** arriba de la carta
+  y productos **«Se acabó hoy»** que se actualizan solos cada ~90 s.
+- **Horario visible**: «Cierra a las 11:30 pm» / «Abrimos hoy a las 7 pm (en 2 h)».
+- **Modo Noche de playa** (luna del encabezado): cielo añil, luciérnagas y
+  mar que brilla. **⚡ Modo ligero**: se activa solo con «Ahorro de datos» o
+  conexión 2G/3G (o con el botón ⚡); quita animaciones y efectos pesados.
+- Precios en **MN**.
+
+### Para el negocio (panel)
+| Pestaña | Qué configuras |
+|---|---|
+| **Hoy** | abierto/cerrado, ¿hay hoy?, **🍽️ Menú del día** (título, nota, productos) |
+| **Combos** | crear/editar combos: productos, cantidades y precio (te dice cuánto ahorra el cliente) |
+| **Entrega y pago** | domicilio y/o recogida, **zonas con precio de mensajería**, **formas de pago** con sus datos, **horario semanal** automático |
+| **Publicar** | **Código QR** de la carta + cartel PNG para imprimir; publicar el menú |
+| **Ajustes** | nombre, **número de WhatsApp**, contraseña… |
+
+> Todo se guarda al momento en el teléfono del panel. Para que lo vean los
+> clientes: **Publicar → Publicar menú ahora**.
+> La contraseña del panel **ya no se publica** en `menu.json`.
+
+## 🚀 Publicar en Vercel (y el QR)
+
+1. Sube este proyecto a un repo de GitHub (sin `node_modules` ni `.next`).
+2. En [vercel.com](https://vercel.com) → **Add New → Project** → importa el
+   repo → **Deploy** (Vercel detecta Next.js solo; no hace falta configurar).
+3. Abre `https://tu-proyecto.vercel.app/#/admin` (o 3 toques al logo).
+4. **Publicar**: pon tu usuario/repo de GitHub y un token para que el panel
+   guarde `public/data/menu.json`. Cada publicación actualiza la carta de
+   todos en ~1 minuto (se lee de GitHub y, tras el redeploy, del propio sitio).
+5. **Código QR**: en **Publicar → Código QR** el QR ya apunta a tu dirección
+   de Vercel. Descarga el **cartel para imprimir**. Si luego compras un
+   dominio propio, escríbelo en el campo y vuelve a descargar el QR.
 
 ## 🧪 Desarrollo
 

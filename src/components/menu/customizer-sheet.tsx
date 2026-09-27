@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Flame, Minus, Plus, ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import { Ban, Flame, Minus, Plus, RotateCcw, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import {
   Sheet,
@@ -16,8 +17,9 @@ import { Button } from "@/components/ui/button";
 import { useCartStore, unitPriceFor } from "@/lib/cart";
 import { money, useMenuStore } from "@/lib/store";
 import { buzz, useCustomerStore } from "@/lib/customer";
+import { removableOf, sinText } from "@/lib/ingredients";
 import type { Product } from "@/lib/types";
-import { ExplodedView } from "./exploded-view";
+import { LayerStack } from "./layer-stack";
 
 /* ------------------------------------------------------------------ */
 /*  Personalizador: elige agregos, escribe notas y añade al carrito.   */
@@ -37,6 +39,34 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
   const [selected, setSelected] = useState<string[]>([]);
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState("");
+  const removedPrefs = useCustomerStore((s) => s.removedPrefs);
+  const setRemovedPref = useCustomerStore((s) => s.setRemovedPref);
+  /* Lo que el cliente quitó en esta visita; si aún no tocó nada, se usa
+     lo que quitó la última vez (sus gustos recordados). */
+  const [touched, setTouched] = useState<{ pid: string | null; list: string[] }>({
+    pid: null,
+    list: [],
+  });
+  const [remember, setRemember] = useState(true);
+
+  const removable = useMemo(
+    () => (product ? removableOf(product.ingredients) : []),
+    [product]
+  );
+  const remembered = product
+    ? (removedPrefs[product.id] ?? []).filter((x) => removable.includes(x))
+    : [];
+  const fromMemory = !!product && touched.pid !== product.id && remembered.length > 0;
+  const removed = product && touched.pid === product.id ? touched.list : remembered;
+
+  const toggleRemoved = (ing: string) => {
+    if (!product) return;
+    const next = removed.includes(ing)
+      ? removed.filter((x) => x !== ing)
+      : [...removed, ing];
+    setTouched({ pid: product.id, list: next });
+    buzz(12);
+  };
 
   const availableAgregos = useMemo(
     () => agregos.filter((a) => a.available),
@@ -62,6 +92,7 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
     setSelected([]);
     setQty(1);
     setNotes("");
+    setTouched({ pid: null, list: [] });
   };
 
   const handleAdd = () => {
@@ -74,15 +105,21 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
       unitPrice,
       agregoIds: chosen.map((a) => a.id),
       agregoNames: chosen.map((a) => a.name),
+      removed,
       notes: notes.trim().slice(0, 140),
     });
+    if (remember && removable.length) setRemovedPref(product.id, removed);
     // Guardamos sus gustos y confirmamos con un toquecito
     useCustomerStore.getState().bumpOrderCount(product.id, qty);
     buzz(35);
     toast.success(`${product.emoji} ${product.name} al carrito`, {
-      description: chosen.length
-        ? `Con ${chosen.map((a) => a.name).join(", ")}`
-        : "Listo para la marea 🌊",
+      description:
+        [
+          chosen.length ? `Con ${chosen.map((a) => a.name).join(", ")}` : "",
+          sinText(removed),
+        ]
+          .filter(Boolean)
+          .join(" · ") || "Listo para la marea 🌊",
     });
     reset();
     onOpenChange(false);
@@ -102,23 +139,86 @@ export function CustomizerSheet({ product, open, onOpenChange }: CustomizerSheet
       >
         {product && (
           <>
-            <SheetHeader className="items-center gap-1 pb-0 text-center sm:text-center">
-              <SheetTitle className="font-display text-2xl text-[#c2542f]">
-                {product.emoji} {product.name}
-              </SheetTitle>
+            <SheetHeader className="gap-2 p-0 pt-3 text-left">
+              {/* Foto grande con nombre y precio, como una postal */}
+              <div className="relative h-48 overflow-hidden rounded-3xl bg-[#fdf3e0] sm:h-56">
+                {product.image ? (
+                  <Image
+                    src={product.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 100vw, 560px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="grid h-full place-items-center text-6xl" aria-hidden="true">
+                    {product.emoji}
+                  </span>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#281a0e]/80 via-transparent to-transparent" />
+                <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-3">
+                  <SheetTitle className="font-display text-[26px] leading-none text-white">
+                    {product.name}
+                  </SheetTitle>
+                  <span className="shrink-0 rounded-full bg-white/95 px-3 py-1 font-display text-base text-[#c2542f]">
+                    {money(settings.currency, product.price)}
+                  </span>
+                </div>
+              </div>
               <SheetDescription className="text-sm text-[#8a7350]">
                 {product.description}
               </SheetDescription>
             </SheetHeader>
 
-            {/* Vista explotada */}
-            <div className="my-4 rounded-2xl bg-[#fdf3e0]/70 p-4 ring-1 ring-[#f0dfc0]">
-              <ExplodedView
+            {/* Capas: una franja por ingrediente (toca la ✕ para quitarla) */}
+            <div className="my-4 rounded-3xl bg-[#fdf3e0]/70 p-4 ring-1 ring-[#f0dfc0]">
+              <LayerStack
                 ingredients={product.ingredients}
-                emoji={product.emoji}
+                extras={chosen.map((a) => a.name)}
+                removed={removed}
+                onToggle={toggleRemoved}
                 name={product.name}
               />
             </div>
+
+            {/* Quitar ingredientes */}
+            {removable.length > 0 && (
+              <div className="aol-remove mb-4">
+                {removed.length > 0 && (
+                  <div className="mb-2 flex items-center gap-2">
+                    <Ban className="size-4 text-[#e2574c]" aria-hidden="true" />
+                    <h3 className="text-sm font-extrabold text-[#4a3b28]">Tus cambios</h3>
+                    <button
+                      type="button"
+                      onClick={() => setTouched({ pid: product.id, list: [] })}
+                      className="ml-auto inline-flex items-center gap-1 text-xs font-bold text-[#c2542f] hover:underline"
+                    >
+                      <RotateCcw className="size-3.5" aria-hidden="true" />
+                      Ponerlo todo
+                    </button>
+                  </div>
+                )}
+                {fromMemory && (
+                  <p className="mb-2 rounded-xl bg-[#f2c230]/20 px-3 py-2 text-xs font-bold text-[#7a5410]">
+                    💾 Te lo dejamos como la última vez: {sinText(removed).toLowerCase()}
+                  </p>
+                )}
+                {removed.length > 0 && (
+                  <p className="aol-removed mb-1 text-sm font-extrabold text-[#c0392b]">
+                    {sinText(removed)}
+                  </p>
+                )}
+                <label className="mt-2.5 flex items-center gap-2 text-xs font-semibold text-[#8a7350]">
+                  <input
+                    type="checkbox"
+                    className="size-4 accent-[#e2574c]"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                  />
+                  Recordar mis gustos para la próxima vez
+                </label>
+              </div>
+            )}
 
             {/* Agregos (solo comida) */}
             {!isDrink && (
