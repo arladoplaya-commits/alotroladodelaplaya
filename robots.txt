@@ -1,3 +1,4 @@
 User-Agent: *
 Allow: /
 
+Sitemap: https://arladoplaya-commits.github.io/alotroladodelaplaya/sitemap.xml
