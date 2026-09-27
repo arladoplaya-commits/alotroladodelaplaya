@@ -893,7 +893,7 @@
       "note": "",
       "productIds": []
     },
-    "publicUrl": "",
+    "publicUrl": "https://arladoplaya-commits.github.io/alotroladodelaplaya/",
     "loyalty": {
       "enabled": false,
       "stamps": 5,
@@ -911,8 +911,8 @@
     ]
   },
   "github": {
-    "owner": "",
-    "repo": "",
+    "owner": "arladoplaya-commits",
+    "repo": "alotroladodelaplaya",
     "branch": "main",
     "path": "data/menu.json"
   }
