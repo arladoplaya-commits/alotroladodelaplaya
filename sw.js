@@ -2,7 +2,7 @@
    · Fotos, fuentes y archivos de la web (_next): se muestran al instante
      desde el teléfono y se actualizan por detrás para la próxima visita.
    · Páginas y datos (menu.json…): red primero, caché si no hay conexión. */
-const CACHE = "aolp-v7";
+const CACHE = "aolp-v8";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -67,8 +67,13 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Datos (menu.json…): siempre se confirma con el servidor si hay versión nueva
+  const net =
+    req.mode === "navigate"
+      ? fetch(new Request(req.url, { cache: "no-cache", credentials: "same-origin", redirect: "manual" }))
+      : fetch(req, { cache: "no-cache" });
   event.respondWith(
-    fetch(req)
+    net
       .then((res) => save(req, res))
       .catch(() =>
         caches
