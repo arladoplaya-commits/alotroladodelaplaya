@@ -1,6 +1,6 @@
 {
-  "version": 7,
-  "updatedAt": "2026-09-26T07:30:00.000Z",
+  "version": 8,
+  "updatedAt": "2026-09-28T05:09:20.000Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -50,6 +50,13 @@
       "emoji": "☕",
       "visible": true,
       "nameEn": "Coffee"
+    },
+    {
+      "id": "dulces",
+      "name": "Dulces",
+      "emoji": "🍰",
+      "visible": true,
+      "nameEn": "Sweets"
     }
   ],
   "products": [
