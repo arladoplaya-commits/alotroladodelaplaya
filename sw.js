@@ -2,7 +2,7 @@
    · Fotos, fuentes y archivos de la web (_next): se muestran al instante
      desde el teléfono y se actualizan por detrás para la próxima visita.
    · Páginas y datos (menu.json…): red primero, caché si no hay conexión. */
-const CACHE = "aolp-v5";
+const CACHE = "aolp-v6";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
