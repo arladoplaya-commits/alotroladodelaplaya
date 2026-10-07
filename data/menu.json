@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:59:44.856Z",
+  "updatedAt": "2026-10-07T18:00:21.090Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -813,6 +813,19 @@
       "description": "Ensalada fría con jamón y piña",
       "price": 500,
       "category": "raciones",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muyex3c7r0xode",
+      "name": "Cuña de cake",
+      "description": "Cuña de cake",
+      "price": 550,
+      "category": "dulces",
       "image": "",
       "emoji": "🍔",
       "tags": [],
