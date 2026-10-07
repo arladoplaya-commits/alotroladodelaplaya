@@ -16,6 +16,17 @@ y el menú publicado por GitHub.
 - Corregidos `canonical`, `og:image`, `twitter:image` y JSON-LD de las 30 páginas.
 - `sitemap.xml` se regenera al publicar (`.github/workflows/sitemap.yml`).
 
+## Fotos (panel)
+- Al subir una foto se convierte a **WebP** (JPEG si el teléfono no sabe WebP), máx. 800 px, y se comprime
+  hasta ~90 KB. Se corrige también la rotación de fotos del celular.
+- Al subir una foto nueva a un producto, la **anterior se borra de GitHub** cuando publicas, siempre que
+  ningún otro producto/foto la siga usando. No toca el logo ni los íconos.
+
+## Categorías (panel → Productos)
+- Nueva tarjeta **🗂️ Categorías**: añadir (emoji + nombre), renombrar, mostrar/ocultar, subir/bajar y borrar.
+- No se puede borrar una categoría que tenga productos (primero muévelos o bórralos).
+- Se publican solas junto con el resto de cambios.
+
 ## Supabase (opcional, recomendado)
 - `supabase/seguridad.sql`: freno a adivinar la clave del panel, límite de tamaño y anti-spam.
   Ejecútalo en el SQL Editor después de `setup.sql`.

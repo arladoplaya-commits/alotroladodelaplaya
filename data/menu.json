@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T18:13:14.612Z",
+  "updatedAt": "2026-10-06T23:59:17.258Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -63,10 +63,10 @@
     {
       "id": "p-clasica",
       "name": "La Orilla",
-      "description": "Pan Hamburguesa, Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
+      "description": "Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1200,
       "category": "hamburguesas",
-      "image": "/images/products/la-orilla-ag9q1.jpg",
+      "image": "/images/products/p-clasica.jpg",
       "emoji": "🍔",
       "tags": [],
       "available": true,
@@ -85,7 +85,7 @@
     {
       "id": "p-cerdo",
       "name": "Marea Alta",
-      "description": "Pan hamburguesa, Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
+      "description": "Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1400,
       "category": "hamburguesas",
       "image": "/images/products/p-cerdo.jpg",
@@ -94,8 +94,8 @@
       "available": true,
       "featured": false,
       "ingredients": [
-        "Pan de hamburguesa",
-        "hamburguesa de cerdo",
+        "Pan de papa",
+        "Carne de cerdo",
         "Vegetales",
         "Ketchup",
         "Mostaza",
@@ -106,8 +106,8 @@
     },
     {
       "id": "p-res",
-      "name": "Arressife",
-      "description": "Pan hamburguesa, Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
+      "name": "El Arrecife",
+      "description": "Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1600,
       "category": "hamburguesas",
       "image": "/images/products/p-res.jpg",
@@ -116,8 +116,8 @@
       "available": true,
       "featured": false,
       "ingredients": [
-        "Pan de hamburguesa",
-        "hamburguesa de res",
+        "Pan de papa",
+        "Carne de res",
         "Vegetales",
         "Ketchup",
         "Mostaza",
@@ -129,7 +129,7 @@
     {
       "id": "p-doble",
       "name": "Doble Ola",
-      "description": "Pan hamburguesa, Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips de boniato",
+      "description": "Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
       "price": 1550,
       "category": "hamburguesas",
       "image": "/images/products/p-doble.jpg",
@@ -140,8 +140,8 @@
       "available": true,
       "featured": false,
       "ingredients": [
-        "Pan hamburguesa",
-        "dos hamburguesa de pollo",
+        "Pan de papa",
+        "Carne de pollo",
         "Carne de pollo",
         "Vegetales",
         "Ketchup",
@@ -154,7 +154,7 @@
     {
       "id": "p-doble-mixta",
       "name": "La Gran Marejada",
-      "description": "Pan de hamburguesa, hamburguesa de Cerdo y hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
+      "description": "Cerdo y pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1750,
       "category": "hamburguesas",
       "image": "/images/products/p-doble-mixta.jpg",
@@ -179,7 +179,7 @@
     {
       "id": "p-perro-clasico",
       "name": "El Salvavidas",
-      "description": "Pan perro, hot dog, ketchup, mayonesa y mostaza.",
+      "description": "Pan con perro, ketchup, mayonesa y mostaza.",
       "price": 700,
       "category": "perros",
       "image": "/images/products/p-perro-clasico.jpg",
@@ -199,8 +199,8 @@
     },
     {
       "id": "p-perro-crispy",
-      "name": "La Duna",
-      "description": "Pan perro, hot Dog, Crips de boniato, ketchup, mostaza.",
+      "name": "El Surfista",
+      "description": "Pan con perro, ketchup, mostaza y chips de boniato.",
       "price": 750,
       "category": "perros",
       "image": "/images/products/p-perro-crispy.jpg",
@@ -223,8 +223,8 @@
     {
       "id": "p-perro-isleno",
       "name": "Cayo Piña",
-      "description": "Pan perro, hot Dog, ketchup, mostaza y piña glaseada.",
-      "price": 800,
+      "description": "Pan con perro, ketchup, mostaza y piña glaseada.",
+      "price": 850,
       "category": "perros",
       "image": "/images/products/p-perro-isleno.jpg",
       "emoji": "🌭",
@@ -246,7 +246,7 @@
     {
       "id": "p-perro-saludable",
       "name": "Brisa Verde",
-      "description": "Pan perro, hot Dog, ketchup, mostaza y vegetales.",
+      "description": "Pan con perro, ketchup, mostaza y vegetales.",
       "price": 850,
       "category": "perros",
       "image": "/images/products/p-perro-saludable.jpg",
@@ -269,7 +269,7 @@
     {
       "id": "p-perro-cheesy",
       "name": "Puesta de Sol",
-      "description": "Pan perro, hot Dog, ketchup, mostaza y queso gouda.",
+      "description": "Pan con perro, ketchup, mostaza y queso gouda.",
       "price": 900,
       "category": "perros",
       "image": "/images/products/p-perro-cheesy.jpg",
@@ -292,7 +292,7 @@
     {
       "id": "p-baguette-rustico",
       "name": "El Muelle",
-      "description": "Pan baguette, jamón, queso gouda, vegetales , mayonesa y chips de boniato",
+      "description": "Pan baguette, jamón, queso gouda, vegetales y mayonesa.",
       "price": 1320,
       "category": "baguette",
       "image": "/images/products/p-baguette-rustico.jpg",
@@ -313,8 +313,8 @@
     {
       "id": "p-albondiga-cerdo",
       "name": "Perlas de Cerdo",
-      "description": "Ración de 5 albóndigas de cerdo con ketchup.",
-      "price": 900,
+      "description": "Ración de 5 albóndigas con ketchup.",
+      "price": 800,
       "category": "raciones",
       "image": "/images/products/p-albondiga-cerdo.jpg",
       "emoji": "🍖",
@@ -331,8 +331,8 @@
     {
       "id": "p-albondiga-pollo",
       "name": "Perlas de Pollo",
-      "description": "Ración de 6 albóndigas de pollocon ketchup.",
-      "price": 900,
+      "description": "Ración de 5 albóndigas con ketchup.",
+      "price": 800,
       "category": "raciones",
       "image": "/images/products/p-albondiga-pollo.jpg",
       "emoji": "🍖",
@@ -348,9 +348,9 @@
     },
     {
       "id": "p-croquetas",
-      "name": "Tesoro de croquetas",
-      "description": "Ración de 10 croquetas con porción de salsa rosa",
-      "price": 950,
+      "name": "Croquetas del Malecón",
+      "description": "Ración de 10 croquetas.",
+      "price": 850,
       "category": "raciones",
       "image": "/images/products/p-croquetas.jpg",
       "emoji": "🧆",
@@ -366,7 +366,7 @@
     {
       "id": "p-fajitas-pollo",
       "name": "Fajitas del Velero",
-      "description": "Ración de Fajitas de pollo con porción de mayonesa.",
+      "description": "Fajitas de pollo con porción de mayonesa.",
       "price": 1200,
       "category": "raciones",
       "image": "/images/products/p-fajitas-pollo.jpg",
@@ -383,8 +383,8 @@
     },
     {
       "id": "p-papas-fritas",
-      "name": "Los Maderos",
-      "description": "Ración de papas fritas con porción de ketchup",
+      "name": "Papas de Arena",
+      "description": "Ración de papas fritas.",
       "price": 850,
       "category": "raciones",
       "image": "/images/products/p-papas-fritas.jpg",
@@ -400,8 +400,8 @@
     },
     {
       "id": "p-papischis",
-      "name": "Los náufragos",
-      "description": "Ración de Papas fritas y salchicha trozeadas con porción de ketchup",
+      "name": "Papischis Tiburón",
+      "description": "Papas fritas y salchichas con salsa.",
       "price": 1000,
       "category": "raciones",
       "image": "/images/products/p-papischis.jpg",
@@ -421,8 +421,8 @@
     },
     {
       "id": "p-alitas-pollo",
-      "name": "Alits de gaviota",
-      "description": "Ración de alitas de pollo con porción de salsa",
+      "name": "Alitas del Faro",
+      "description": "Ración de alitas de pollo.",
       "price": 1400,
       "category": "raciones",
       "image": "/images/products/p-alitas-pollo.jpg",
@@ -462,7 +462,7 @@
       "id": "p-malta",
       "name": "Malta Marinera",
       "description": "Malta bien helada con su espuma dorada. Energía playera.",
-      "price": 620,
+      "price": 650,
       "category": "bebidas-refrescos",
       "image": "/images/products/p-malta.jpg",
       "emoji": "🥃",
@@ -482,8 +482,8 @@
     },
     {
       "id": "p-cerveza",
-      "name": "Cerveza de la frontera",
-      "description": "Cerveza importada",
+      "name": "Cerveza Horizonte",
+      "description": "Lager importada, helada hasta el último sorbo. Brindis al atardecer.",
       "price": 650,
       "category": "bebidas-refrescos",
       "image": "/images/products/p-cerveza.jpg",
@@ -503,8 +503,8 @@
     },
     {
       "id": "p-jugos",
-      "name": "Nectar de verano",
-      "description": "Jugos de frutas naturales del día:\npapaya o piña.",
+      "name": "Jugo Tropical",
+      "description": "Jugos de frutas naturales del día: naranja, papaya o piña.",
       "price": 700,
       "category": "bebidas-jugos",
       "image": "/images/products/p-jugos.jpg",
@@ -526,8 +526,8 @@
     {
       "id": "p-malteada",
       "name": "Espuma de Mar",
-      "description": "Malta con leche condensada (Malteada de siempre)",
-      "price": 950,
+      "description": "Malteada cremosa con crema batida. Dulce como la brisa.",
+      "price": 850,
       "category": "bebidas-jugos",
       "image": "/images/products/p-malteada.jpg",
       "emoji": "🥛",
@@ -547,7 +547,7 @@
     {
       "id": "p-batidos",
       "name": "Batido Coral",
-      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce.\nPlátano y frutabomba",
+      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce.",
       "price": 900,
       "category": "bebidas-jugos",
       "image": "/images/products/p-batidos.jpg",
@@ -568,7 +568,7 @@
     {
       "id": "p-maracuya",
       "name": "Maracuyá Atardecer",
-      "description": "Jugo de Maracuyá bien fría, entre dulce y ácida.",
+      "description": "Maracuyá bien fría, entre dulce y ácida. El favorito del cangrejo.",
       "price": 900,
       "category": "bebidas-jugos",
       "image": "/images/products/p-maracuya.jpg",
@@ -590,7 +590,7 @@
     {
       "id": "p-limonada",
       "name": "Limonada Brisa",
-      "description": "Limonada natural frappe",
+      "description": "Limonada natural con hielo y menta fresca. Sombra y frescura.",
       "price": 700,
       "category": "bebidas-jugos",
       "image": "/images/products/p-limonada.jpg",
@@ -612,7 +612,7 @@
     {
       "id": "p-limonada-brasilena",
       "name": "Limonada Copacabana",
-      "description": "Limonada brasileña, limón, hielo frappé y leche condensada",
+      "description": "La clásica brasileña: limón batido con crema, suave y helada.",
       "price": 850,
       "category": "bebidas-jugos",
       "image": "/images/products/p-limonada-brasilena.jpg",
@@ -634,7 +634,7 @@
     {
       "id": "p-espresso",
       "name": "Espresso Marinero",
-      "description": "Espresso corto e intenso con su Chispa instantánea, bien acompañado de su galletica",
+      "description": "Espresso corto e intenso con su crema dorada. Chispa instantánea.",
       "price": 250,
       "category": "bebidas-cafe",
       "image": "/images/products/p-espresso.jpg",
@@ -653,7 +653,7 @@
     {
       "id": "p-cortado",
       "name": "Cortado Amanecer",
-      "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto, acompañado de su galletica",
+      "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto.",
       "price": 350,
       "category": "bebidas-cafe",
       "image": "/images/products/p-cortado.jpg",
@@ -672,7 +672,7 @@
     {
       "id": "p-bombon",
       "name": "Bombón de Arena",
-      "description": "Espresso sobre leche condensada, en capas como un atardecer, acompañado de su galletica",
+      "description": "Espresso sobre leche condensada, en capas como un atardecer.",
       "price": 450,
       "category": "bebidas-cafe",
       "image": "/images/products/p-bombon.jpg",
@@ -689,175 +689,6 @@
       ],
       "nameEn": "Sand Bombón",
       "descriptionEn": "Espresso over condensed milk, layered like a sunset."
-    },
-    {
-      "id": "p-muyas5dd6htrkj",
-      "name": "Doble Coral",
-      "description": "Pan hamburguesa, dos hamburguesas de cerdo, vegetales, ketchup, mostaza y chips de boniato",
-      "price": 1750,
-      "category": "hamburguesas",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyb1a3w9vng23",
-      "name": "Neptuno",
-      "description": "Pan baguette, atún, mayonesa, cebolla y chips de boniato",
-      "price": 1500,
-      "category": "baguette",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyb85b68qfn5a",
-      "name": "Tesoro de frituras",
-      "description": "Ración de 8 frituras de Malanga con porción de miel",
-      "price": 1000,
-      "category": "raciones",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyblp437ryhli",
-      "name": "Malta de altamar",
-      "description": "Malta",
-      "price": 700,
-      "category": "bebidas-refrescos",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muybn5yqoop5xl",
-      "name": "Agua fresca",
-      "description": "Botella de agua",
-      "price": 300,
-      "category": "bebidas-refrescos",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muybsvkwlenwqq",
-      "name": "Cerveza costera",
-      "description": "Cerveza nacional",
-      "price": 800,
-      "category": "bebidas-refrescos",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muybu1dod0kd3b",
-      "name": "Mensaje en la botella",
-      "description": "Cerveza nacional de botella",
-      "price": 850,
-      "category": "bebidas-refrescos",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muybuuijug9vyi",
-      "name": "Correr por la playa",
-      "description": "Energizante",
-      "price": 750,
-      "category": "bebidas-refrescos",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyd7h78sa8ln8",
-      "name": "Piña pirata",
-      "description": "Piña colada virgen ó con alcohol (es su sabía decisión)",
-      "price": 1200,
-      "category": "bebidas-jugos",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyev0jlnchp0q",
-      "name": "Ensalada del mar",
-      "description": "Ensalada fría con jamón y piña",
-      "price": 500,
-      "category": "raciones",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyex3c7r0xode",
-      "name": "Cuña de cake",
-      "description": "Cuña de cake",
-      "price": 550,
-      "category": "dulces",
-      "image": "/images/products/cuna-de-cake-fe8bc.jpg",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyeyc41co4rlg",
-      "name": "Trifle",
-      "description": "Trifle",
-      "price": 550,
-      "category": "dulces",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-muyeynj9me64wa",
-      "name": "Marquesita",
-      "description": "Marquesita",
-      "price": 400,
-      "category": "dulces",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
     }
   ],
   "agregos": [
@@ -919,7 +750,7 @@
         }
       ],
       "price": 2400,
-      "active": false
+      "active": true
     },
     {
       "id": "c-perro-refresco",
@@ -937,7 +768,7 @@
         }
       ],
       "price": 1200,
-      "active": false
+      "active": true
     },
     {
       "id": "c-pareja",
@@ -959,7 +790,7 @@
         }
       ],
       "price": 5300,
-      "active": false
+      "active": true
     }
   ],
   "settings": {
