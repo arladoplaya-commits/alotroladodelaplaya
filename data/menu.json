@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:37:13.717Z",
+  "updatedAt": "2026-10-07T17:00:49.509Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -526,8 +526,8 @@
     {
       "id": "p-malteada",
       "name": "Espuma de Mar",
-      "description": "Malteada cremosa con crema batida. Dulce como la brisa.",
-      "price": 850,
+      "description": "Malta con leche condensada (Malteada de siempre)",
+      "price": 950,
       "category": "bebidas-jugos",
       "image": "/images/products/p-malteada.jpg",
       "emoji": "🥛",
