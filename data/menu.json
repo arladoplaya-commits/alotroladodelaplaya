@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:00:59.113Z",
+  "updatedAt": "2026-10-07T16:02:20.957Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -85,7 +85,7 @@
     {
       "id": "p-cerdo",
       "name": "Marea Alta",
-      "description": "Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
+      "description": "Pan hamburguesa, Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1400,
       "category": "hamburguesas",
       "image": "/images/products/p-cerdo.jpg",
