@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:27:29.808Z",
+  "updatedAt": "2026-10-07T16:28:38.388Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -734,6 +734,19 @@
       "name": "Malta de altamar",
       "description": "Malta",
       "price": 700,
+      "category": "bebidas-refrescos",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muybn5yqoop5xl",
+      "name": "Agua fresca",
+      "description": "Botella de agua",
+      "price": 300,
       "category": "bebidas-refrescos",
       "image": "",
       "emoji": "🍔",
