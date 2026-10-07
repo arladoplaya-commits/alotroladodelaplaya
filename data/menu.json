@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T03:27:03.857Z",
+  "updatedAt": "2026-10-07T03:29:40.907Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -69,7 +69,7 @@
       "image": "/images/products/p-clasica.jpg",
       "emoji": "🍔",
       "tags": [],
-      "available": false,
+      "available": true,
       "featured": false,
       "ingredients": [
         "Pan de papa",
@@ -91,7 +91,7 @@
       "image": "/images/products/p-cerdo.jpg",
       "emoji": "🍔",
       "tags": [],
-      "available": false,
+      "available": true,
       "featured": false,
       "ingredients": [
         "Pan de papa",
