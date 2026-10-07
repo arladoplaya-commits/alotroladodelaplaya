@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T03:29:40.907Z",
+  "updatedAt": "2026-10-07T15:56:56.700Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -63,10 +63,10 @@
     {
       "id": "p-clasica",
       "name": "La Orilla",
-      "description": "Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
+      "description": "Pan Hamburguesa, Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1200,
       "category": "hamburguesas",
-      "image": "/images/products/p-clasica.jpg",
+      "image": "/images/products/la-orilla-ag9q1.jpg",
       "emoji": "🍔",
       "tags": [],
       "available": true,
