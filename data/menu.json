@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:13:26.147Z",
+  "updatedAt": "2026-10-07T16:13:46.892Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -331,8 +331,8 @@
     {
       "id": "p-albondiga-pollo",
       "name": "Perlas de Pollo",
-      "description": "Ración de 5 albóndigas con ketchup.",
-      "price": 800,
+      "description": "Ración de 6 albóndigas de pollocon ketchup.",
+      "price": 900,
       "category": "raciones",
       "image": "/images/products/p-albondiga-pollo.jpg",
       "emoji": "🍖",
