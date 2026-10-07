@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:11:02.050Z",
+  "updatedAt": "2026-10-07T16:12:29.419Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -696,6 +696,19 @@
       "description": "Pan hamburguesa, dos hamburguesas de cerdo, vegetales, ketchup, mostaza y chips de boniato",
       "price": 1750,
       "category": "hamburguesas",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muyb1a3w9vng23",
+      "name": "Neptuno",
+      "description": "Pan baguette, atún, mayonesa, cebolla y chips de boniato",
+      "price": 1500,
+      "category": "baguette",
       "image": "",
       "emoji": "🍔",
       "tags": [],
