@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:28:38.388Z",
+  "updatedAt": "2026-10-07T16:32:08.694Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -482,8 +482,8 @@
     },
     {
       "id": "p-cerveza",
-      "name": "Cerveza Horizonte",
-      "description": "Lager importada, helada hasta el último sorbo. Brindis al atardecer.",
+      "name": "Cerveza de la frontera",
+      "description": "Cerveza importada",
       "price": 650,
       "category": "bebidas-refrescos",
       "image": "/images/products/p-cerveza.jpg",
