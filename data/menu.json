@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:19:09.514Z",
+  "updatedAt": "2026-10-07T16:21:24.928Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -383,8 +383,8 @@
     },
     {
       "id": "p-papas-fritas",
-      "name": "Papas de Arena",
-      "description": "Ración de papas fritas.",
+      "name": "Los Maderos",
+      "description": "Ración de papas fritas con porción de ketchup",
       "price": 850,
       "category": "raciones",
       "image": "/images/products/p-papas-fritas.jpg",
