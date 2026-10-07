@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:00:49.509Z",
+  "updatedAt": "2026-10-07T17:01:19.854Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -547,7 +547,7 @@
     {
       "id": "p-batidos",
       "name": "Batido Coral",
-      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce.",
+      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce.\nPlátano y frutabomba",
       "price": 900,
       "category": "bebidas-jugos",
       "image": "/images/products/p-batidos.jpg",
