@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T18:01:31.866Z",
+  "updatedAt": "2026-10-07T18:13:14.612Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -826,7 +826,7 @@
       "description": "Cuña de cake",
       "price": 550,
       "category": "dulces",
-      "image": "",
+      "image": "/images/products/cuna-de-cake-fe8bc.jpg",
       "emoji": "🍔",
       "tags": [],
       "available": true,
