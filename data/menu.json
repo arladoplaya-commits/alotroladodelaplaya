@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T18:01:00.289Z",
+  "updatedAt": "2026-10-07T18:01:31.866Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -838,6 +838,19 @@
       "name": "Trifle",
       "description": "Trifle",
       "price": 550,
+      "category": "dulces",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muyeynj9me64wa",
+      "name": "Marquesita",
+      "description": "Marquesita",
+      "price": 400,
       "category": "dulces",
       "image": "",
       "emoji": "🍔",
