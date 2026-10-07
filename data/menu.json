@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:16:21.353Z",
+  "updatedAt": "2026-10-07T16:17:00.720Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -709,6 +709,19 @@
       "description": "Pan baguette, atún, mayonesa, cebolla y chips de boniato",
       "price": 1500,
       "category": "baguette",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muyb85b68qfn5a",
+      "name": "Tesoro de frituras",
+      "description": "Ración de 8 frituras de Malanga con porción de miel",
+      "price": 1000,
+      "category": "raciones",
       "image": "",
       "emoji": "🍔",
       "tags": [],
