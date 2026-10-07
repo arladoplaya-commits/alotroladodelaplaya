@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:32:08.694Z",
+  "updatedAt": "2026-10-07T16:33:25.023Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -747,6 +747,19 @@
       "name": "Agua fresca",
       "description": "Botella de agua",
       "price": 300,
+      "category": "bebidas-refrescos",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muybsvkwlenwqq",
+      "name": "Cerveza costera",
+      "description": "Cerveza nacional",
+      "price": 800,
       "category": "bebidas-refrescos",
       "image": "",
       "emoji": "🍔",
