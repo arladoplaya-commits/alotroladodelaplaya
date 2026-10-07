@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:14:26.633Z",
+  "updatedAt": "2026-10-07T17:14:59.958Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -653,7 +653,7 @@
     {
       "id": "p-cortado",
       "name": "Cortado Amanecer",
-      "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto.",
+      "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto, acompañado de su galletica",
       "price": 350,
       "category": "bebidas-cafe",
       "image": "/images/products/p-cortado.jpg",
@@ -672,7 +672,7 @@
     {
       "id": "p-bombon",
       "name": "Bombón de Arena",
-      "description": "Espresso sobre leche condensada, en capas como un atardecer.",
+      "description": "Espresso sobre leche condensada, en capas como un atardecer, acompañado de su galletica",
       "price": 450,
       "category": "bebidas-cafe",
       "image": "/images/products/p-bombon.jpg",
