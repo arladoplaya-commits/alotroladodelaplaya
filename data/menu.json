@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:02:28.852Z",
+  "updatedAt": "2026-10-07T16:02:48.255Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -116,8 +116,8 @@
       "available": true,
       "featured": false,
       "ingredients": [
-        "Pan de papa",
-        "Carne de res",
+        "Pan de hamburguesa",
+        "hamburguesa de res",
         "Vegetales",
         "Ketchup",
         "Mostaza",
