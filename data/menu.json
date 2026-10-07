@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:10:08.265Z",
+  "updatedAt": "2026-10-07T16:10:26.350Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -269,7 +269,7 @@
     {
       "id": "p-perro-cheesy",
       "name": "Puesta de Sol",
-      "description": "Pan con perro, ketchup, mostaza y queso gouda.",
+      "description": "Pan perro, hot Dog, ketchup, mostaza y queso gouda.",
       "price": 900,
       "category": "perros",
       "image": "/images/products/p-perro-cheesy.jpg",
