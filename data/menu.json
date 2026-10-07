@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:33:46.536Z",
+  "updatedAt": "2026-10-07T16:34:38.544Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -773,6 +773,19 @@
       "name": "Mensaje en la botella",
       "description": "Cerveza nacional de botella",
       "price": 850,
+      "category": "bebidas-refrescos",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-muybuuijug9vyi",
+      "name": "Correr por la playa",
+      "description": "Energizante",
+      "price": 750,
       "category": "bebidas-refrescos",
       "image": "",
       "emoji": "🍔",
