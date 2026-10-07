@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:06:55.937Z",
+  "updatedAt": "2026-10-07T17:07:58.753Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -612,7 +612,7 @@
     {
       "id": "p-limonada-brasilena",
       "name": "Limonada Copacabana",
-      "description": "La clásica brasileña: limón batido con crema, suave y helada.",
+      "description": "Limonada brasileña, limón, hielo frappé y leche condensada",
       "price": 850,
       "category": "bebidas-jugos",
       "image": "/images/products/p-limonada-brasilena.jpg",
