@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:10:26.350Z",
+  "updatedAt": "2026-10-07T16:11:02.050Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -292,7 +292,7 @@
     {
       "id": "p-baguette-rustico",
       "name": "El Muelle",
-      "description": "Pan baguette, jamón, queso gouda, vegetales y mayonesa.",
+      "description": "Pan baguette, jamón, queso gouda, vegetales , mayonesa y chips de boniato",
       "price": 1320,
       "category": "baguette",
       "image": "/images/products/p-baguette-rustico.jpg",
