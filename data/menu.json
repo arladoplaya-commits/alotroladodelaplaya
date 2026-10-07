@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:02:16.063Z",
+  "updatedAt": "2026-10-07T17:06:55.937Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -590,7 +590,7 @@
     {
       "id": "p-limonada",
       "name": "Limonada Brisa",
-      "description": "Limonada natural con hielo y menta fresca. Sombra y frescura.",
+      "description": "Limonada natural frappe",
       "price": 700,
       "category": "bebidas-jugos",
       "image": "/images/products/p-limonada.jpg",
