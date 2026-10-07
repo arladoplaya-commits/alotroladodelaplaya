@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:06:53.925Z",
+  "updatedAt": "2026-10-07T16:09:46.487Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -199,8 +199,8 @@
     },
     {
       "id": "p-perro-crispy",
-      "name": "El Surfista",
-      "description": "Pan con perro, ketchup, mostaza y chips de boniato.",
+      "name": "La Duna",
+      "description": "Pan perro, hot Dog, Crips de boniato, ketchup, mostaza.",
       "price": 750,
       "category": "perros",
       "image": "/images/products/p-perro-crispy.jpg",
@@ -223,8 +223,8 @@
     {
       "id": "p-perro-isleno",
       "name": "Cayo Piña",
-      "description": "Pan con perro, ketchup, mostaza y piña glaseada.",
-      "price": 850,
+      "description": "Pan perro, hot Dog, ketchup, mostaza y piña glaseada.",
+      "price": 800,
       "category": "perros",
       "image": "/images/products/p-perro-isleno.jpg",
       "emoji": "🌭",
