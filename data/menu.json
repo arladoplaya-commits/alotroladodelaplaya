@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:00:24.827Z",
+  "updatedAt": "2026-10-07T16:00:59.113Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -140,8 +140,8 @@
       "available": true,
       "featured": false,
       "ingredients": [
-        "Pan de papa",
-        "Carne de pollo",
+        "Pan hamburguesa",
+        "hamburguesa de pollo",
         "Carne de pollo",
         "Vegetales",
         "Ketchup",
