@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:13:26.632Z",
+  "updatedAt": "2026-10-07T17:14:26.633Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -634,7 +634,7 @@
     {
       "id": "p-espresso",
       "name": "Espresso Marinero",
-      "description": "Espresso corto e intenso con su crema dorada. Chispa instantánea.",
+      "description": "Espresso corto e intenso con su Chispa instantánea, bien acompañado de su galletica",
       "price": 250,
       "category": "bebidas-cafe",
       "image": "/images/products/p-espresso.jpg",
