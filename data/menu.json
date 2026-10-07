@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:01:47.451Z",
+  "updatedAt": "2026-10-07T17:02:16.063Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -504,7 +504,7 @@
     {
       "id": "p-jugos",
       "name": "Nectar de verano",
-      "description": "Jugos de frutas naturales del día: maracuyá, papaya o piña.",
+      "description": "Jugos de frutas naturales del día:\npapaya o piña.",
       "price": 700,
       "category": "bebidas-jugos",
       "image": "/images/products/p-jugos.jpg",
