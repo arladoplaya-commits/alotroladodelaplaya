@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:03:38.321Z",
+  "updatedAt": "2026-10-07T16:04:44.750Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -689,6 +689,19 @@
       ],
       "nameEn": "Sand Bombón",
       "descriptionEn": "Espresso over condensed milk, layered like a sunset."
+    },
+    {
+      "id": "p-muyas5dd6htrkj",
+      "name": "Doble Coral",
+      "description": "Pan hamburguesa, dos hamburguesas de cerdo, vegetales, ketchup, mostaza y chips de boniato",
+      "price": 1750,
+      "category": "hamburguesas",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
     }
   ],
   "agregos": [
