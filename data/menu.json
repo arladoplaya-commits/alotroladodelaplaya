@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:02:48.255Z",
+  "updatedAt": "2026-10-07T16:03:16.233Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -129,7 +129,7 @@
     {
       "id": "p-doble",
       "name": "Doble Ola",
-      "description": "Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
+      "description": "Pan hamburguesa, Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips de boniato",
       "price": 1550,
       "category": "hamburguesas",
       "image": "/images/products/p-doble.jpg",
@@ -141,7 +141,7 @@
       "featured": false,
       "ingredients": [
         "Pan hamburguesa",
-        "hamburguesa de pollo",
+        "dos hamburguesa de pollo",
         "Carne de pollo",
         "Vegetales",
         "Ketchup",
