@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T16:22:43.974Z",
+  "updatedAt": "2026-10-07T16:23:43.322Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -462,7 +462,7 @@
       "id": "p-malta",
       "name": "Malta Marinera",
       "description": "Malta bien helada con su espuma dorada. Energía playera.",
-      "price": 650,
+      "price": 620,
       "category": "bebidas-refrescos",
       "image": "/images/products/p-malta.jpg",
       "emoji": "🥃",
