@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-07T17:01:19.854Z",
+  "updatedAt": "2026-10-07T17:01:47.451Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -568,7 +568,7 @@
     {
       "id": "p-maracuya",
       "name": "Maracuyá Atardecer",
-      "description": "Maracuyá bien fría, entre dulce y ácida. El favorito del cangrejo.",
+      "description": "Jugo de Maracuyá bien fría, entre dulce y ácida.",
       "price": 900,
       "category": "bebidas-jugos",
       "image": "/images/products/p-maracuya.jpg",
