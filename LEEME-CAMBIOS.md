@@ -35,3 +35,9 @@ y el menú publicado por GitHub.
 1. **Número de WhatsApp**: Panel → Ajustes → WhatsApp. Sin número nadie puede pedir.
 2. **Clave del panel**: cambia `playa2026` (línea comentada al inicio de `seguridad.sql`).
 3. Publica desde **un solo teléfono** con el token de GitHub ("Todo guardado en GitHub").
+
+## Revisión (token y fotos)
+- El token de GitHub se guarda en cuanto lo pegas (antes solo al pulsar «Publicar» o «Guardar datos») y también al subir fotos de la galería. El campo muestra «✓ Token guardado» y se pide almacenamiento persistente al navegador.
+- Al eliminar un producto se borra su foto de GitHub en el próximo «Publicar» (si nadie más la usa).
+- Al quitar una foto de la galería del local se borra igual (las 4 fotos por defecto `s-*` no se tocan).
+- Las 36 fotos existentes se convirtieron a WebP (800 px máx.) y se actualizaron todas las referencias. Service worker v10.
