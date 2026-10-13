@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-13T13:35:05.511Z",
+  "updatedAt": "2026-10-13T13:36:17.238Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -69,7 +69,7 @@
       "image": "/images/products/p-clasica.jpg",
       "emoji": "🍔",
       "tags": [],
-      "available": true,
+      "available": false,
       "featured": false,
       "ingredients": [
         "Pan de papa",
