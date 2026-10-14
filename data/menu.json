@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:54:30.888Z",
+  "updatedAt": "2026-10-14T16:55:01.155Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -223,8 +223,8 @@
     {
       "id": "p-perro-isleno",
       "name": "Cayo Piña",
-      "description": "Pan con perro, ketchup, mostaza y piña glaseada.",
-      "price": 850,
+      "description": "Pan perro, 2 hot Dog, ketchup, mostaza y piña glaseada.",
+      "price": 800,
       "category": "perros",
       "image": "/images/products/p-perro-isleno.jpg",
       "emoji": "🌭",
