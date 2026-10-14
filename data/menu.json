@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:55:57.655Z",
+  "updatedAt": "2026-10-14T16:56:40.886Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -695,6 +695,19 @@
       "name": "Doble Coral",
       "description": "Pan hamburguesa, Dos hamburguesas de cerdo, vegetales, ketchup, mostaza y chips de boniato",
       "price": 1850,
+      "category": "hamburguesas",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-mv8cpzbo3d6s7z",
+      "name": "Neptuno",
+      "description": "Pan baguette, atún, cebolla, mayonesa y chips de boniato",
+      "price": 1500,
       "category": "hamburguesas",
       "image": "",
       "emoji": "🍔",
