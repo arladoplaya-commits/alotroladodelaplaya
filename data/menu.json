@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:49:41.426Z",
+  "updatedAt": "2026-10-14T16:50:17.240Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -106,8 +106,8 @@
     },
     {
       "id": "p-res",
-      "name": "El Arrecife",
-      "description": "Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
+      "name": "Arrescife",
+      "description": "Pan Hamburguesa, Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1600,
       "category": "hamburguesas",
       "image": "/images/products/p-res.jpg",
