@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:05:38.420Z",
+  "updatedAt": "2026-10-14T17:06:30.348Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -722,6 +722,19 @@
       "description": "Ración de 8 frituras de Malanga con porción de miel",
       "price": 1000,
       "category": "raciones",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-mv8d2pay8svmaf",
+      "name": "Malta de altamar",
+      "description": "Malta",
+      "price": 700,
+      "category": "bebidas-refrescos",
       "image": "",
       "emoji": "🍔",
       "tags": [],
