@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:53:58.781Z",
+  "updatedAt": "2026-10-14T16:54:30.888Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -199,8 +199,8 @@
     },
     {
       "id": "p-perro-crispy",
-      "name": "El Surfista",
-      "description": "Pan con perro, ketchup, mostaza y chips de boniato.",
+      "name": "La Duna",
+      "description": "Pan  Perro, 2 hot Dog, ketchup, mostaza y chips de boniato.",
       "price": 750,
       "category": "perros",
       "image": "/images/products/p-perro-crispy.jpg",
