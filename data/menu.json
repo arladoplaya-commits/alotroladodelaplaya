@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:55:01.155Z",
+  "updatedAt": "2026-10-14T16:55:24.154Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -246,7 +246,7 @@
     {
       "id": "p-perro-saludable",
       "name": "Brisa Verde",
-      "description": "Pan con perro, ketchup, mostaza y vegetales.",
+      "description": "Pan perro, 2 hot Dogs, ketchup, mostaza y vegetales.",
       "price": 850,
       "category": "perros",
       "image": "/images/products/p-perro-saludable.jpg",
