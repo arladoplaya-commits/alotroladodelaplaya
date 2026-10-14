@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:00:30.302Z",
+  "updatedAt": "2026-10-14T17:02:23.745Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -421,8 +421,8 @@
     },
     {
       "id": "p-alitas-pollo",
-      "name": "Alitas del Faro",
-      "description": "Ración de alitas de pollo.",
+      "name": "Alitas de Gaviota",
+      "description": "Ración de alitas de pollo con porción de salsa",
       "price": 1400,
       "category": "raciones",
       "image": "/images/products/p-alitas-pollo.jpg",
