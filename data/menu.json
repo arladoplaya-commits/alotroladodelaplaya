@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:50:17.240Z",
+  "updatedAt": "2026-10-14T16:50:43.155Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -129,7 +129,7 @@
     {
       "id": "p-doble",
       "name": "Doble Ola",
-      "description": "Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
+      "description": "Pan hamburguesa, Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
       "price": 1550,
       "category": "hamburguesas",
       "image": "/images/products/p-doble.jpg",
