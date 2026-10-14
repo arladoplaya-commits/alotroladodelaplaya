@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:24:37.438Z",
+  "updatedAt": "2026-10-14T17:25:49.739Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -787,6 +787,19 @@
       "description": "Energizante",
       "price": 750,
       "category": "bebidas-refrescos",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-mv8dqx15oyxsli",
+      "name": "Piña Pirata",
+      "description": "Piña colada virgen ó con alcohol (es su decisión)",
+      "price": 1200,
+      "category": "bebidas-jugos",
       "image": "",
       "emoji": "🍔",
       "tags": [],
