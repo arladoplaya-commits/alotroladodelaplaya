@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:53:13.643Z",
+  "updatedAt": "2026-10-14T16:53:58.781Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -179,7 +179,7 @@
     {
       "id": "p-perro-clasico",
       "name": "El Salvavidas",
-      "description": "Pan con perro, ketchup, mayonesa y mostaza.",
+      "description": "Pan perro, 2 Hot dog, ketchup, mayonesa y mostaza.",
       "price": 700,
       "category": "perros",
       "image": "/images/products/p-perro-clasico.jpg",
