@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:57:53.387Z",
+  "updatedAt": "2026-10-14T16:58:33.851Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -348,9 +348,9 @@
     },
     {
       "id": "p-croquetas",
-      "name": "Croquetas del Malecón",
-      "description": "Ración de 10 croquetas.",
-      "price": 850,
+      "name": "Tesoro de croquetas",
+      "description": "Ración de 10 croquetas con porción de salsa",
+      "price": 950,
       "category": "raciones",
       "image": "/images/products/p-croquetas.jpg",
       "emoji": "🧆",
