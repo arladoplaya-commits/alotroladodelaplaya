@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:50:43.155Z",
+  "updatedAt": "2026-10-14T16:51:19.998Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -154,7 +154,7 @@
     {
       "id": "p-doble-mixta",
       "name": "La Gran Marejada",
-      "description": "Cerdo y pollo, vegetales, ketchup, mostaza y chips de boniato.",
+      "description": "Pan hamburguesa, Hamburguesa de Cerdo y hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1750,
       "category": "hamburguesas",
       "image": "/images/products/p-doble-mixta.jpg",
