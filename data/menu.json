@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:58:33.851Z",
+  "updatedAt": "2026-10-14T16:58:57.686Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -366,7 +366,7 @@
     {
       "id": "p-fajitas-pollo",
       "name": "Fajitas del Velero",
-      "description": "Fajitas de pollo con porción de mayonesa.",
+      "description": "Racion de Fajitas de pollo con porción de mayonesa.",
       "price": 1200,
       "category": "raciones",
       "image": "/images/products/p-fajitas-pollo.jpg",
