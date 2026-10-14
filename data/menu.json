@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:56:58.739Z",
+  "updatedAt": "2026-10-14T16:57:15.354Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -314,7 +314,7 @@
       "id": "p-albondiga-cerdo",
       "name": "Perlas de Cerdo",
       "description": "Ración de 5 albóndigas con ketchup.",
-      "price": 800,
+      "price": 900,
       "category": "raciones",
       "image": "/images/products/p-albondiga-cerdo.jpg",
       "emoji": "🍖",
