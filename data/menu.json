@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:07:26.711Z",
+  "updatedAt": "2026-10-14T17:07:53.453Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -760,6 +760,19 @@
       "name": "Cerveza Costera",
       "description": "Cerveza nacional",
       "price": 800,
+      "category": "bebidas-refrescos",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-mv8d4qbv0d2gff",
+      "name": "Mensaje en la botella",
+      "description": "Cerveza nacional de botella",
+      "price": 850,
       "category": "bebidas-refrescos",
       "image": "",
       "emoji": "🍔",
