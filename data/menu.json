@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:25:49.739Z",
+  "updatedAt": "2026-10-14T17:27:26.547Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -800,6 +800,19 @@
       "description": "Piña colada virgen ó con alcohol (es su decisión)",
       "price": 1200,
       "category": "bebidas-jugos",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-mv8dsrajajgwf9",
+      "name": "Ensalada del mar",
+      "description": "Ensalada fría con jamón y piña",
+      "price": 500,
+      "category": "raciones",
       "image": "",
       "emoji": "🍔",
       "tags": [],
