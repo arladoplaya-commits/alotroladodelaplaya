@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T16:59:23.753Z",
+  "updatedAt": "2026-10-14T17:00:30.302Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -400,8 +400,8 @@
     },
     {
       "id": "p-papischis",
-      "name": "Papischis Tiburón",
-      "description": "Papas fritas y salchichas con salsa.",
+      "name": "Los Náufragos",
+      "description": "Papas fritas y salchichas trozeada con porción de ketchup",
       "price": 1000,
       "category": "raciones",
       "image": "/images/products/p-papischis.jpg",
