@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:35:08.879Z",
+  "updatedAt": "2026-10-14T17:35:33.465Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -826,19 +826,6 @@
       "description": "Cuña de cake",
       "price": 550,
       "category": "dulces",
-      "image": "",
-      "emoji": "🍔",
-      "tags": [],
-      "available": true,
-      "featured": false,
-      "ingredients": []
-    },
-    {
-      "id": "p-mv8e1o04fx4l14",
-      "name": "Trifle",
-      "description": "Trifle",
-      "price": 550,
-      "category": "hamburguesas",
       "image": "",
       "emoji": "🍔",
       "tags": [],
