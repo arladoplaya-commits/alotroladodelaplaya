@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:34:12.277Z",
+  "updatedAt": "2026-10-14T17:35:08.879Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -839,6 +839,19 @@
       "description": "Trifle",
       "price": 550,
       "category": "hamburguesas",
+      "image": "",
+      "emoji": "🍔",
+      "tags": [],
+      "available": true,
+      "featured": false,
+      "ingredients": []
+    },
+    {
+      "id": "p-mv8e3olw4eumc8",
+      "name": "Trifle",
+      "description": "Trifle",
+      "price": 550,
+      "category": "dulces",
       "image": "",
       "emoji": "🍔",
       "tags": [],
