@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-14T17:38:07.805Z",
+  "updatedAt": "2026-10-17T22:12:50.745Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -979,25 +979,25 @@
         "id": "z-vedado",
         "name": "Vedado",
         "fee": 200,
-        "active": true
+        "active": false
       },
       {
         "id": "z-centro",
         "name": "Centro Habana",
         "fee": 300,
-        "active": true
+        "active": false
       },
       {
         "id": "z-plaza",
         "name": "Plaza de la Revolución",
         "fee": 300,
-        "active": true
+        "active": false
       },
       {
         "id": "z-playa",
         "name": "Playa / Miramar",
         "fee": 400,
-        "active": true
+        "active": false
       }
     ],
     "payments": [
