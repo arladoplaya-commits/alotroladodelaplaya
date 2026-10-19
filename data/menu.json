@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-17T22:12:50.745Z",
+  "updatedAt": "2026-10-19T23:02:54.682Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -965,15 +965,15 @@
   "settings": {
     "businessName": "Al Otro Lado de la Playa",
     "tagline": "Hamburguesas, perros calientes, baguettes y raciones · By Sol & Habana",
-    "whatsapp": "",
+    "whatsapp": "58693441",
     "currency": "$",
     "deliveryPoint": "Calle 21 e/ 14 · Vedado",
     "deliveryTime": "Pedidos por WhatsApp",
     "hideSoldOut": true,
     "adminPassword": "",
     "ordersOpen": true,
-    "deliveryEnabled": true,
-    "pickupEnabled": true,
+    "deliveryEnabled": false,
+    "pickupEnabled": false,
     "zones": [
       {
         "id": "z-vedado",
@@ -996,7 +996,7 @@
       {
         "id": "z-playa",
         "name": "Playa / Miramar",
-        "fee": 400,
+        "fee": 0,
         "active": false
       }
     ],
@@ -1028,38 +1028,38 @@
       "days": [
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         },
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         },
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         },
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         },
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         },
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         },
         {
           "closed": false,
-          "open": "12:00",
-          "close": "23:30"
+          "open": "10:00",
+          "close": "20:00"
         }
       ]
     },
