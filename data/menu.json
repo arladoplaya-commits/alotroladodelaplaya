@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-19T23:05:24.400Z",
+  "updatedAt": "2026-10-21T15:19:30.772Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -919,7 +919,7 @@
         }
       ],
       "price": 2400,
-      "active": true
+      "active": false
     },
     {
       "id": "c-perro-refresco",
@@ -937,7 +937,7 @@
         }
       ],
       "price": 1200,
-      "active": true
+      "active": false
     },
     {
       "id": "c-pareja",
@@ -959,7 +959,7 @@
         }
       ],
       "price": 5300,
-      "active": true
+      "active": false
     }
   ],
   "settings": {
