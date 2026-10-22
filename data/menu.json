@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-22T19:49:57.291Z",
+  "updatedAt": "2026-10-22T19:51:09.771Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -352,7 +352,7 @@
       "description": "Ración de 10 croquetas con porción de salsa",
       "price": 950,
       "category": "raciones",
-      "image": "/images/products/p-croquetas.jpg",
+      "image": "/images/products/tesoro-de-croquetas-yhu8s.webp",
       "emoji": "🧆",
       "tags": [],
       "available": true,
