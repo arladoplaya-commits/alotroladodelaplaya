@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-22T19:49:07.845Z",
+  "updatedAt": "2026-10-22T19:49:57.291Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -593,7 +593,7 @@
       "description": "Limonada natural frappe.",
       "price": 700,
       "category": "bebidas-jugos",
-      "image": "/images/products/p-limonada.jpg",
+      "image": "/images/products/limonada-brisa-ygdie.webp",
       "emoji": "🍋",
       "tags": [
         "Bien frío"
@@ -615,7 +615,7 @@
       "description": "Limonada brasileña: limón, hielo frappé y leche condensada",
       "price": 850,
       "category": "bebidas-jugos",
-      "image": "/images/products/p-limonada-brasilena.jpg",
+      "image": "/images/products/limonada-copacabana-yg15c.webp",
       "emoji": "🍋",
       "tags": [
         "Crema de limón"
