@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-21T15:21:01.723Z",
+  "updatedAt": "2026-10-22T19:49:07.845Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -675,7 +675,7 @@
       "description": "Espresso sobre leche condensada, en capas como un atardecer.",
       "price": 450,
       "category": "bebidas-cafe",
-      "image": "/images/products/p-bombon.jpg",
+      "image": "/images/products/bombon-de-arena-yfbmv.webp",
       "emoji": "☕",
       "tags": [
         "Dulce"
