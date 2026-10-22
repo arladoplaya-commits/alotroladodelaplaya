@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-22T19:51:09.771Z",
+  "updatedAt": "2026-10-22T19:51:36.168Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -226,7 +226,7 @@
       "description": "Pan perro, 2 hot Dog, ketchup, mostaza y piña glaseada.",
       "price": 800,
       "category": "perros",
-      "image": "/images/products/p-perro-isleno.jpg",
+      "image": "/images/products/cayo-pina-yignx.webp",
       "emoji": "🌭",
       "tags": [
         "Dulce-salado"
