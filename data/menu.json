@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-22T19:53:22.455Z",
+  "updatedAt": "2026-10-26T22:09:01.640Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -203,7 +203,7 @@
       "description": "Pan  Perro, 2 hot Dog, ketchup, mostaza y chips de boniato.",
       "price": 750,
       "category": "perros",
-      "image": "/images/products/p-perro-crispy.jpg",
+      "image": "/images/products/la-duna-t627m.webp",
       "emoji": "🌭",
       "tags": [
         "Crujiente"
