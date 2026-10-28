@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-28T21:41:00.894Z",
+  "updatedAt": "2026-10-28T21:41:22.337Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -547,7 +547,7 @@
     {
       "id": "p-batidos",
       "name": "Batido Coral",
-      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce. Plátano, frutabomba y guayaba",
+      "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce. Mamey, Plátano, frutabomba y guayaba",
       "price": 900,
       "category": "bebidas-jugos",
       "image": "/images/products/p-batidos.jpg",
