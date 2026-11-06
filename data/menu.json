@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-10-28T21:41:22.337Z",
+  "updatedAt": "2026-11-06T19:55:32.954Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -440,7 +440,7 @@
       "id": "p-refrescos",
       "name": "Ola Fría",
       "description": "Gaseosas bien frías: cola, naranja o limón. El clásico de la arena.",
-      "price": 600,
+      "price": 658,
       "category": "bebidas-refrescos",
       "image": "/images/products/p-refrescos.jpg",
       "emoji": "🥤",
@@ -484,7 +484,7 @@
       "id": "p-cerveza",
       "name": "Cerveza de la frontera",
       "description": "Cerveza importada",
-      "price": 650,
+      "price": 750,
       "category": "bebidas-refrescos",
       "image": "/images/products/p-cerveza.jpg",
       "emoji": "🍺",
@@ -733,7 +733,7 @@
       "id": "p-mv8d2pay8svmaf",
       "name": "Malta de altamar",
       "description": "Malta",
-      "price": 700,
+      "price": 750,
       "category": "bebidas-refrescos",
       "image": "",
       "emoji": "🍔",
@@ -837,7 +837,7 @@
       "id": "p-mv8e3olw4eumc8",
       "name": "Trifle",
       "description": "Trifle",
-      "price": 550,
+      "price": 400,
       "category": "dulces",
       "image": "",
       "emoji": "🍔",
