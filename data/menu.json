@@ -66,7 +66,7 @@
       "description": "Pan Hamburguesa, Hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1200,
       "category": "hamburguesas",
-      "image": "/images/products/p-clasica.jpg",
+      "image": "/images/products/p-clasica.webp",
       "emoji": "🍔",
       "tags": [],
       "available": true,
@@ -88,7 +88,7 @@
       "description": "Pan hamburguesa, Hamburguesa de cerdo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1400,
       "category": "hamburguesas",
-      "image": "/images/products/p-cerdo.jpg",
+      "image": "/images/products/p-cerdo.webp",
       "emoji": "🍔",
       "tags": [],
       "available": true,
@@ -110,7 +110,7 @@
       "description": "Pan Hamburguesa, Hamburguesa de res, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1600,
       "category": "hamburguesas",
-      "image": "/images/products/p-res.jpg",
+      "image": "/images/products/p-res.webp",
       "emoji": "🍔",
       "tags": [],
       "available": true,
@@ -132,7 +132,7 @@
       "description": "Pan hamburguesa, Dos hamburguesas de pollo, vegetales, ketchup, mostaza y chips.",
       "price": 1550,
       "category": "hamburguesas",
-      "image": "/images/products/p-doble.jpg",
+      "image": "/images/products/p-doble.webp",
       "emoji": "🍔",
       "tags": [
         "Doble carne"
@@ -157,7 +157,7 @@
       "description": "Pan hamburguesa, Hamburguesa de Cerdo y hamburguesa de pollo, vegetales, ketchup, mostaza y chips de boniato.",
       "price": 1750,
       "category": "hamburguesas",
-      "image": "/images/products/p-doble-mixta.jpg",
+      "image": "/images/products/p-doble-mixta.webp",
       "emoji": "🍔",
       "tags": [
         "Doble carne"
@@ -182,7 +182,7 @@
       "description": "Pan perro, 2 Hot dog, ketchup, mayonesa y mostaza.",
       "price": 700,
       "category": "perros",
-      "image": "/images/products/p-perro-clasico.jpg",
+      "image": "/images/products/p-perro-clasico.webp",
       "emoji": "🌭",
       "tags": [],
       "available": true,
@@ -249,7 +249,7 @@
       "description": "Pan perro, 2 hot Dogs, ketchup, mostaza y vegetales.",
       "price": 850,
       "category": "perros",
-      "image": "/images/products/p-perro-saludable.jpg",
+      "image": "/images/products/p-perro-saludable.webp",
       "emoji": "🌭",
       "tags": [
         "Con vegetales"
@@ -272,7 +272,7 @@
       "description": "Pan perro, 2 hot Dog, ketchup, mostaza y queso gouda.",
       "price": 900,
       "category": "perros",
-      "image": "/images/products/p-perro-cheesy.jpg",
+      "image": "/images/products/p-perro-cheesy.webp",
       "emoji": "🌭",
       "tags": [
         "Queso gouda"
@@ -295,7 +295,7 @@
       "description": "Pan baguette, jamón, queso gouda, vegetales y mayonesa.",
       "price": 1320,
       "category": "baguette",
-      "image": "/images/products/p-baguette-rustico.jpg",
+      "image": "/images/products/p-baguette-rustico.webp",
       "emoji": "🥖",
       "tags": [],
       "available": true,
@@ -316,7 +316,7 @@
       "description": "Ración de 5 albóndigas de cerdo con ketchup.",
       "price": 900,
       "category": "raciones",
-      "image": "/images/products/p-albondiga-cerdo.jpg",
+      "image": "/images/products/p-albondiga-cerdo.webp",
       "emoji": "🍖",
       "tags": [],
       "available": true,
@@ -334,7 +334,7 @@
       "description": "Ración de 6 albóndigas de pollo con ketchup.",
       "price": 900,
       "category": "raciones",
-      "image": "/images/products/p-albondiga-pollo.jpg",
+      "image": "/images/products/p-albondiga-pollo.webp",
       "emoji": "🍖",
       "tags": [],
       "available": true,
@@ -387,7 +387,7 @@
       "description": "Ración de papas fritas con porción de ketchup",
       "price": 850,
       "category": "raciones",
-      "image": "/images/products/p-papas-fritas.jpg",
+      "image": "/images/products/p-papas-fritas.webp",
       "emoji": "🍟",
       "tags": [],
       "available": true,
@@ -404,7 +404,7 @@
       "description": "Papas fritas y salchichas trozeada con porción de ketchup",
       "price": 1000,
       "category": "raciones",
-      "image": "/images/products/p-papischis.jpg",
+      "image": "/images/products/p-papischis.webp",
       "emoji": "🍟",
       "tags": [
         "Para compartir"
@@ -425,7 +425,7 @@
       "description": "Ración de alitas de pollo con porción de salsa",
       "price": 1400,
       "category": "raciones",
-      "image": "/images/products/p-alitas-pollo.jpg",
+      "image": "/images/products/p-alitas-pollo.webp",
       "emoji": "🍗",
       "tags": [],
       "available": true,
@@ -442,7 +442,7 @@
       "description": "Gaseosas bien frías: cola, naranja o limón. El clásico de la arena.",
       "price": 658,
       "category": "bebidas-refrescos",
-      "image": "/images/products/p-refrescos.jpg",
+      "image": "/images/products/p-refrescos.webp",
       "emoji": "🥤",
       "tags": [
         "Bien frío"
@@ -464,7 +464,7 @@
       "description": "Malta bien helada con su espuma dorada. Energía playera.",
       "price": 650,
       "category": "bebidas-refrescos",
-      "image": "/images/products/p-malta.jpg",
+      "image": "/images/products/p-malta.webp",
       "emoji": "🥃",
       "tags": [
         "Bien frío"
@@ -486,7 +486,7 @@
       "description": "Cerveza importada",
       "price": 750,
       "category": "bebidas-refrescos",
-      "image": "/images/products/p-cerveza.jpg",
+      "image": "/images/products/p-cerveza.webp",
       "emoji": "🍺",
       "tags": [
         "Importada"
@@ -507,7 +507,7 @@
       "description": "Jugos de frutas naturales del día: papaya, piña y guayaba",
       "price": 700,
       "category": "bebidas-jugos",
-      "image": "/images/products/p-jugos.jpg",
+      "image": "/images/products/p-jugos.webp",
       "emoji": "🧃",
       "tags": [
         "Natural"
@@ -529,7 +529,7 @@
       "description": "Malta con leche condensada (malteada de siempre)",
       "price": 950,
       "category": "bebidas-jugos",
-      "image": "/images/products/p-malteada.jpg",
+      "image": "/images/products/p-malteada.webp",
       "emoji": "🥛",
       "tags": [
         "Crema batida"
@@ -550,7 +550,7 @@
       "description": "Batidos de frutas naturales batidas al momento. Pura marea dulce. Mamey, Plátano, frutabomba y guayaba",
       "price": 900,
       "category": "bebidas-jugos",
-      "image": "/images/products/p-batidos.jpg",
+      "image": "/images/products/p-batidos.webp",
       "emoji": "🍓",
       "tags": [
         "Natural"
@@ -571,7 +571,7 @@
       "description": "Jugo de Maracuyá bien fría, entre dulce y ácida.",
       "price": 900,
       "category": "bebidas-jugos",
-      "image": "/images/products/p-maracuya.jpg",
+      "image": "/images/products/p-maracuya.webp",
       "emoji": "🍹",
       "tags": [
         "Natural"
@@ -637,7 +637,7 @@
       "description": "Espresso corto e intenso con su crema dorada. Chispa instantánea.",
       "price": 250,
       "category": "bebidas-cafe",
-      "image": "/images/products/p-espresso.jpg",
+      "image": "/images/products/p-espresso.webp",
       "emoji": "☕",
       "tags": [],
       "available": true,
@@ -656,7 +656,7 @@
       "description": "Espresso cortado con un chorro de leche. Equilibrio perfecto.",
       "price": 350,
       "category": "bebidas-cafe",
-      "image": "/images/products/p-cortado.jpg",
+      "image": "/images/products/p-cortado.webp",
       "emoji": "☕",
       "tags": [],
       "available": true,

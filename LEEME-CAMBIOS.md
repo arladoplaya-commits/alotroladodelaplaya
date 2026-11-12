@@ -41,3 +41,17 @@ y el menú publicado por GitHub.
 - Al eliminar un producto se borra su foto de GitHub en el próximo «Publicar» (si nadie más la usa).
 - Al quitar una foto de la galería del local se borra igual (las 4 fotos por defecto `s-*` no se tocan).
 - Las 36 fotos existentes se convirtieron a WebP (800 px máx.) y se actualizaron todas las referencias. Service worker v10.
+
+## Dos cartas, modo navideño (v11)
+- **Carta en PDF** (Publicar): pestañas «🍔 Comidas», «🥤 Líquidos» y «📄 Las 2 cartas» (2 hojas A4). Líquidos = categorías de bebidas; combos y agregos van en la de comidas.
+- **🎄 Modo navideño**: interruptor en Hoy (y en Ajustes). Al activarlo y publicar, la web del cliente y el PDF se visten de Navidad (`aol-xmas.js`).
+- Compresor de fotos revisado: genera WebP real (RIFF/WEBP), máx. 800 px, corrige rotación y pone fondo blanco a PNG transparentes. Service worker v11.
+
+## v11b
+- Las cartas PDF ajustan la letra solas para llenar la hoja A4 (más grande, menos espacio vacío).
+- Modo navideño renovado: cielo nocturno con luna y estrellas, luces de colores, arbolitos, trineo, nieve, gorro de Santa en el logo, cuenta atrás a Navidad. El PDF lleva marco rojo/verde, copos y precios en verde.
+- Limpieza de fotos: todas las referencias usan `.webp`; se borraron los `.jpg` duplicados y las fotos sin uso (32 archivos).
+
+## v11c
+- Al activar/desactivar 🎄 Modo navideño en Hoy se publica al instante en GitHub (aviso en pantalla). Si falta el token, avisa que hay que configurarlo en Publicar.
+- Las páginas abiertas de clientes se ponen/quitan el modo navideño solas (cada 90 s o al volver a la app).
