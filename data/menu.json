@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "updatedAt": "2026-11-12T00:21:30.247Z",
+  "updatedAt": "2026-11-12T03:56:09.122Z",
   "categories": [
     {
       "id": "hamburguesas",
@@ -1084,7 +1084,8 @@
         "minTotal": 2000,
         "active": false
       }
-    ]
+    ],
+    "christmas": true
   },
   "github": {
     "owner": "arladoplaya-commits",
